@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CUDPAST Doctor</string>
+
+
+    <string name="error_campo_dni">por favor ingrese DNI</string>
+    <string name="error_campo_nomnre">por favor ingrese nombre</string>
+    <string name="error_campo_apellido">por favor ingrese apeliido</string>
+    <string name="error_campo_telefono">por favor ingrese telefono</string>
+    <string name="error_campo_codmed">por favor su código</string>
+    <string name="error_campo_usuario">por favor ingrese usuario</string>
+    <string name="error_campo_password">por favor ingrese contraseña</string>
+</resources>
