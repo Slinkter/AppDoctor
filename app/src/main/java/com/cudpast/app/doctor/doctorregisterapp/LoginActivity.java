@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class StartActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "Login";
     private static String IP = "http://www.cudpast.com/AppDoctor/Login_GETID.php?id=";
@@ -75,7 +75,7 @@ public class StartActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(StartActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
 
             }
         });
@@ -92,16 +92,16 @@ public class StartActivity extends AppCompatActivity {
                 String usuario = jsondatos.getString("dniusuario");
                 String password = jsondatos.getString("password");
                 if (usuario.equals(USER) && password.equals(PASSWORD)) {
-                    Toast.makeText(StartActivity.this, "Servidor Godday \n ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Servidor Godday \n ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(StartActivity.this, "Servidor Godday \n ====== * ====== \n" + "usuario o contraseña no es válido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Servidor Godday \n ====== * ====== \n" + "usuario o contraseña no es válido", Toast.LENGTH_LONG).show();
                 }
 
 
             } else {
-                Toast.makeText(StartActivity.this, estado, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, estado, Toast.LENGTH_LONG).show();
             }
 
 

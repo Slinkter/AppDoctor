@@ -3,6 +3,7 @@ package com.cudpast.app.doctor.doctorregisterapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
+
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,8 +79,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 String password = signupPassword.getText().toString();
                 String correoG = getIntent().getExtras().getString("correog");
                 String fecha = getCurrentTimeStamp();
-
-
                 if (submitForm()) {
                     registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, usuario, password, correoG, fecha);
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, usuario, password, correoG, fecha);
@@ -117,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
 
     public void iniciarActivity() {
-        Intent intent = new Intent(RegisterActivity.this, StartActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -220,7 +219,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     //Validación de formulario parte 2
     private boolean checkDNI() {
         if (signupDNI.length() < 8) {
-            signupDNI.setError("Error ingresar dni");
+            signupDNI.setError("Error : ingresar  8 digitos");
             return false;
         }
         return true;
