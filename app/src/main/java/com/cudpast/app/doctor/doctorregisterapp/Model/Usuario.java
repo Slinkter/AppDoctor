@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp;
+package com.cudpast.app.doctor.doctorregisterapp.Model;
 
 public class Usuario {
 
@@ -8,7 +8,7 @@ public class Usuario {
     private String lastname;
     private String numphone;
     private String codmedpe;//codigo de medico de peru
-    private String usuario;
+    private String usuario;//dirección
     private String password;
     private String correoG;
     private String fecha;

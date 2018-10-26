@@ -4,44 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".RegisterActivity">
+    tools:context=".Activities.RegisterActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_marginTop="20dp"
             android:id="@+id/nameg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Registro"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Registro"
             android:textSize="30dp" />
 
         <LinearLayout
-            android:layout_marginTop="-20dp"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="-20dp"
             android:layout_weight="3"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <EditText
-                android:id="@+id/signupDNI"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="6"
-                android:gravity="center"
-                android:hint="DNI"
-                android:inputType="none|numberSigned"
-                android:maxLength="8" />
-
-            <EditText
-
                 android:id="@+id/signupName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,6 +58,16 @@
                 android:inputType="none|numberSigned" />
 
             <EditText
+                android:id="@+id/signupUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:gravity="center"
+                android:hint="Dirección"
+                android:inputType="textPersonName"
+                />
+
+            <EditText
                 android:id="@+id/signupCodMePe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,13 +77,15 @@
                 android:inputType="phone"
                 android:maxLength="6" />
 
+
             <EditText
-                android:id="@+id/signupUser"
+                android:id="@+id/signupDNI"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Usuario"
-                android:inputType="textPersonName" />
+                android:hint="DNI"
+                android:maxLength="8"
+                android:inputType="none|numberSigned" />
 
             <EditText
                 android:id="@+id/signupPassword"
@@ -92,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:hint="Contraseña"
+
                 android:inputType="textPassword" />
         </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp;
+package com.cudpast.app.doctor.doctorregisterapp.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +21,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.cudpast.app.doctor.doctorregisterapp.R;
+import com.cudpast.app.doctor.doctorregisterapp.Model.Usuario;
+import com.cudpast.app.doctor.doctorregisterapp.Soporte.VolleyRP;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private static final String IP_REGISTRAR = "http://www.cudpast.com/AppDoctor/Registro_INSERT.php";
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
+
     EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupUser, signupPassword;
     Button guardar, salir;
     Animation animation;
@@ -58,24 +62,25 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        signupDNI = findViewById(R.id.signupDNI);
+
         signupName = findViewById(R.id.signupName);
         signupLast = findViewById(R.id.signupLast);
         signupNumPhone = findViewById(R.id.signupNumPhone);
+        signupUser = findViewById(R.id.signupUser); //<--- dirección
         signupCodMePe = findViewById(R.id.signupCodMePe);
-        signupUser = findViewById(R.id.signupUser);
+        signupDNI = findViewById(R.id.signupDNI);
         signupPassword = findViewById(R.id.signupPassword);
 
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String dni = signupDNI.getText().toString();
                 String firstname = signupName.getText().toString();
                 String lastname = signupLast.getText().toString();
                 String numphone = signupNumPhone.getText().toString();
+                String usuario = signupUser.getText().toString(); // <--- dirección
                 String codmedpe = signupCodMePe.getText().toString();
-                String usuario = signupUser.getText().toString();
+                String dni = signupDNI.getText().toString();
                 String password = signupPassword.getText().toString();
                 String correoG = getIntent().getExtras().getString("correog");
                 String fecha = getCurrentTimeStamp();
@@ -106,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public static String getCurrentTimeStamp() {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String currentTimeStamp = dateFormat.format(new Date()); // Find todays date
+            String currentTimeStamp = dateFormat.format(new Date());
             return currentTimeStamp;
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         hashMapRegistro.put("apellido",lastname);
         hashMapRegistro.put("telefono",numphone);
         hashMapRegistro.put("codMedico",codmedpe);
-        hashMapRegistro.put("usuario",usuario);
+        hashMapRegistro.put("direccion",usuario);
         hashMapRegistro.put("password",password);
         hashMapRegistro.put("correo",correoG);
         hashMapRegistro.put("fecha",fecha);

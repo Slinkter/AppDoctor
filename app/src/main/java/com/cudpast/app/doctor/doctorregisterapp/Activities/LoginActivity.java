@@ -1,9 +1,11 @@
-package com.cudpast.app.doctor.doctorregisterapp;
+package com.cudpast.app.doctor.doctorregisterapp.Activities;
 
 import android.content.Intent;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +14,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.cudpast.app.doctor.doctorregisterapp.R;
+import com.cudpast.app.doctor.doctorregisterapp.Soporte.VolleyRP;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private String USER = "";
     private String PASSWORD = "";
 
+    Animation animation;
+    private Vibrator vib;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +56,12 @@ public class LoginActivity extends AppCompatActivity {
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
+
+                if (submitForm()) {
+                    VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
+                }
+
+
             }
         });
 
@@ -92,36 +104,52 @@ public class LoginActivity extends AppCompatActivity {
                 String usuario = jsondatos.getString("dniusuario");
                 String password = jsondatos.getString("password");
                 if (usuario.equals(USER) && password.equals(PASSWORD)) {
-                    Toast.makeText(LoginActivity.this, "Servidor Godday \n ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, " ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("usuario", usuario);
+
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Servidor Godday \n ====== * ====== \n" + "usuario o contraseña no es válido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "====== * ====== \n" + "usuario o contraseña no es válido", Toast.LENGTH_SHORT).show();
                 }
-
-
             } else {
                 Toast.makeText(LoginActivity.this, estado, Toast.LENGTH_LONG).show();
             }
-
 
         } catch (JSONException e) {
 
         }
 
     }
-
-
-    private void goToActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-
-    // 100 % mas boton
+    // Funcional 100%
     public void signup(View view) {
         Intent intent = new Intent(this, VerificacionActivity.class);
         startActivity(intent);
         finish();
     }
+
+
+    //Validación de formulario parte 2
+    private boolean checkDNI() {
+        if (usernamelogin.length() < 8) {
+            usernamelogin.setError("Error : ingresar  8 digitos");
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean submitForm() {
+        if (!checkDNI()) {
+            usernamelogin.setAnimation(animation);
+            usernamelogin.startAnimation(animation);
+            vib.vibrate(120);
+            return false;
+        }
+        return true;
+    }
+
+
 }
