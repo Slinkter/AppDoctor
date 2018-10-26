@@ -54,6 +54,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
+        getSupportActionBar().hide();
+
         guardar = findViewById(R.id.btnGuardar);
         salir = findViewById(R.id.btnSalir);
         volleyRP = VolleyRP.getInstance(this);

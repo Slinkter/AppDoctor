@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        getSupportActionBar().hide();
+
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
 
@@ -123,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
     // Funcional 100%
     public void signup(View view) {
         Intent intent = new Intent(this, VerificacionActivity.class);

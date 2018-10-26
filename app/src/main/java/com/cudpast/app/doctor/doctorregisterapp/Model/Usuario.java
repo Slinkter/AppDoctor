@@ -8,7 +8,7 @@ public class Usuario {
     private String lastname;
     private String numphone;
     private String codmedpe;//codigo de medico de peru
-    private String usuario;//dirección
+    private String direccion;//dirección
     private String password;
     private String correoG;
     private String fecha;
@@ -17,26 +17,26 @@ public class Usuario {
 
     }
 
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String usuario, String password, String correoG, String fecha) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String direccion, String password, String correoG, String fecha) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
         this.numphone = numphone;
         this.codmedpe = codmedpe;
-        this.usuario = usuario;
+        this.direccion = direccion;
         this.password = password;
         this.correoG = correoG;
         this.fecha = fecha;
     }
 
 
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String usuario, String password, String correoG) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String direccion, String password, String correoG) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
         this.numphone = numphone;
         this.codmedpe = codmedpe;
-        this.usuario = usuario;
+        this.direccion = direccion;
         this.password = password;
         this.correoG = correoG;
     }
@@ -81,13 +81,7 @@ public class Usuario {
         this.codmedpe = codmedpe;
     }
 
-    public String getUsuario() {
-        return usuario;
-    }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
 
     public String getPassword() {
         return password;
@@ -111,5 +105,14 @@ public class Usuario {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }
