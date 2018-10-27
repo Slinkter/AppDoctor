@@ -8,7 +8,8 @@ public class Usuario {
     private String lastname;
     private String numphone;
     private String codmedpe;//codigo de medico de peru
-    private String direccion;//dirección
+    private String especialidad;
+    private String direccion;
     private String password;
     private String correoG;
     private String fecha;
@@ -16,29 +17,31 @@ public class Usuario {
     public Usuario() {
 
     }
-
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String direccion, String password, String correoG, String fecha) {
+    //Firebase db_doctor_register
+    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
         this.numphone = numphone;
         this.codmedpe = codmedpe;
+        this.especialidad = especialidad;
         this.direccion = direccion;
         this.password = password;
         this.correoG = correoG;
         this.fecha = fecha;
     }
-
-
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String direccion, String password, String correoG) {
+    //Firebase db_doctor_login
+    public Usuario(String dni, String password) {
+        this.dni = dni;
+        this.password = password;
+    }
+    //Firebase db_doctor_consulta
+    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
         this.numphone = numphone;
-        this.codmedpe = codmedpe;
-        this.direccion = direccion;
-        this.password = password;
-        this.correoG = correoG;
+        this.especialidad = especialidad;
     }
 
     public String getDni() {
@@ -81,7 +84,21 @@ public class Usuario {
         this.codmedpe = codmedpe;
     }
 
+    public String getEspecialidad() {
+        return especialidad;
+    }
 
+    public void setEspecialidad(String especialidad) {
+        this.especialidad = especialidad;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
     public String getPassword() {
         return password;
@@ -105,14 +122,5 @@ public class Usuario {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
-    }
-
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
     }
 }

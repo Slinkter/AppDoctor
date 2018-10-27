@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
-    EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupUser, signupPassword;
+    EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupDir, signupPassword;
     Button guardar, salir;
     Animation animation;
     private Vibrator vib;
@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         signupName = findViewById(R.id.signupName);
         signupLast = findViewById(R.id.signupLast);
         signupNumPhone = findViewById(R.id.signupNumPhone);
-        signupUser = findViewById(R.id.signupUser); //<--- dirección
+        signupDir = findViewById(R.id.signupDir); //<--- dirección
         signupCodMePe = findViewById(R.id.signupCodMePe);
         signupEsp = findViewById(R.id.signupEsp);
         signupDNI = findViewById(R.id.signupDNI);
@@ -82,17 +82,23 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 String firstname = signupName.getText().toString();
                 String lastname = signupLast.getText().toString();
                 String numphone = signupNumPhone.getText().toString();
-                String usuario = signupUser.getText().toString(); // <--- dirección
+                String direccion = signupDir.getText().toString(); // <--- dirección
                 String codmedpe = signupCodMePe.getText().toString();
-                String especilidad = signupEsp.getText().toString();
+                String especialidad = signupEsp.getText().toString();
                 String dni = signupDNI.getText().toString();
                 String password = signupPassword.getText().toString();
                 String correoG = getIntent().getExtras().getString("correog");
                 String fecha = getCurrentTimeStamp();
+
                 if (submitForm()) {
-                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especilidad ,usuario, password, correoG, fecha);
-                    Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, usuario, password, correoG, fecha);
-                    databaseReference.child("usuarios").child(dni).setValue(user1);
+                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
+                    // dni,  firstname,  lastname,  numphone,  codmedpe,  especialidad,  direccion,  password,  correoG,  fecha
+                    Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
+                    Usuario user2 = new Usuario(dni,password);
+                    Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad);
+                    databaseReference.child("db_doctor_register").child(dni).setValue(user1);
+                    databaseReference.child("db_doctor_login").child(dni).setValue(user2);
+                    databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
                     iniciarActivity();
                 }
             }
@@ -133,15 +139,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
 
     //Insertar en la base de datos de Godaddy
-    public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe,String especilidad , String usuario, String password, String correoG, String fecha) {
+    public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
         HashMap<String, String> hashMapRegistro = new HashMap<>();
         hashMapRegistro.put("idDNI",dni);
         hashMapRegistro.put("nombre",firstname);
         hashMapRegistro.put("apellido",lastname);
         hashMapRegistro.put("telefono",numphone);
         hashMapRegistro.put("codMedico",codmedpe);
-        hashMapRegistro.put("especilidad",especilidad);
-        hashMapRegistro.put("direccion",usuario);
+        hashMapRegistro.put("especialidad",especialidad);
+        hashMapRegistro.put("direccion",direccion);
         hashMapRegistro.put("password",password);
         hashMapRegistro.put("correo",correoG);
         hashMapRegistro.put("fecha",fecha);
@@ -211,10 +217,10 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
             vib.vibrate(120);
             return false;
         }
-
+        // direccion
         if (!checkUser()) {
-            signupUser.setAnimation(animation);
-            signupUser.startAnimation(animation);
+            signupDir.setAnimation(animation);
+            signupDir.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
@@ -229,13 +235,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     //Validación de formulario parte 2
-    private boolean checkDNI() {
-        if (signupDNI.length() < 8) {
-            signupDNI.setError("Error : ingresar  8 digitos");
-            return false;
-        }
-        return true;
-    }
+
 
     private boolean checkName() {
         if (signupName.getText().toString().trim().isEmpty()) {
@@ -268,10 +268,10 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         }
         return true;
     }
-
+    // direccion
     private boolean checkUser() {
-        if (signupUser.getText().toString().trim().isEmpty()) {
-            signupUser.setError("Error ingresar usuario");
+        if (signupDir.getText().toString().trim().isEmpty()) {
+            signupDir.setError("Error ingresar direccion");
             return false;
         }
         return true;
@@ -280,6 +280,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private boolean checkPassword() {
         if (signupPassword.getText().toString().trim().isEmpty()) {
             signupPassword.setError("Error ingresar password");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkDNI() {
+        if (signupDNI.length() < 8) {
+            signupDNI.setError("Error : ingresar  8 digitos");
             return false;
         }
         return true;

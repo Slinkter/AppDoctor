@@ -1,11 +1,13 @@
 package com.cudpast.app.doctor.doctorregisterapp.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -53,6 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         usernamelogin = findViewById(R.id.loginUsername);
         passwordlogin = findViewById(R.id.loginPassword);
         btnIngresar = findViewById(R.id.btnLogin);
+
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
+        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 
         btnIngresar.setOnClickListener(new View.OnClickListener() {
@@ -108,11 +113,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (usuario.equals(USER) && password.equals(PASSWORD)) {
                     Toast.makeText(LoginActivity.this, " ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
-
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("usuario", usuario);
-
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "====== * ====== \n" + "usuario o contraseña no es válido", Toast.LENGTH_SHORT).show();
                 }
@@ -136,10 +140,32 @@ public class LoginActivity extends AppCompatActivity {
 
     //Validación de formulario parte 2
     private boolean checkDNI() {
-        if (usernamelogin.length() < 8) {
+        if (usernamelogin.length() < 8  ) {
             usernamelogin.setError("Error : ingresar  8 digitos");
             return false;
         }
+
+        if (usernamelogin.getText().toString().trim().isEmpty()){
+            usernamelogin.setError("vacio");
+            return false;
+        }
+
+
+        return true;
+    }
+
+    private boolean checkPassword() {
+        if (passwordlogin.length() < 2  ) {
+            passwordlogin.setError("Error : ingresar password");
+            return false;
+        }
+
+        if (passwordlogin.getText().toString().trim().isEmpty()){
+            passwordlogin.setError("vacio");
+            return false;
+        }
+
+
         return true;
     }
 
@@ -151,6 +177,16 @@ public class LoginActivity extends AppCompatActivity {
             vib.vibrate(120);
             return false;
         }
+
+        if (!checkPassword()) {
+            usernamelogin.setAnimation(animation);
+            usernamelogin.startAnimation(animation);
+            vib.vibrate(120);
+            return false;
+        }
+
+
+
         return true;
     }
 

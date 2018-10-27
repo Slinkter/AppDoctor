@@ -55,7 +55,7 @@
                 android:inputType="none|numberSigned" />
 
             <EditText
-                android:id="@+id/signupUser"
+                android:id="@+id/signupDir"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="6"
