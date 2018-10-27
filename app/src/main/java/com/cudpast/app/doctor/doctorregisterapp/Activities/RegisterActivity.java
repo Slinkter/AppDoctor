@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
-    EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupUser, signupPassword;
+    EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupUser, signupPassword;
     Button guardar, salir;
     Animation animation;
     private Vibrator vib;
@@ -70,8 +70,10 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         signupNumPhone = findViewById(R.id.signupNumPhone);
         signupUser = findViewById(R.id.signupUser); //<--- dirección
         signupCodMePe = findViewById(R.id.signupCodMePe);
+        signupEsp = findViewById(R.id.signupEsp);
         signupDNI = findViewById(R.id.signupDNI);
         signupPassword = findViewById(R.id.signupPassword);
+
 
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,12 +84,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 String numphone = signupNumPhone.getText().toString();
                 String usuario = signupUser.getText().toString(); // <--- dirección
                 String codmedpe = signupCodMePe.getText().toString();
+                String especilidad = signupEsp.getText().toString();
                 String dni = signupDNI.getText().toString();
                 String password = signupPassword.getText().toString();
                 String correoG = getIntent().getExtras().getString("correog");
                 String fecha = getCurrentTimeStamp();
                 if (submitForm()) {
-                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, usuario, password, correoG, fecha);
+                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especilidad ,usuario, password, correoG, fecha);
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, usuario, password, correoG, fecha);
                     databaseReference.child("usuarios").child(dni).setValue(user1);
                     iniciarActivity();
@@ -130,19 +133,21 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
 
     //Insertar en la base de datos de Godaddy
-    public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe, String usuario, String password, String correoG, String fecha) {
+    public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe,String especilidad , String usuario, String password, String correoG, String fecha) {
         HashMap<String, String> hashMapRegistro = new HashMap<>();
         hashMapRegistro.put("idDNI",dni);
         hashMapRegistro.put("nombre",firstname);
         hashMapRegistro.put("apellido",lastname);
         hashMapRegistro.put("telefono",numphone);
         hashMapRegistro.put("codMedico",codmedpe);
+        hashMapRegistro.put("especilidad",especilidad);
         hashMapRegistro.put("direccion",usuario);
         hashMapRegistro.put("password",password);
         hashMapRegistro.put("correo",correoG);
         hashMapRegistro.put("fecha",fecha);
 
-        JsonObjectRequest solicitar = new JsonObjectRequest(Request.Method.POST,
+        JsonObjectRequest solicitar = new JsonObjectRequest(
+                Request.Method.POST,
                 IP_REGISTRAR,
                 new JSONObject(hashMapRegistro),
                 new Response.Listener<JSONObject>() {
