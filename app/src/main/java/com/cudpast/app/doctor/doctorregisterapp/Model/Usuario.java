@@ -13,6 +13,7 @@ public class Usuario {
     private String password;
     private String correoG;
     private String fecha;
+    private String image;
 
     public Usuario() {
 
@@ -36,12 +37,13 @@ public class Usuario {
         this.password = password;
     }
     //Firebase db_doctor_consulta
-    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad,String image) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
         this.numphone = numphone;
         this.especialidad = especialidad;
+        this.image = image;
     }
 
     public String getDni() {
@@ -122,5 +124,13 @@ public class Usuario {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -8,19 +8,19 @@
     tools:context=".Activities.LoginActivity">
 
     <LinearLayout
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
 
         <ImageView
-            android:layout_marginBottom="50dp"
             android:id="@+id/icon"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_marginBottom="50dp"
             android:contentDescription="nada"
             android:src="@drawable/ic_hospital" />
 
@@ -56,8 +56,8 @@
             android:paddingRight="16dp">
 
             <Button
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/btnLogin"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
@@ -65,8 +65,8 @@
                 android:text="Ingresar" />
 
             <Button
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/button2"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"

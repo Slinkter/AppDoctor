@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -9,12 +8,12 @@
     tools:context=".Activities.RegisterActivity">
 
     <LinearLayout
-        android:paddingTop="56dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingTop="56dp"
+        android:paddingRight="24dp">
 
         <TextView
             android:id="@+id/nameg"
@@ -26,87 +25,101 @@
             android:textSize="30dp" />
 
 
+        <EditText
+            android:id="@+id/signupName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Nombres"
+            android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/signupName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="Nombres"
-                android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/signupLast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Apellidos"
+            android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/signupLast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="Apellidos"
-                android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/signupNumPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Telefono"
+            android:inputType="none|numberSigned" />
 
-            <EditText
-                android:id="@+id/signupNumPhone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="Telefono"
-                android:inputType="none|numberSigned" />
+        <EditText
+            android:id="@+id/signupDir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:gravity="center"
+            android:hint="Dirección"
+            android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/signupDir"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="6"
-                android:gravity="center"
-                android:hint="Dirección"
-                android:inputType="textPersonName"
-                />
+        <EditText
+            android:id="@+id/signupCodMePe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:freezesText="false"
+            android:gravity="center"
+            android:hint="Codigo Medico Perú"
+            android:inputType="phone"
+            android:maxLength="6" />
 
-            <EditText
-                android:id="@+id/signupCodMePe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:freezesText="false"
-                android:gravity="center"
-                android:hint="Codigo Medico Perú"
-                android:inputType="phone"
-                android:maxLength="6" />
-
-            <EditText
-                android:id="@+id/signupEsp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="6"
-                android:gravity="center"
-                android:hint="Especilidad"
-                android:inputType="textPersonName"  />
+        <EditText
+            android:id="@+id/signupEsp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:gravity="center"
+            android:hint="Especilidad"
+            android:inputType="textPersonName" />
 
 
-            <EditText
-                android:id="@+id/signupDNI"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:hint="DNI"
-                android:maxLength="8"
-                android:inputType="none|numberSigned" />
+        <EditText
+            android:id="@+id/signupDNI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="DNI"
+            android:inputType="none|numberSigned"
+            android:maxLength="8" />
 
-            <EditText
-                android:id="@+id/signupPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:hint="Contraseña"
+        <EditText
+            android:id="@+id/signupPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Contraseña"
+            android:inputType="textPassword" />
 
-                android:inputType="textPassword" />
+        <Button
+            android:id="@+id/btn_choose_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
 
+            android:text="subir foto" />
+
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/btn_choose_image"
+            android:layout_below="@+id/botones"
+            android:layout_marginTop="16dp" />
 
         <RelativeLayout
-            android:layout_marginTop="20dp"
+            android:id="@+id/botones"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
             android:background="@color/grey_300"
             android:gravity="center_vertical">
@@ -163,8 +176,6 @@
 
 
     </LinearLayout>
-
-
 
 
 </ScrollView>

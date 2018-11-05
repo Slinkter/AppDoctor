@@ -1,17 +1,22 @@
 package com.cudpast.app.doctor.doctorregisterapp.Activities;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Vibrator;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -34,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.squareup.picasso.Picasso;
 
 public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -43,11 +49,18 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
-    EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupDir, signupPassword;
-    Button guardar, salir;
-    Animation animation;
+    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupDir, signupPassword;
+    private Button guardar, salir,uploadPhoto;
+    private Animation animation;
     private Vibrator vib;
-    DatabaseReference databaseReference;
+    private DatabaseReference databaseReference;
+    private ImageView signupImagePhoto;
+    private Uri mUriImage;
+
+
+    public static final int PICK_IMAGE_REQUEST = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +71,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
         guardar = findViewById(R.id.btnGuardar);
         salir = findViewById(R.id.btnSalir);
+        uploadPhoto = findViewById(R.id.btn_choose_image);
+
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -73,7 +88,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         signupEsp = findViewById(R.id.signupEsp);
         signupDNI = findViewById(R.id.signupDNI);
         signupPassword = findViewById(R.id.signupPassword);
+        signupImagePhoto = findViewById(R.id.image_view);
 
+
+        uploadPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
 
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,15 +113,16 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 String correoG = getIntent().getExtras().getString("correog");
                 String fecha = getCurrentTimeStamp();
 
+
                 if (submitForm()) {
                     registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     // dni,  firstname,  lastname,  numphone,  codmedpe,  especialidad,  direccion,  password,  correoG,  fecha
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     Usuario user2 = new Usuario(dni,password);
-                    Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad);
+                  //  Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad);
                     databaseReference.child("db_doctor_register").child(dni).setValue(user1);
                     databaseReference.child("db_doctor_login").child(dni).setValue(user2);
-                    databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+                 //   databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
                     iniciarActivity();
                 }
             }
@@ -235,8 +259,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     //Validación de formulario parte 2
-
-
     private boolean checkName() {
         if (signupName.getText().toString().trim().isEmpty()) {
             signupName.setError("Error ingresar nombre");
@@ -291,6 +313,30 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
             return false;
         }
         return true;
+    }
+
+
+    //Paso 1
+    private void openFileChooser(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,PICK_IMAGE_REQUEST);
+    }
+    //Paso 2
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+            mUriImage = data.getData();
+            Picasso.with(this).load(mUriImage).into(signupImagePhoto);
+        }
+    }
+    //Soporte 1 :ES PARA LA EXTESNION DEL JPG O IMAGEN
+    private String getFileExtension(Uri uri){
+        ContentResolver cR =getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
 }
