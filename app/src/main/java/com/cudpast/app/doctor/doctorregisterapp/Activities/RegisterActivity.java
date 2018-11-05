@@ -31,14 +31,22 @@ import com.cudpast.app.doctor.doctorregisterapp.Model.Usuario;
 import com.cudpast.app.doctor.doctorregisterapp.Soporte.VolleyRP;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -54,11 +62,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private Animation animation;
     private Vibrator vib;
     private DatabaseReference databaseReference;
+    private StorageReference StorageReference;
     private ImageView signupImagePhoto;
     private Uri mUriImage;
 
 
     public static final int PICK_IMAGE_REQUEST = 1;
+    private UploadTask uploadTask;
 
 
 
@@ -76,6 +86,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -102,24 +113,73 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
             @Override
             public void onClick(View view) {
 
-                String firstname = signupName.getText().toString();
-                String lastname = signupLast.getText().toString();
-                String numphone = signupNumPhone.getText().toString();
-                String direccion = signupDir.getText().toString(); // <--- dirección
-                String codmedpe = signupCodMePe.getText().toString();
-                String especialidad = signupEsp.getText().toString();
-                String dni = signupDNI.getText().toString();
-                String password = signupPassword.getText().toString();
-                String correoG = getIntent().getExtras().getString("correog");
-                String fecha = getCurrentTimeStamp();
+                final String firstname = signupName.getText().toString();
+                final String lastname = signupLast.getText().toString();
+                final String numphone = signupNumPhone.getText().toString();
+                final String direccion = signupDir.getText().toString(); // <--- dirección
+                final String codmedpe = signupCodMePe.getText().toString();
+                final String especialidad = signupEsp.getText().toString();
+                final String dni = signupDNI.getText().toString();
+                final String password = signupPassword.getText().toString();
+                final String correoG = getIntent().getExtras().getString("correog");
+                final String fecha = getCurrentTimeStamp();
+
 
 
                 if (submitForm()) {
+
+                    if (mUriImage !=null){
+                        final StorageReference fileReference = StorageReference.child(dni+ "." + getFileExtension(mUriImage));
+                        uploadTask = fileReference.putFile(mUriImage);
+
+                        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()){
+                                    throw Objects.requireNonNull(task.getException());
+                                }
+                                return fileReference.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    try {
+                                        Uri downloadUri = task.getResult();
+                                        String imageUrl = downloadUri.toString();
+                                        Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
+                                        String uploadId = dni;
+                                        // databaseReference.child(uploadId).setValue(upload);
+                                        databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+                                    }catch (Exception e){
+
+                                    }
+
+
+
+                                } else {
+                                    // Handle failures
+                                    // ...
+                                }
+                            }
+
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }
+
+
+
                     registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     // dni,  firstname,  lastname,  numphone,  codmedpe,  especialidad,  direccion,  password,  correoG,  fecha
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     Usuario user2 = new Usuario(dni,password);
-                  //  Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad);
+                   // Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
                     databaseReference.child("db_doctor_register").child(dni).setValue(user1);
                     databaseReference.child("db_doctor_login").child(dni).setValue(user2);
                  //   databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
@@ -338,5 +398,17 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
+    //
+    private String uploadFileAndGetUrlImage(String idDNI){
+        String urlimage ="";
+
+
+
+        return urlimage;
+
+    }
+
+
 
 }

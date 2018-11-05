@@ -80,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
         PASSWORD = sPassword;
 
         Toast.makeText(this, "Verificando ", Toast.LENGTH_SHORT).show();
-
         SolicutudJSON(IP + sUser);
 
     }
