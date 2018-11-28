@@ -3,7 +3,7 @@ package com.cudpast.app.doctor.doctorregisterapp.Model;
 public class Usuario {
 
 
-    private String dni ;
+    private String dni;
     private String firstname;
     private String lastname;
     private String numphone;
@@ -18,6 +18,7 @@ public class Usuario {
     public Usuario() {
 
     }
+
     //Firebase db_doctor_register
     public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
         this.dni = dni;
@@ -31,13 +32,15 @@ public class Usuario {
         this.correoG = correoG;
         this.fecha = fecha;
     }
+
     //Firebase db_doctor_login
     public Usuario(String dni, String password) {
         this.dni = dni;
         this.password = password;
     }
+
     //Firebase db_doctor_consulta
-    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad,String image) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad, String image) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;

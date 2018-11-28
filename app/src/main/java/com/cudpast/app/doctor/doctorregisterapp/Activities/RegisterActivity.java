@@ -57,8 +57,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
-    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupDir, signupPassword;
-    private Button guardar, salir,uploadPhoto;
+    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupDir, signupPassword;
+    private Button guardar, salir, uploadPhoto;
     private Animation animation;
     private Vibrator vib;
     private DatabaseReference databaseReference;
@@ -69,7 +69,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
     public static final int PICK_IMAGE_REQUEST = 1;
     private UploadTask uploadTask;
-
 
 
     @Override
@@ -125,17 +124,16 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String fecha = getCurrentTimeStamp();
 
 
-
                 if (submitForm()) {
 
-                    if (mUriImage !=null){
-                        final StorageReference fileReference = StorageReference.child(dni+ "." + getFileExtension(mUriImage));
+                    if (mUriImage != null) {
+                        final StorageReference fileReference = StorageReference.child(dni + "." + getFileExtension(mUriImage));
                         uploadTask = fileReference.putFile(mUriImage);
 
                         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()){
+                                if (!task.isSuccessful()) {
                                     throw Objects.requireNonNull(task.getException());
                                 }
                                 return fileReference.getDownloadUrl();
@@ -147,14 +145,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                     try {
                                         Uri downloadUri = task.getResult();
                                         String imageUrl = downloadUri.toString();
-                                        Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
+                                        Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
                                         String uploadId = dni;
                                         // databaseReference.child(uploadId).setValue(upload);
                                         databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
-                                    }catch (Exception e){
+                                    } catch (Exception e) {
 
                                     }
-
 
 
                                 } else {
@@ -174,15 +171,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                     }
 
 
-
-                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
+                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, correoG, fecha);
                     // dni,  firstname,  lastname,  numphone,  codmedpe,  especialidad,  direccion,  password,  correoG,  fecha
-                    Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
-                    Usuario user2 = new Usuario(dni,password);
-                   // Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
+                    Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, correoG, fecha);
+                    Usuario user2 = new Usuario(dni, password);
+                    // Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
                     databaseReference.child("db_doctor_register").child(dni).setValue(user1);
                     databaseReference.child("db_doctor_login").child(dni).setValue(user2);
-                 //   databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+                    //   databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
                     iniciarActivity();
                 }
             }
@@ -225,16 +221,16 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     //Insertar en la base de datos de Godaddy
     public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
         HashMap<String, String> hashMapRegistro = new HashMap<>();
-        hashMapRegistro.put("idDNI",dni);
-        hashMapRegistro.put("nombre",firstname);
-        hashMapRegistro.put("apellido",lastname);
-        hashMapRegistro.put("telefono",numphone);
-        hashMapRegistro.put("codMedico",codmedpe);
-        hashMapRegistro.put("especialidad",especialidad);
-        hashMapRegistro.put("direccion",direccion);
-        hashMapRegistro.put("password",password);
-        hashMapRegistro.put("correo",correoG);
-        hashMapRegistro.put("fecha",fecha);
+        hashMapRegistro.put("idDNI", dni);
+        hashMapRegistro.put("nombre", firstname);
+        hashMapRegistro.put("apellido", lastname);
+        hashMapRegistro.put("telefono", numphone);
+        hashMapRegistro.put("codMedico", codmedpe);
+        hashMapRegistro.put("especialidad", especialidad);
+        hashMapRegistro.put("direccion", direccion);
+        hashMapRegistro.put("password", password);
+        hashMapRegistro.put("correo", correoG);
+        hashMapRegistro.put("fecha", fecha);
 
         JsonObjectRequest solicitar = new JsonObjectRequest(
                 Request.Method.POST,
@@ -350,6 +346,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         }
         return true;
     }
+
     // direccion
     private boolean checkUser() {
         if (signupDir.getText().toString().trim().isEmpty()) {
@@ -377,38 +374,42 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
 
     //Paso 1
-    private void openFileChooser(){
+    private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
+
     //Paso 2
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriImage = data.getData();
-            Picasso.with(this).load(mUriImage).into(signupImagePhoto);
+            Picasso.with(this)
+                    .load(mUriImage)
+                    .resize(100, 100)
+                    .centerInside()
+                    .into(signupImagePhoto);
         }
     }
+
     //Soporte 1 :ES PARA LA EXTESNION DEL JPG O IMAGEN
-    private String getFileExtension(Uri uri){
-        ContentResolver cR =getContentResolver();
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     //
-    private String uploadFileAndGetUrlImage(String idDNI){
-        String urlimage ="";
-
+    private String uploadFileAndGetUrlImage(String idDNI) {
+        String urlimage = "";
 
 
         return urlimage;
 
     }
-
 
 
 }

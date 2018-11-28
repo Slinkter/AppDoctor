@@ -27,19 +27,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "Login";
     private static String IP = "http://www.cudpast.com/AppDoctor/Login_GETID.php?id=";
-
-    EditText usernamelogin;
-    EditText passwordlogin;
-
+    private EditText usernamelogin;
+    private EditText passwordlogin;
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-
     private Button btnIngresar;
-
     private String USER = "";
     private String PASSWORD = "";
-
-    Animation animation;
+    private Animation animation;
     private Vibrator vib;
 
     @Override
@@ -63,12 +58,9 @@ public class LoginActivity extends AppCompatActivity {
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (submitForm()) {
                     VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
                 }
-
-
             }
         });
 
@@ -78,10 +70,8 @@ public class LoginActivity extends AppCompatActivity {
     private void VerificarLogin(String sUser, String sPassword) {
         USER = sUser;
         PASSWORD = sPassword;
-
         Toast.makeText(this, "Verificando ", Toast.LENGTH_SHORT).show();
         SolicutudJSON(IP + sUser);
-
     }
 
     public void SolicutudJSON(String URL) {
@@ -102,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void verificarLoginURL(JSONObject datos) {
-
         try {
             String estado = datos.getString("resultado");
             if (estado.equals("CC")) {
@@ -135,16 +124,14 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
     //Validación de formulario parte 2
     private boolean checkDNI() {
-        if (usernamelogin.length() < 8  ) {
+        if (usernamelogin.length() < 8) {
             usernamelogin.setError("Error : ingresar  8 digitos");
             return false;
         }
 
-        if (usernamelogin.getText().toString().trim().isEmpty()){
+        if (usernamelogin.getText().toString().trim().isEmpty()) {
             usernamelogin.setError("vacio");
             return false;
         }
@@ -154,20 +141,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean checkPassword() {
-        if (passwordlogin.length() < 2  ) {
+        if (passwordlogin.length() < 2) {
             passwordlogin.setError("Error : ingresar password");
             return false;
         }
 
-        if (passwordlogin.getText().toString().trim().isEmpty()){
+        if (passwordlogin.getText().toString().trim().isEmpty()) {
             passwordlogin.setError("vacio");
             return false;
         }
-
-
         return true;
     }
-
 
     private boolean submitForm() {
         if (!checkDNI()) {
@@ -183,7 +167,6 @@ public class LoginActivity extends AppCompatActivity {
             vib.vibrate(120);
             return false;
         }
-
 
 
         return true;
