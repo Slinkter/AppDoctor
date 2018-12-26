@@ -128,7 +128,6 @@
                 android:id="@+id/passwordlessButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">

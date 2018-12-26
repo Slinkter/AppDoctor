@@ -22,11 +22,7 @@ public class VerificacionActivity extends AppCompatActivity implements GoogleApi
 
     public static final int codigo = 777;
     public static final String TAG = "ERROR";
-
     public String correog = "";
-
-
-
 
 
     @Override
@@ -63,7 +59,7 @@ public class VerificacionActivity extends AppCompatActivity implements GoogleApi
         if (requestCode == codigo) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
-          //  Log.d(TAG, "handleSignInResult:" + result.getStatus().toString());
+            //  Log.d(TAG, "handleSignInResult:" + result.getStatus().toString());
             handleSignInResult(result);
         }
     }
