@@ -139,12 +139,12 @@ public class LoginActivity extends AppCompatActivity {
 
     //Validación de formulario parte 2
     private boolean checkDNI() {
-        if (usernamelogin.length() < 8  ) {
+        if (usernamelogin.length() < 8) {
             usernamelogin.setError("Error : ingresar  8 digitos");
             return false;
         }
 
-        if (usernamelogin.getText().toString().trim().isEmpty()){
+        if (usernamelogin.getText().toString().trim().isEmpty()) {
             usernamelogin.setError("vacio");
             return false;
         }
@@ -154,12 +154,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean checkPassword() {
-        if (passwordlogin.length() < 2  ) {
+        if (passwordlogin.length() < 2) {
             passwordlogin.setError("Error : ingresar password");
             return false;
         }
 
-        if (passwordlogin.getText().toString().trim().isEmpty()){
+        if (passwordlogin.getText().toString().trim().isEmpty()) {
             passwordlogin.setError("vacio");
             return false;
         }
@@ -183,7 +183,6 @@ public class LoginActivity extends AppCompatActivity {
             vib.vibrate(120);
             return false;
         }
-
 
 
         return true;

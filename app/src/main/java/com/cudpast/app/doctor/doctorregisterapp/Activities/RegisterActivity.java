@@ -49,6 +49,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import dmax.dialog.SpotsDialog;
+
 public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     GoogleApiClient googleApiClient;
@@ -124,14 +126,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String correoG = getIntent().getExtras().getString("correog");
                 final String fecha = getCurrentTimeStamp();
 
-
+                final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
+                waitingDialog.show();
 
                 if (submitForm()) {
 
                     if (mUriImage !=null){
                         final StorageReference fileReference = StorageReference.child(dni+ "." + getFileExtension(mUriImage));
                         uploadTask = fileReference.putFile(mUriImage);
-
                         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -152,10 +154,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         // databaseReference.child(uploadId).setValue(upload);
                                         databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
                                     }catch (Exception e){
-
+                                        e.printStackTrace();
                                     }
-
-
 
                                 } else {
                                     // Handle failures
@@ -173,8 +173,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
                     }
 
-
-
                     registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     // dni,  firstname,  lastname,  numphone,  codmedpe,  especialidad,  direccion,  password,  correoG,  fecha
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
@@ -183,6 +181,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                     databaseReference.child("db_doctor_register").child(dni).setValue(user1);
                     databaseReference.child("db_doctor_login").child(dni).setValue(user2);
                  //   databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+                    waitingDialog.dismiss();//cerra waitingDialog
                     iniciarActivity();
                 }
             }
@@ -236,6 +235,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         hashMapRegistro.put("correo",correoG);
         hashMapRegistro.put("fecha",fecha);
 
+
+
         JsonObjectRequest solicitar = new JsonObjectRequest(
                 Request.Method.POST,
                 IP_REGISTRAR,
@@ -243,11 +244,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject datos) {
+
                         try {
                             String estado = datos.getString("resultado");
                             if (estado.equalsIgnoreCase("Datos registrados  :) ")) {
+
                                 Toast.makeText(RegisterActivity.this, estado, Toast.LENGTH_SHORT).show();
                             } else {
+
                                 Toast.makeText(RegisterActivity.this, estado, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
@@ -258,6 +262,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
                 Toast.makeText(RegisterActivity.this, "no se pudo registrar", Toast.LENGTH_SHORT).show();
             }
         });
