@@ -61,30 +61,20 @@ public class LoginActivity extends AppCompatActivity {
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (submitForm()) {
-
                     VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
                 }
-
-
             }
         });
-
-
     }
 
     private void VerificarLogin(String sUser, String sPassword) {
         USER = sUser;
         PASSWORD = sPassword;
-
-
         SolicutudJSON(IP + sUser);
-
     }
 
     public void SolicutudJSON(String URL) {
@@ -102,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(LoginActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -118,14 +107,13 @@ public class LoginActivity extends AppCompatActivity {
                 String usuario = jsondatos.getString("dniusuario");
                 String password = jsondatos.getString("password");
                 if (usuario.equals(USER) && password.equals(PASSWORD)) {
-                    Toast.makeText(LoginActivity.this, " ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, VerificacionLoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "====== * ====== \n" + "usuario o contraseña no es válido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Usuario o contraseña no es válido", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(LoginActivity.this, estado, Toast.LENGTH_LONG).show();
@@ -136,8 +124,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-
-
 
     //Validación de formulario parte 2
     private boolean checkDNI() {
@@ -188,7 +174,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return true;
     }
-
 
     // Funcional 100%
     public void signup(View view) {

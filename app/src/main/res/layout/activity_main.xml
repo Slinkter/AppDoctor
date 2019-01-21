@@ -7,6 +7,15 @@
     android:orientation="vertical"
     tools:context=".Activities.MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Bienvenido"
+        android:textSize="44sp"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -17,16 +26,16 @@
 
         <ImageView
             android:id="@+id/idFotoUsuario"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="8dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_margin="6dp"
             android:background="@color/colorAccent" />
 
         <TextView
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:text="Usuario"
             android:textSize="24sp" />
 
         <TextView
@@ -34,14 +43,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hello World!"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/idTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hello World!"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="Atender"
+            android:text="Iniciar" />
+
 
     </LinearLayout>
 
@@ -57,7 +76,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="Cerra_sesion"
-        android:text="Cerra Cuenta" />
+        android:text="Cerra Cuenta"
+        android:visibility="gone" />
 
 
 </LinearLayout>

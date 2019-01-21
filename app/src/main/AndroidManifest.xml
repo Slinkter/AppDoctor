@@ -12,9 +12,13 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.VerificacionLoginActivity"></activity>
-        <activity android:name=".Activities.RegisterActivity"></activity>
-        <activity android:name=".Activities.VerificacionRegistroActivity"></activity>
+        <activity
+            android:name=".Business.DoctorHome"
+            android:label="@string/title_activity_doctor_home"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activities.VerificacionLoginActivity" />
+        <activity android:name=".Activities.RegisterActivity" />
+        <activity android:name=".Activities.VerificacionRegistroActivity" />
         <activity android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

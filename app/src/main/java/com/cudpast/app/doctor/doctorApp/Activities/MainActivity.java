@@ -23,7 +23,7 @@ import com.google.android.gms.common.api.Status;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    TextView intentUser;
+
     private ImageView photoImageView;
     private TextView nameTextView;
     private TextView emailTextView;
@@ -34,12 +34,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        getSupportActionBar().hide();
         photoImageView = findViewById(R.id.idFotoUsuario);
         nameTextView = findViewById(R.id.nameTextView);
         emailTextView = findViewById(R.id.emailTextView);
         idTextView = findViewById(R.id.idTextView);
-
 
         //Login silencioso
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -122,5 +121,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    public void Atender(View view) {
     }
 }

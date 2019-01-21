@@ -74,7 +74,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
-
         getSupportActionBar().hide();
 
         guardar = findViewById(R.id.btnGuardar);
