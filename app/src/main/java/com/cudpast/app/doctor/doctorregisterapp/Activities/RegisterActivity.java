@@ -174,14 +174,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                     }
 
                     registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
-                    // dni,  firstname,  lastname,  numphone,  codmedpe,  especialidad,  direccion,  password,  correoG,  fecha
+
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     Usuario user2 = new Usuario(dni,password);
                    // Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
                     databaseReference.child("db_doctor_register").child(dni).setValue(user1);
                     databaseReference.child("db_doctor_login").child(dni).setValue(user2);
-                 //   databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
-                    waitingDialog.dismiss();//cerra waitingDialog
+                   // databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+                    //cerra waitingDialog
+                    waitingDialog.dismiss();
                     iniciarActivity();
                 }
             }
@@ -223,6 +224,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
     //Insertar en la base de datos de Godaddy
     public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
+
         HashMap<String, String> hashMapRegistro = new HashMap<>();
         hashMapRegistro.put("idDNI",dni);
         hashMapRegistro.put("nombre",firstname);
@@ -235,8 +237,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         hashMapRegistro.put("correo",correoG);
         hashMapRegistro.put("fecha",fecha);
 
-
-
         JsonObjectRequest solicitar = new JsonObjectRequest(
                 Request.Method.POST,
                 IP_REGISTRAR,
@@ -244,19 +244,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject datos) {
-
                         try {
                             String estado = datos.getString("resultado");
                             if (estado.equalsIgnoreCase("Datos registrados  :) ")) {
-
                                 Toast.makeText(RegisterActivity.this, estado, Toast.LENGTH_SHORT).show();
                             } else {
-
                                 Toast.makeText(RegisterActivity.this, estado, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(RegisterActivity.this, "no se pudo registrar", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
