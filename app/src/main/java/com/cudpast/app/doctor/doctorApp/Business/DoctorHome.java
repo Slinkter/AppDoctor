@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cudpast.app.doctor.doctorApp.R;
+
 public class DoctorHome extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 

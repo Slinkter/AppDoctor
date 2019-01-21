@@ -124,5 +124,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void Atender(View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
