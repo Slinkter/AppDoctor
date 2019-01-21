@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "729041200286",
+    "firebase_url": "https://projectomedicalapp.firebaseio.com",
+    "project_id": "projectomedicalapp",
+    "storage_bucket": "projectomedicalapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729041200286:android:2ec0b939d847847f",
+        "android_client_info": {
+          "package_name": "com.cudpast.app.doctor.doctorApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "729041200286-dao908pi71iu6373mg4kauhd95nfgbna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cudpast.app.doctor.doctorApp",
+            "certificate_hash": "37c864ee8bd40acdd61fa30a6f2728c805376a88"
+          }
+        },
+        {
+          "client_id": "729041200286-nr5725pur0sep3epn7tf03qo9f26e3os.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZP7LdiljnP2jvfDk5y1gL2KmJ9eqJmaI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "729041200286-nr5725pur0sep3epn7tf03qo9f26e3os.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

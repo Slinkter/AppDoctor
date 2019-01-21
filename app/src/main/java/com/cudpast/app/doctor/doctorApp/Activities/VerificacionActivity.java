@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp.Activities;
+package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.cudpast.app.doctor.doctorregisterapp.R;
+import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;

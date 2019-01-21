@@ -1,11 +1,10 @@
-package com.cudpast.app.doctor.doctorregisterapp.Activities;
+package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.cudpast.app.doctor.doctorregisterapp.R;
+import com.cudpast.app.doctor.doctorApp.R;
 
 public class MainActivity extends AppCompatActivity {
 

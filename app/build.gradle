@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.cudpast.app.doctor.doctorregisterapp"
+        applicationId "com.cudpast.app.doctor.doctorApp"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1

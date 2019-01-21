@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp.Model;
+package com.cudpast.app.doctor.doctorApp.Model;
 
 public class Usuario {
 

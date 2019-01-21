@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp.Activities;
+package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.cudpast.app.doctor.doctorregisterapp.R;
-import com.cudpast.app.doctor.doctorregisterapp.Soporte.VolleyRP;
+import com.cudpast.app.doctor.doctorApp.R;
+import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
 
 import org.json.JSONException;
 import org.json.JSONObject;

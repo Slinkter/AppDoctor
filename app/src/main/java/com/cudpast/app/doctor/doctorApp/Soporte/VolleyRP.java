@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp.Soporte;
+package com.cudpast.app.doctor.doctorApp.Soporte;
 
 
 import android.content.Context;

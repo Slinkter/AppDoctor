@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp.Activities;
+package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -26,9 +26,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.cudpast.app.doctor.doctorregisterapp.R;
-import com.cudpast.app.doctor.doctorregisterapp.Model.Usuario;
-import com.cudpast.app.doctor.doctorregisterapp.Soporte.VolleyRP;
+import com.cudpast.app.doctor.doctorApp.R;
+import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Continuation;
@@ -126,10 +126,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String correoG = getIntent().getExtras().getString("correog");
                 final String fecha = getCurrentTimeStamp();
 
-                final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
-                waitingDialog.show();
-
                 if (submitForm()) {
+                    final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
+                    waitingDialog.show();
 
                     if (mUriImage !=null){
                         final StorageReference fileReference = StorageReference.child(dni+ "." + getFileExtension(mUriImage));

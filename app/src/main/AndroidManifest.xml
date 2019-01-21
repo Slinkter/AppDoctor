@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cudpast.app.doctor.doctorregisterapp">
+    package="com.cudpast.app.doctor.doctorApp">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -12,20 +12,20 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.RegisterActivity">
+        <activity android:name="com.cudpast.app.doctor.doctorApp.Activities.RegisterActivity">
 
         </activity>
-        <activity android:name=".Activities.VerificacionActivity">
+        <activity android:name="com.cudpast.app.doctor.doctorApp.Activities.VerificacionActivity">
 
         </activity>
-        <activity android:name=".Activities.SplashActivity" >
+        <activity android:name="com.cudpast.app.doctor.doctorApp.Activities.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.LoginActivity" >
+        <activity android:name="com.cudpast.app.doctor.doctorApp.Activities.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +33,7 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name="com.cudpast.app.doctor.doctorApp.Activities.MainActivity">
 
         </activity>
     </application>

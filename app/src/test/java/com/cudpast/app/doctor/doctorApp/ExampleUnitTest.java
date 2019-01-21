@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorregisterapp;
+package com.cudpast.app.doctor.doctorApp;
 
 import org.junit.Test;
 
