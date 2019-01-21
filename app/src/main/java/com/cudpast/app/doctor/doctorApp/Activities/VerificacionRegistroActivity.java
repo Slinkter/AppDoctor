@@ -16,7 +16,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-public class VerificacionActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class VerificacionRegistroActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     GoogleApiClient googleApiClient;
     SignInButton signInButton;
 

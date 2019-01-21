@@ -67,8 +67,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private StorageReference StorageReference;
     private ImageView signupImagePhoto;
     private Uri mUriImage;
-
-
     public static final int PICK_IMAGE_REQUEST = 1;
     private UploadTask uploadTask;
 

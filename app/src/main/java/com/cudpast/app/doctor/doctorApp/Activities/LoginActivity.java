@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = jsondatos.getString("password");
                 if (usuario.equals(USER) && password.equals(PASSWORD)) {
                     Toast.makeText(LoginActivity.this, " ====== * ====== \n" + "Bienvenido : " + usuario + "\n", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, MainActivity.class);
+                    Intent intent = new Intent(this, VerificacionLoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("usuario", usuario);
                     startActivity(intent);
@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Funcional 100%
     public void signup(View view) {
-        Intent intent = new Intent(this, VerificacionActivity.class);
+        Intent intent = new Intent(this, VerificacionRegistroActivity.class);
         startActivity(intent);
         finish();
     }

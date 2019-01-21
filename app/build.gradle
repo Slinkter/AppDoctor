@@ -40,6 +40,9 @@ dependencies {
 
     // carga un efecto de carga
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
+    //Descargar imagenes
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
 }
 
