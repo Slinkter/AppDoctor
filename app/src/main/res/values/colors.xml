@@ -7,4 +7,27 @@
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
+
+
+
+
+    <color name="bottomText">#FF4081</color>
+
+    <color name="rippleEffectColor">#f816a463 </color>
+    <color name="btnSignIN">#1fbad6</color>
+    <color name="btnRegister">#83838c</color>
+
+
+    <color name="baseReleaseColor">#212121</color>
+    <color name="basePressColor">#1fbad6</color>
+    <color name="ballReleaseColor">#9E9E9E</color>
+    <color name="ballPressColor">#f816a463</color>
+
+
+    <color name="bluelight">#49acd5</color>
+    <color name="green">#45bc62</color>
+    <color name="orange">#eaad43</color>
+    <color name="white">#fff</color>
+
+
 </resources>

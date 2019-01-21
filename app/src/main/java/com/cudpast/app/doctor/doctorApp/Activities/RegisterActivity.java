@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -70,6 +71,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public static final int PICK_IMAGE_REQUEST = 1;
     private UploadTask uploadTask;
 
+    private FirebaseAuth auth;
+    private FirebaseDatabase db;
+    private DatabaseReference users;//para registro
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +95,11 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+
+        //Firebase init
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
 
 
         signupName = findViewById(R.id.signupName);
@@ -120,15 +134,17 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String password = signupPassword.getText().toString();
                 final String correoG = getIntent().getExtras().getString("correog");
                 final String fecha = getCurrentTimeStamp();
-
+                // Validar Formulario
                 if (submitForm()) {
-
+                    // Dialog
                     final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
                     waitingDialog.show();
-
+                    // Validar foto
                     if (mUriImage !=null){
+                        //Firebase Storage
                         final StorageReference fileReference = StorageReference.child(dni+ "." + getFileExtension(mUriImage));
                         uploadTask = fileReference.putFile(mUriImage);
+
                         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -172,10 +188,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
                     Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
                     Usuario user2 = new Usuario(dni,password);
-                   // Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
+
                     databaseReference.child("db_doctor_register").child(dni).setValue(user1);
                     databaseReference.child("db_doctor_login").child(dni).setValue(user2);
-                   // databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+
+
+                    //  Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
+                    //databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
                     //cerra waitingDialog
                     waitingDialog.dismiss();
                     iniciarActivity();
