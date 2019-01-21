@@ -22,6 +22,8 @@ import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import dmax.dialog.SpotsDialog;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -65,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (submitForm()) {
+
                     VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
                 }
 
@@ -79,15 +82,20 @@ public class LoginActivity extends AppCompatActivity {
         USER = sUser;
         PASSWORD = sPassword;
 
-        Toast.makeText(this, "Verificando ", Toast.LENGTH_SHORT).show();
+
         SolicutudJSON(IP + sUser);
 
     }
 
     public void SolicutudJSON(String URL) {
+
+        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.VericacionLogin);
+        waitingDialog.show();
+
         JsonObjectRequest solicitud = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject datos) {
+                waitingDialog.dismiss();
                 verificarLoginURL(datos);
             }
         }, new Response.ErrorListener() {
@@ -129,12 +137,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    // Funcional 100%
-    public void signup(View view) {
-        Intent intent = new Intent(this, VerificacionRegistroActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
 
     //Validación de formulario parte 2
@@ -168,7 +170,6 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-
     private boolean submitForm() {
         if (!checkDNI()) {
             usernamelogin.setAnimation(animation);
@@ -186,6 +187,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
         return true;
+    }
+
+
+    // Funcional 100%
+    public void signup(View view) {
+        Intent intent = new Intent(this, VerificacionRegistroActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

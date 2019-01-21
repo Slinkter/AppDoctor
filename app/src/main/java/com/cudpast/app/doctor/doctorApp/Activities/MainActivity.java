@@ -50,15 +50,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-
-//        intentUser = findViewById(R.id.intentUser);
-//        String usuario = getIntent().getExtras().getString("usuario");
-//
-//        intentUser.setText(usuario);
     }
 
-    // salir de aplicacion
+    //SALIR
     public void Salir(View view) {
         Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -72,8 +66,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
 
     }
-    //cerra session
-
+    //CERRA
     public void Cerra_sesion(View view) {
         Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
@@ -86,28 +79,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         });
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-        if (opr.isDone()) {
-            GoogleSignInResult result = opr.get();
-            //metodo auxiliar para acceder a los datos del usuario
-            metodoSignInResult(result);
-
-        } else {
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    metodoSignInResult(googleSignInResult);
-                }
-            });
-        }
-
-
-    }
-
+    //Metodo Silencio
     private void metodoSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount account = result.getSignInAccount();
@@ -122,13 +94,30 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             goLogIngScreen();
         }
     }
-
+    //Ir a  LoginACTIVITY
     private void goLogIngScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+    //verificar si esta en session
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
+        if (opr.isDone()) {
+            GoogleSignInResult result = opr.get();
+            metodoSignInResult(result);
+        } else {
+            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+                    metodoSignInResult(googleSignInResult);
+                }
+            });
+        }
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

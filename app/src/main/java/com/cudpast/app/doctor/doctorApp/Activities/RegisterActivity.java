@@ -70,8 +70,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public static final int PICK_IMAGE_REQUEST = 1;
     private UploadTask uploadTask;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +123,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String fecha = getCurrentTimeStamp();
 
                 if (submitForm()) {
+
                     final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
                     waitingDialog.show();
 
