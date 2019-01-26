@@ -2,24 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+<<<<<<< HEAD
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
 
 
+=======
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true"
+>>>>>>> prueba001
     tools:context=".Activities.LoginActivity">
 
     <LinearLayout
 
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="match_parent"
 
         android:gravity="center"
+=======
+        android:layout_height="wrap_content"
+>>>>>>> prueba001
         android:orientation="vertical"
         android:paddingLeft="20dp"
+        android:paddingTop="50dp"
         android:paddingRight="20dp">
 
 
+<<<<<<< HEAD
         <ImageView
             android:layout_marginTop="40dp"
             android:id="@+id/icon"
@@ -53,32 +65,90 @@
             android:inputType="textPassword" />
 
 
+=======
+>>>>>>> prueba001
         <LinearLayout
+            android:id="@+id/formlogin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnLogin"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="50dp"
+                android:contentDescription="nada"
+                android:src="@drawable/ic_hospital" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/loginUsername"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_weight="1"
-                android:text="Ingresar" />
+                android:layout_marginTop="0dp"
+                android:ems="8"
+                android:gravity="center"
+                android:hint="DNI"
+                android:inputType="none|numberSigned"
+                android:maxLength="8"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:textSize="20dp"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                app:met_singleLineEllipsis="false" />
 
-            <Button
-                android:id="@+id/button2"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="0dp"
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/loginPassword"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_weight="1"
-                android:onClick="signup"
-                android:text="Registrarse" />
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="CONTRASEÑA"
+                android:inputType="textPassword"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:textSize="20dp"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                app:met_singleLineEllipsis="false" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/formlogin"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="100dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnLogin"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:layout_weight="1"
+                    android:text="Ingresar" />
+
+                <Button
+                    android:id="@+id/button2"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:layout_weight="1"
+                    android:onClick="signup"
+                    android:text="Registrarse" />
+
+
+            </LinearLayout>
 
         </LinearLayout>
 

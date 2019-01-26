@@ -21,47 +21,86 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Registro"
-            android:textSize="30dp" />
+            android:textColor="@color/colorPrimary"
+            android:text="REGISTRO"
+            android:textStyle="bold"
+            android:textSize="40sp" />
 
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:hint="Nombres"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false"
 
-        <EditText
+            />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupLast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:hint="Apellidos"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false"
 
-        <EditText
+            />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupNumPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:hint="Telefono"
-            android:inputType="none|numberSigned" />
+            android:inputType="phone"
+            android:maxLength="9"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupDir"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="6"
             android:gravity="center"
             android:hint="Dirección"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupCodMePe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,50 +108,86 @@
             android:gravity="center"
             android:hint="Codigo Medico Perú"
             android:inputType="phone"
-            android:maxLength="6" />
+            android:maxLength="6"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupEsp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="6"
             android:gravity="center"
             android:hint="Especilidad"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupDNI"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="DNI"
             android:inputType="none|numberSigned"
-            android:maxLength="8" />
+            android:maxLength="8"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
-        <EditText
+        <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="Contraseña"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
         <Button
             android:id="@+id/btn_choose_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-
             android:text="subir foto" />
 
 
         <ImageView
             android:id="@+id/image_view"
+<<<<<<< HEAD
             android:layout_width="match_parent"
+=======
+            android:layout_width="100dp"
+>>>>>>> prueba001
             android:layout_height="100dp"
             android:layout_above="@+id/btn_choose_image"
             android:layout_below="@+id/botones"
+            android:layout_gravity="center"
             android:layout_marginTop="16dp" />
 
         <RelativeLayout
@@ -121,14 +196,12 @@
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:background="@color/grey_300"
             android:gravity="center_vertical">
 
             <LinearLayout
                 android:id="@+id/passwordlessButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
@@ -174,6 +247,10 @@
 
         </RelativeLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp" />
 
     </LinearLayout>
 

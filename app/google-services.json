@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "399352777185",
-    "firebase_url": "https://projectmedical001.firebaseio.com",
-    "project_id": "projectmedical001",
-    "storage_bucket": "projectmedical001.appspot.com"
+    "project_number": "729041200286",
+    "firebase_url": "https://projectomedicalapp.firebaseio.com",
+    "project_id": "projectomedicalapp",
+    "storage_bucket": "projectomedicalapp.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:399352777185:android:9429b3bac940dec2",
+        "mobilesdk_app_id": "1:729041200286:android:2ec0b939d847847f",
         "android_client_info": {
-          "package_name": "com.cudpast.app.doctor.doctorregisterapp"
+          "package_name": "com.cudpast.app.doctor.doctorApp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "399352777185-06v5ngngt0846q04feri3edbuqc16p90.apps.googleusercontent.com",
+          "client_id": "729041200286-dao908pi71iu6373mg4kauhd95nfgbna.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.cudpast.app.doctor.doctorregisterapp",
-            "certificate_hash": "2785ead60c542ed62e73b23a4ce638d796eee0a3"
+            "package_name": "com.cudpast.app.doctor.doctorApp",
+            "certificate_hash": "37c864ee8bd40acdd61fa30a6f2728c805376a88"
           }
         },
         {
-          "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
+          "client_id": "729041200286-nr5725pur0sep3epn7tf03qo9f26e3os.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDZzbqQqclMRU9MU51-hGPtUcgKv1mVlDw"
+          "current_key": "AIzaSyAZP7LdiljnP2jvfDk5y1gL2KmJ9eqJmaI"
         }
       ],
       "services": {
@@ -40,139 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:399352777185:android:2230cfec8b884be4",
-        "android_client_info": {
-          "package_name": "com.cudpast.app.doctor.mydbfirebase"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "399352777185-9vv2qbe11ju2eg0b29tfc6ip6lra3g37.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cudpast.app.doctor.mydbfirebase",
-            "certificate_hash": "2785ead60c542ed62e73b23a4ce638d796eee0a3"
-          }
-        },
-        {
-          "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDZzbqQqclMRU9MU51-hGPtUcgKv1mVlDw"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:399352777185:android:e4acebd7b04be11b",
-        "android_client_info": {
-          "package_name": "com.cudpast.app.medical.projectmedical001"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "399352777185-o6qe9jg7pfne560s81naoa5g0ojkmh50.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.cudpast.app.medical.projectmedical001",
-            "certificate_hash": "2785ead60c542ed62e73b23a4ce638d796eee0a3"
-          }
-        },
-        {
-          "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDZzbqQqclMRU9MU51-hGPtUcgKv1mVlDw"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:399352777185:android:0b77772edd6b4e37",
-        "android_client_info": {
-          "package_name": "com.example.empleado.mychat"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "399352777185-hsab0irbb8ghb8f6vbsqrkhgungogbeg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.empleado.mychat",
-            "certificate_hash": "b1235b90cb7bbf9460b817b5e5ef4252a7607a7c"
-          }
-        },
-        {
-          "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDZzbqQqclMRU9MU51-hGPtUcgKv1mVlDw"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "399352777185-3vivf5u7dpoj6cahuvs87v9rs47op4o0.apps.googleusercontent.com",
+              "client_id": "729041200286-nr5725pur0sep3epn7tf03qo9f26e3os.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
