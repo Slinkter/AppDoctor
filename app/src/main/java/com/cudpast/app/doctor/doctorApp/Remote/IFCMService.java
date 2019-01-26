@@ -12,7 +12,7 @@ public interface IFCMService {
 
     @Headers({
             "Content-Type:application/json",
-            "Authorization:key=AAAAXPtHyeE:APA91bF4hnrk3mNyNRxQ1uw7z9khEPGvEbQvVQugq2djQ9rKjUrmkF_g8TxnOvvUmtVU1N_J22cCzEckjkW6sIj30_GtaSN6RJ7AfHnsAbSwPd59pXP1GZOerTAwhM7doV1FNzkaZe7N"
+            "Authorization:key=AAAAqb495J4:APA91bG4syzoU6QuWt5GvyIu3FUoPS9UPMNYWmeFZUutzYQZ1rPtou54UOTwxd-eumWuqdaCAoNJ1MOQJ6FXGZQnOW66KbH1YvsfGWZlyUjHvZdeH8iP6arioetA1VCCycVDDJiaSkge"
     })
 
     @POST("fcm/send")

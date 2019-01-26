@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,6 +18,8 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -26,6 +29,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Model.User;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
@@ -34,8 +39,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -45,6 +54,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -54,29 +64,25 @@ import dmax.dialog.SpotsDialog;
 
 public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    GoogleApiClient googleApiClient;
 
     private static final String IP_REGISTRAR = "http://www.cudpast.com/AppDoctor/Registro_INSERT.php";
+    public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-
-    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe,signupEsp, signupDir, signupPassword;
-    private Button guardar, salir,uploadPhoto;
+    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupDir, signupPassword;
+    private Button guardar, salir, uploadPhoto;
     private Animation animation;
     private Vibrator vib;
-    private DatabaseReference databaseReference;
-    private StorageReference StorageReference;
     private ImageView signupImagePhoto;
     private Uri mUriImage;
-    public static final int PICK_IMAGE_REQUEST = 1;
     private UploadTask uploadTask;
 
+
+    private DatabaseReference databaseReference;
+    private DatabaseReference tb_Info_Doctor;
+    private StorageReference StorageReference;
+
     private FirebaseAuth auth;
-    private FirebaseDatabase db;
-    private DatabaseReference users;//para registro
-
-
-
 
 
     @Override
@@ -99,8 +105,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
         //Firebase init
         auth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance();
-
+        tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.tb_Info_Doctor);
 
         signupName = findViewById(R.id.signupName);
         signupLast = findViewById(R.id.signupLast);
@@ -130,25 +135,27 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String direccion = signupDir.getText().toString(); // <--- dirección
                 final String codmedpe = signupCodMePe.getText().toString();
                 final String especialidad = signupEsp.getText().toString();
-                final String dni = signupDNI.getText().toString();
+                final String dni = signupDNI.getText().toString();// <-- 123456789@doctor.com
                 final String password = signupPassword.getText().toString();
                 final String correoG = getIntent().getExtras().getString("correog");
                 final String fecha = getCurrentTimeStamp();
+
                 // Validar Formulario
-                if (submitForm()) {
-                    // Dialog
+                //if (submitForm()) {
+
+                if (true) {
                     final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
                     waitingDialog.show();
                     // Validar foto
-                    if (mUriImage !=null){
-                        //Firebase Storage
-                        final StorageReference fileReference = StorageReference.child(dni+ "." + getFileExtension(mUriImage));
+                    if (mUriImage != null) {
+
+                        final StorageReference fileReference = StorageReference.child(dni + "." + getFileExtension(mUriImage));
                         uploadTask = fileReference.putFile(mUriImage);
 
                         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()){
+                                if (!task.isSuccessful()) {
                                     throw Objects.requireNonNull(task.getException());
                                 }
                                 return fileReference.getDownloadUrl();
@@ -160,42 +167,71 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                     try {
                                         Uri downloadUri = task.getResult();
                                         String imageUrl = downloadUri.toString();
-                                        Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
-                                        String uploadId = dni;
-                                        // databaseReference.child(uploadId).setValue(upload);
+
+                                        //Base de datos : Archivo Php
+                                        registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, correoG, fecha);
+                                        //Base de datos : Firebase
+                                        final Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, correoG, fecha);
+                                        Usuario user2 = new Usuario(dni, password);
+                                        Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
+
+                                        databaseReference.child("db_doctor_register").child(dni).setValue(user1);
+                                        databaseReference.child("db_doctor_login").child(dni).setValue(user2);
                                         databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
-                                    }catch (Exception e){
+
+                                        //Crear correo en firebase
+                                        auth.createUserWithEmailAndPassword(dni + "@doctor.com", password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                            @Override
+                                            public void onSuccess(AuthResult authResult) {
+
+
+                                                tb_Info_Doctor.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                        .setValue(user1)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                waitingDialog.dismiss();
+                                                                Toast.makeText(RegisterActivity.this, "Usuarios Registrador", Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        waitingDialog.dismiss();
+                                                        Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
+
+                                                    }
+                                                });
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                waitingDialog.dismiss();
+                                                Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+
+                                    } catch (Exception e) {
                                         e.printStackTrace();
+                                        Log.e("error" , "" +e);
                                     }
 
                                 } else {
-                                    // Handle failures
-                                    // ...
+
                                 }
                             }
 
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
 
-
                     }
 
-                    registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
-
-                    Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe,especialidad ,direccion, password, correoG, fecha);
-                    Usuario user2 = new Usuario(dni,password);
-
-                    databaseReference.child("db_doctor_register").child(dni).setValue(user1);
-                    databaseReference.child("db_doctor_login").child(dni).setValue(user2);
-
-
-                    //  Usuario user3 = new Usuario(dni,firstname,lastname,numphone,especialidad,imageUrl);
-                    //databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
-                    //cerra waitingDialog
                     waitingDialog.dismiss();
                     iniciarActivity();
                 }
@@ -240,16 +276,16 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public void registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
 
         HashMap<String, String> hashMapRegistro = new HashMap<>();
-        hashMapRegistro.put("idDNI",dni);
-        hashMapRegistro.put("nombre",firstname);
-        hashMapRegistro.put("apellido",lastname);
-        hashMapRegistro.put("telefono",numphone);
-        hashMapRegistro.put("codMedico",codmedpe);
-        hashMapRegistro.put("especialidad",especialidad);
-        hashMapRegistro.put("direccion",direccion);
-        hashMapRegistro.put("password",password);
-        hashMapRegistro.put("correo",correoG);
-        hashMapRegistro.put("fecha",fecha);
+        hashMapRegistro.put("idDNI", dni);
+        hashMapRegistro.put("nombre", firstname);
+        hashMapRegistro.put("apellido", lastname);
+        hashMapRegistro.put("telefono", numphone);
+        hashMapRegistro.put("codMedico", codmedpe);
+        hashMapRegistro.put("especialidad", especialidad);
+        hashMapRegistro.put("direccion", direccion);
+        hashMapRegistro.put("password", password);
+        hashMapRegistro.put("correo", correoG);
+        hashMapRegistro.put("fecha", fecha);
 
         JsonObjectRequest solicitar = new JsonObjectRequest(
                 Request.Method.POST,
@@ -365,6 +401,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         }
         return true;
     }
+
     // direccion
     private boolean checkUser() {
         if (signupDir.getText().toString().trim().isEmpty()) {
@@ -392,38 +429,38 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
 
     //Paso 1
-    private void openFileChooser(){
+    private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent,PICK_IMAGE_REQUEST);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
+
     //Paso 2
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriImage = data.getData();
             Picasso.with(this).load(mUriImage).into(signupImagePhoto);
         }
     }
+
     //Soporte 1 :ES PARA LA EXTESNION DEL JPG O IMAGEN
-    private String getFileExtension(Uri uri){
-        ContentResolver cR =getContentResolver();
+    private String getFileExtension(Uri uri) {
+        ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     //
-    private String uploadFileAndGetUrlImage(String idDNI){
-        String urlimage ="";
-
+    private String uploadFileAndGetUrlImage(String idDNI) {
+        String urlimage = "";
 
 
         return urlimage;
 
     }
-
 
 
 }

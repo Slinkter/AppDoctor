@@ -32,7 +32,7 @@
 
     <style name="CustomSDialog" parent="android:Theme.DeviceDefault.Dialog">
         <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogTitleText">Registrando…</item>
+        <item name="DialogTitleText">Registrando</item>
         <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
         <item name="DialogSpotCount">4</item>
     </style>
@@ -40,7 +40,7 @@
 
     <style name="VericacionLogin" parent="android:Theme.DeviceDefault.Dialog">
         <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogTitleText">Verificando..</item>
+        <item name="DialogTitleText">Verificando</item>
         <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
         <item name="DialogSpotCount">4</item>
     </style>

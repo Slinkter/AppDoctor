@@ -3,8 +3,10 @@ package com.cudpast.app.doctor.doctorApp.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,8 +18,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Model.User;
+import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +57,9 @@ public class LoginActivity extends AppCompatActivity {
     Animation animation;
     private Vibrator vib;
 
+
+    private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +77,13 @@ public class LoginActivity extends AppCompatActivity {
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+        auth = FirebaseAuth.getInstance();
+
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (submitForm()) {
+                    //Login con Godaddy
                     VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
                 }
             }
@@ -72,58 +91,106 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void VerificarLogin(String sUser, String sPassword) {
+
         USER = sUser;
         PASSWORD = sPassword;
-        SolicutudJSON(IP + sUser);
-    }
+        String URL = IP + sUser;
+        JsonObjectRequest solicitudGoDaddy;
 
-    public void SolicutudJSON(String URL) {
-
-        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.VericacionLogin);
+        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this);
         waitingDialog.show();
 
-        JsonObjectRequest solicitud = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
+        solicitudGoDaddy = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject datos) {
-                waitingDialog.dismiss();
-                verificarLoginURL(datos);
+
+                try {
+                    String estado = datos.getString("resultado");
+                    if (estado.equals("CC")) {
+                        JSONObject jsondatos = new JSONObject(datos.getString("datos"));
+                        String usuario = jsondatos.getString("dniusuario");
+
+                        String emailLogin = usernamelogin.getText().toString();
+                        String passwordLogin = passwordlogin.getText().toString();
+
+                        if (usuario.equalsIgnoreCase(emailLogin)){
+                            //->
+                            VerificacionFirebase(emailLogin,passwordLogin);
+                            //<-
+                        }
+
+                        waitingDialog.dismiss();
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_SHORT).show();
+                        waitingDialog.dismiss();
+                    }
+
+                } catch (JSONException e) {
+
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                waitingDialog.dismiss();
                 Toast.makeText(LoginActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
             }
         });
 
-        VolleyRP.addToQueue(solicitud, mRequest, this, volleyRP);
+        VolleyRP.addToQueue(solicitudGoDaddy, mRequest, this, volleyRP);
     }
 
-    private void verificarLoginURL(JSONObject datos) {
+    public void VerificacionFirebase(String usernamelogin , String passwordlogin ){
 
-        try {
-            String estado = datos.getString("resultado");
-            if (estado.equals("CC")) {
-                JSONObject jsondatos = new JSONObject(datos.getString("datos"));
-                String usuario = jsondatos.getString("dniusuario");
-                String password = jsondatos.getString("password");
-                if (usuario.equals(USER) && password.equals(PASSWORD)) {
-                    Intent intent = new Intent(this, VerificacionLoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("usuario", usuario);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Usuario o contraseña no es válido", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(LoginActivity.this, estado, Toast.LENGTH_LONG).show();
+        String emailLogin = usernamelogin+"@doctor.com";
+        String passwordLogin = passwordlogin;
+
+
+        auth.signInWithEmailAndPassword(emailLogin,passwordLogin )
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+
+                        FirebaseDatabase
+                                .getInstance()//Conexion a base de datos --> projectmedical001
+                                .getReference(Common.tb_Info_Doctor)//nombre de la tabla-->
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())//recuperar el Uid
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Common.currentUser = dataSnapshot.getValue(Usuario.class);
+                                        Log.e("LoginActivity", "Common.currentUser -->" + dataSnapshot.getValue(User.class));
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Log.e("ERROR", "DatabaseError -->" + databaseError.toString());
+                                    }
+                                });
+
+
+                        Intent intent = new Intent(LoginActivity.this   , VerificacionLoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("usuario", Common.currentUser.getFirstname());
+                        startActivity(intent);
+                        finish();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
+
+
             }
-
-        } catch (JSONException e) {
-
-        }
+        });
 
     }
+
+
+
 
     //Validación de formulario parte 2
     private boolean checkDNI() {

@@ -18,7 +18,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 
 
-public class VerificacionLoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class VerificacionLoginActivity extends AppCompatActivity implements
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient googleApiClient;
     private SignInButton signInButton;

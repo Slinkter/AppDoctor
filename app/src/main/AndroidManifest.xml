@@ -42,6 +42,7 @@
         <activity android:name=".Activities.VerificacionLoginActivity" />
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.VerificacionRegistroActivity" />
+
         <activity android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

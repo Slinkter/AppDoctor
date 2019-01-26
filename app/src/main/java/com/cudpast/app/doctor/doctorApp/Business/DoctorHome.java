@@ -1,23 +1,23 @@
 package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,12 +26,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
+
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
@@ -62,40 +64,39 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DoctorHome extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,
+public class DoctorHome extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
 
-        private GoogleMap mMap;
-        private SupportMapFragment mapFragment;
+    private GoogleMap mMap;
+    private SupportMapFragment mapFragment;
 
-        private static final String TAG_ERROR = "DoctorHome ";
+    private static final String TAG_ERROR = "DoctorHome ";
 
-        private static final int MY_PERMISSION_REQUEST_CODE = 7000;
-        private static final int PLAY_SERVICE_RES_REQUEST = 7001;
+    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+    private static final int PLAY_SERVICE_RES_REQUEST = 7001;
 
-        private GoogleApiClient mGoogleApiCliente;
-        private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiCliente;
+    private LocationRequest mLocationRequest;
 
-        private static int UPDATE_INTERVAL = 5000;
-        private static int FATEST_INTERVAL = 3000;
-        private static int DISPLACEMENT = 10;
+    private static int UPDATE_INTERVAL = 5000;
+    private static int FATEST_INTERVAL = 3000;
+    private static int DISPLACEMENT = 10;
 
-        private DatabaseReference drivers, onlineRef, currentUserRef;
-        private GeoFire geoFire;
-        private Marker mCurrent;
+    private DatabaseReference drivers, onlineRef, currentUserRef;
+    private GeoFire geoFire;
+    private Marker mCurrent;
 
-        private MaterialAnimatedSwitch location_switch;// ON or OFF
-
-
-        public IGoogleAPI mService;
+    private MaterialAnimatedSwitch location_switch;// ON or OFF
+    public IGoogleAPI mService;
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_home);
         //-->
@@ -123,6 +124,7 @@ public class DoctorHome extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 currentUserRef.onDisconnect().removeValue();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
@@ -130,7 +132,7 @@ public class DoctorHome extends AppCompatActivity
         //al estar en Online , se crea la tabla Drivers
         currentUserRef = FirebaseDatabase
                 .getInstance()
-                .getReference(Common.driver_tbl)
+                .getReference(Common.tb_Business_Doctor)
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         // Inicio de la vista
@@ -158,7 +160,7 @@ public class DoctorHome extends AppCompatActivity
             }
         });
         //
-        drivers = FirebaseDatabase.getInstance().getReference(Common.driver_tbl);
+        drivers = FirebaseDatabase.getInstance().getReference(Common.tb_Business_Doctor);
         Log.e(TAG_ERROR, " drivers");
         geoFire = new GeoFire(drivers);
         Log.e(TAG_ERROR, " geoFire ");
@@ -172,8 +174,8 @@ public class DoctorHome extends AppCompatActivity
 
     }
 
-        @Override
-        public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -182,24 +184,24 @@ public class DoctorHome extends AppCompatActivity
         }
     }
 
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.doctor_home, menu);
         return true;
     }
 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
     }
 
-        @SuppressWarnings("StatementWithEmptyBody")
-        @Override
-        public boolean onNavigationItemSelected(MenuItem item) {
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -220,7 +222,7 @@ public class DoctorHome extends AppCompatActivity
         return true;
     }
 
-        private void updateFirebaseToken() {
+    private void updateFirebaseToken() {
         Log.e(TAG_ERROR, " updateFirebaseToken() ");
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
         Token token = new Token(FirebaseInstanceId.getInstance().getToken());
@@ -228,7 +230,7 @@ public class DoctorHome extends AppCompatActivity
         Log.e(TAG_ERROR, "FirebaseAuth.getInstance().getCurrentUser().getUid() -------->" + FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
-        private void setUpLocation() {
+    private void setUpLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
         } else {
@@ -243,7 +245,7 @@ public class DoctorHome extends AppCompatActivity
         Log.e("*setUpLocation()", "432");
     }
 
-        private void builGoogleApiClient() {
+    private void builGoogleApiClient() {
         mGoogleApiCliente = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -253,7 +255,7 @@ public class DoctorHome extends AppCompatActivity
         Log.e("*builGoogleApiClient()", " 442" + mGoogleApiCliente);
     }
 
-        private void createLocationRequest() {
+    private void createLocationRequest() {
         Log.e("createLocationRequest()", "Linea : 444");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL);
@@ -262,7 +264,7 @@ public class DoctorHome extends AppCompatActivity
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-        private boolean checkPlayService() {
+    private boolean checkPlayService() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
@@ -277,8 +279,8 @@ public class DoctorHome extends AppCompatActivity
         return true;
     }
 
-        @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -295,7 +297,7 @@ public class DoctorHome extends AppCompatActivity
         }
     }
 
-        private void stopLocationUpdate() {
+    private void stopLocationUpdate() {
         //-->Permisos
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -305,7 +307,7 @@ public class DoctorHome extends AppCompatActivity
         Log.e("stopLocationUpdate()", " location_switch : OFF");
     }
 
-        private void displayLocation() {
+    private void displayLocation() {
         //-->Permisos
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -347,7 +349,7 @@ public class DoctorHome extends AppCompatActivity
         Log.e(TAG_ERROR, "displayLocation() : fin ");
     }
 
-        private void startLocationUpdate() {
+    private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -355,31 +357,31 @@ public class DoctorHome extends AppCompatActivity
         Log.e(TAG_ERROR, "startLocationUpdate() --> Permiso");
     }
 
-        @Override
-        public void onConnected(@Nullable Bundle bundle) {
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
         displayLocation();
         startLocationUpdate();
     }
 
-        @Override
-        public void onConnectionSuspended(int i) {
+    @Override
+    public void onConnectionSuspended(int i) {
         mGoogleApiCliente.connect();
     }
 
-        @Override
-        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
-        @Override
-        public void onLocationChanged(Location location) {
+    @Override
+    public void onLocationChanged(Location location) {
         Common.mLastLocation = location;
         displayLocation();
         Log.e(TAG_ERROR, "Can't find style. Error: ");
     }
 
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
         //--> Agregar estido de mapa
         try {
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
@@ -398,8 +400,8 @@ public class DoctorHome extends AppCompatActivity
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
-        //metodos auxiliar para imagenes .svg
-        private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
+    //metodos auxiliar para imagenes .svg
+    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
@@ -411,7 +413,7 @@ public class DoctorHome extends AppCompatActivity
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-        private List<LatLng> decodePoly(String encoded) {
+    private List<LatLng> decodePoly(String encoded) {
         Log.e(TAG_ERROR, "Linea : 379");
         List<LatLng> poly = new ArrayList<LatLng>();
         int index = 0, len = encoded.length();

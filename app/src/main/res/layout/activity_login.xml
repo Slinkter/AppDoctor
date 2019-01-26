@@ -33,7 +33,7 @@
                 android:contentDescription="nada"
                 android:src="@drawable/ic_hospital" />
 
-            <EditText
+            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/loginUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,10 +43,16 @@
                 android:hint="DNI"
                 android:inputType="none|numberSigned"
                 android:maxLength="8"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:textSize="20dp"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                app:met_singleLineEllipsis="false" />
 
-                />
-
-            <EditText
+            <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/loginPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,7 +60,15 @@
                 android:ems="10"
                 android:gravity="center"
                 android:hint="CONTRASEÑA"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:text=""
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@color/colorPrimary"
+                android:textSize="20dp"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                app:met_singleLineEllipsis="false" />
 
             <LinearLayout
                 android:layout_width="match_parent"
