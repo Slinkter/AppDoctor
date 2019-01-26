@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(LoginActivity.this   , VerificacionLoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("usuario", Common.currentUser.getFirstname());
+                        intent.putExtra("usuario", "Usuario test");
                         startActivity(intent);
                         finish();
 
