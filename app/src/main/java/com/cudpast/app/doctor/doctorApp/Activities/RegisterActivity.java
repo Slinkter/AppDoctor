@@ -183,8 +183,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         auth.createUserWithEmailAndPassword(dni + "@doctor.com", password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                             @Override
                                             public void onSuccess(AuthResult authResult) {
-
-
                                                 tb_Info_Doctor.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                         .setValue(user1)
                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
