@@ -157,8 +157,8 @@ public class LoginActivity extends AppCompatActivity {
                                             Usuario user001 = dataSnapshot.getValue(Usuario.class);
                                             Common.currentUser = user001;
 
-                                            valor1 = Common.currentUser.getFirstname();
-                                            valor2 = Common.currentUser.getCorreoG();
+                                            valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
+                                            valor2 = Common.currentUser.getDni();
                                             Log.e("LoginActivity", "onDataChange  1 --> " + Common.currentUser.getFirstname());
                                             Log.e("LoginActivity", "onDataChange  2 --> " + user001.getFirstname());
                                             Log.e("LoginActivity", "valor1  1 --> " + valor1);

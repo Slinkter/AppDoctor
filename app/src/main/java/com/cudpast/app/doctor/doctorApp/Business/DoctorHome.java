@@ -140,10 +140,15 @@ public class DoctorHome extends AppCompatActivity implements
             @Override
             public void onCheckedChanged(boolean isOnline) {
                 if (isOnline) {
-                    FirebaseDatabase.getInstance().goOnline();
-                    startLocationUpdate();
-                    displayLocation();// crear un marker : mCurrent
-                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+                    try {
+                        FirebaseDatabase.getInstance().goOnline();
+                        startLocationUpdate();
+                        displayLocation();// crear un marker : mCurrent
+                        Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     try {
                         FirebaseDatabase.getInstance().goOffline();
@@ -349,6 +354,7 @@ public class DoctorHome extends AppCompatActivity implements
         Log.e(TAG_ERROR, "displayLocation() : fin ");
     }
 
+    //todo:revisar
     private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

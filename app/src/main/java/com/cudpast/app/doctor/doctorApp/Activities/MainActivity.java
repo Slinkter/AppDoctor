@@ -106,38 +106,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void metodoSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
 
-//            if (getIntent() != null){
-//                try {
-//
-//                    String name = getIntent().getExtras().getString("usuario");
-//                    String mail = getIntent().getExtras().getString("correo");
-//
-//
-//                    id_login_name.setText(name);
-//                    id_login_mail.setText(mail);
-//
-//                    GoogleSignInAccount account = result.getSignInAccount();
-//                    nameTextView.setText(account.getDisplayName());
-//                    emailTextView.setText(account.getEmail());
-//                    idTextView.setText(account.getId());
-//                    Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
-//
-//
-//                    Log.e("getIntent", "id_login_name -->" +name);
-//                    Log.e("getIntent", "id_login_mail -->" +mail);
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//
-//
-//            }
+            if (getIntent() != null){
+                try {
+
+                    String name = getIntent().getExtras().getString("usuario");
 
 
-            GoogleSignInAccount account = result.getSignInAccount();
-            nameTextView.setText(account.getDisplayName());
-            emailTextView.setText(account.getEmail());
-            idTextView.setText(account.getId());
-            Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+                    GoogleSignInAccount account = result.getSignInAccount();
+                    nameTextView.setText(name);
+                    emailTextView.setText(name);
+                    idTextView.setText(account.getId());
+                    Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+
+
+                    Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+
+
+//            GoogleSignInAccount account = result.getSignInAccount();
+//            nameTextView.setText(account.getDisplayName());
+//            emailTextView.setText(account.getEmail());
+//            idTextView.setText(account.getId());
+//            Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
         } else {
             //SI NO ESTA LOGEADO
             goLogIngScreen();
