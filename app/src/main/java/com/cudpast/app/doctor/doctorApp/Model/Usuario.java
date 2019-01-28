@@ -2,18 +2,17 @@ package com.cudpast.app.doctor.doctorApp.Model;
 
 public class Usuario {
 
-
+    private String codmedpe;//codigo de medico de peru
+    private String correoG;
+    private String direccion;
     private String dni ;
+    private String especialidad;
+    private String fecha;
     private String firstname;
+    private String image;
     private String lastname;
     private String numphone;
-    private String codmedpe;//codigo de medico de peru
-    private String especialidad;
-    private String direccion;
     private String password;
-    private String correoG;
-    private String fecha;
-    private String image;
 
     public Usuario() {
 

@@ -27,10 +27,25 @@
 
     <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
         <item name="android:gravity">center</item>
-        <item name="android:textSize">36sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="CustomSDialog" parent="android:Theme.DeviceDefault.Dialog">
+    <!--<style name="CustomSDialog" parent="android:Theme.DeviceDefault.Dialog">-->
+        <!--<item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>-->
+        <!--<item name="DialogTitleText">Registrando</item>-->
+        <!--<item name="DialogSpotColor">@android:color/holo_orange_dark</item>-->
+        <!--<item name="DialogSpotCount">4</item>-->
+    <!--</style>-->
+
+
+    <style name="DialogLogin" parent="android:Theme.DeviceDefault.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="DialogTitleText">Iniciando Sessión</item>
+        <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
+        <item name="DialogSpotCount">4</item>
+    </style>
+
+    <style name="DialogRegistro" parent="android:Theme.DeviceDefault.Dialog">
         <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
         <item name="DialogTitleText">Registrando</item>
         <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
@@ -38,12 +53,6 @@
     </style>
 
 
-    <style name="VericacionLogin" parent="android:Theme.DeviceDefault.Dialog">
-        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogTitleText">Verificando</item>
-        <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
-        <item name="DialogSpotCount">4</item>
-    </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

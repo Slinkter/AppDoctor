@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -104,6 +105,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //3.OBTENER DATOS DEL USUARIO
     private void metodoSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
+
+//            if (getIntent() != null){
+//                try {
+//
+//                    String name = getIntent().getExtras().getString("usuario");
+//                    String mail = getIntent().getExtras().getString("correo");
+//
+//
+//                    id_login_name.setText(name);
+//                    id_login_mail.setText(mail);
+//
+//                    GoogleSignInAccount account = result.getSignInAccount();
+//                    nameTextView.setText(account.getDisplayName());
+//                    emailTextView.setText(account.getEmail());
+//                    idTextView.setText(account.getId());
+//                    Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+//
+//
+//                    Log.e("getIntent", "id_login_name -->" +name);
+//                    Log.e("getIntent", "id_login_mail -->" +mail);
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+
+
             GoogleSignInAccount account = result.getSignInAccount();
             nameTextView.setText(account.getDisplayName());
             emailTextView.setText(account.getEmail());

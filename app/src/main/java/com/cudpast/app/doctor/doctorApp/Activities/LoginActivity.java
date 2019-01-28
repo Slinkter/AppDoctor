@@ -43,40 +43,37 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "Login";
     private static String IP = "http://www.cudpast.com/AppDoctor/Login_GETID.php?id=";
 
-    EditText usernamelogin;
-    EditText passwordlogin;
+    private EditText usernamelogin;
+    private EditText passwordlogin;
+
 
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
     private Button btnIngresar;
 
-    private String USER = "";
-    private String PASSWORD = "";
-
-    Animation animation;
+    private Animation animation;
     private Vibrator vib;
 
-
     private FirebaseAuth auth;
+
+    String valor1, valor2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         getSupportActionBar().hide();
-
+        //
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
-
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
+        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        //XML
         usernamelogin = findViewById(R.id.loginUsername);
         passwordlogin = findViewById(R.id.loginPassword);
         btnIngresar = findViewById(R.id.btnLogin);
-
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
+        //FIREBASE INIT
         auth = FirebaseAuth.getInstance();
 
         btnIngresar.setOnClickListener(new View.OnClickListener() {
@@ -84,21 +81,19 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (submitForm()) {
                     //Login con Godaddy
-                    VerificarLogin(usernamelogin.getText().toString(), passwordlogin.getText().toString());
+                    VerificarLogin(usernamelogin.getText().toString());
                 }
             }
         });
     }
 
-    private void VerificarLogin(String sUser, String sPassword) {
+    //1.VERIFICACION DE GODADDY
+    private void VerificarLogin(String sUser) {
 
-        USER = sUser;
-        PASSWORD = sPassword;
+        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
+        waitingDialog.show();
         String URL = IP + sUser;
         JsonObjectRequest solicitudGoDaddy;
-
-        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this);
-        waitingDialog.show();
 
         solicitudGoDaddy = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
             @Override
@@ -107,20 +102,16 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     String estado = datos.getString("resultado");
                     if (estado.equals("CC")) {
+
                         JSONObject jsondatos = new JSONObject(datos.getString("datos"));
                         String usuario = jsondatos.getString("dniusuario");
-
                         String emailLogin = usernamelogin.getText().toString();
                         String passwordLogin = passwordlogin.getText().toString();
 
-                        if (usuario.equalsIgnoreCase(emailLogin)){
-                            //->
-                            VerificacionFirebase(emailLogin,passwordLogin);
-                            //<-
+                        if (usuario.equalsIgnoreCase(emailLogin)) {
+                            VerificacionFirebase(emailLogin, passwordLogin);
                         }
-
                         waitingDialog.dismiss();
-
                     } else {
                         Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_SHORT).show();
                         waitingDialog.dismiss();
@@ -141,13 +132,14 @@ public class LoginActivity extends AppCompatActivity {
         VolleyRP.addToQueue(solicitudGoDaddy, mRequest, this, volleyRP);
     }
 
-    public void VerificacionFirebase(String usernamelogin , String passwordlogin ){
+    //2.AUTENTICACION CON FIREBASE
+    public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
 
-        String emailLogin = usernamelogin+"@doctor.com";
+        String emailLogin = usernamelogin + "@doctor.com";
         String passwordLogin = passwordlogin;
 
 
-        auth.signInWithEmailAndPassword(emailLogin,passwordLogin )
+        auth.signInWithEmailAndPassword(emailLogin, passwordLogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
@@ -159,7 +151,32 @@ public class LoginActivity extends AppCompatActivity {
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        Common.currentUser = dataSnapshot.getValue(Usuario.class);
+
+                                        try {
+
+                                            Usuario user001 = dataSnapshot.getValue(Usuario.class);
+                                            Common.currentUser = user001;
+
+                                            valor1 = Common.currentUser.getFirstname();
+                                            valor2 = Common.currentUser.getCorreoG();
+                                            Log.e("LoginActivity", "onDataChange  1 --> " + Common.currentUser.getFirstname());
+                                            Log.e("LoginActivity", "onDataChange  2 --> " + user001.getFirstname());
+                                            Log.e("LoginActivity", "valor1  1 --> " + valor1);
+                                            Log.e("LoginActivity", "valor2  2 --> " + valor2);
+                                            Log.e("LoginActivity", "Common.currentUser  --> " + Common.currentUser);
+
+                                            Intent intent = new Intent(LoginActivity.this, VerificacionLoginActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.putExtra("usuario", valor1);
+                                            intent.putExtra("correo", valor2);
+
+                                            startActivity(intent);
+                                            finish();
+
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
                                         Log.e("LoginActivity", "Common.currentUser -->" + dataSnapshot.getValue(User.class));
                                     }
 
@@ -170,17 +187,12 @@ public class LoginActivity extends AppCompatActivity {
                                 });
 
 
-                        Intent intent = new Intent(LoginActivity.this   , VerificacionLoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("usuario", "Usuario test");
-                        startActivity(intent);
-                        finish();
+
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
                 Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
 
 
@@ -190,40 +202,35 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-
     //Validación de formulario parte 2
     private boolean checkDNI() {
+
         if (usernamelogin.length() < 8) {
             usernamelogin.setError("Error : ingresar  8 digitos");
             return false;
         }
-
         if (usernamelogin.getText().toString().trim().isEmpty()) {
             usernamelogin.setError("vacio");
             return false;
         }
-
-
         return true;
     }
 
     private boolean checkPassword() {
+
         if (passwordlogin.length() < 2) {
             passwordlogin.setError("Error : ingresar password");
             return false;
         }
-
         if (passwordlogin.getText().toString().trim().isEmpty()) {
             passwordlogin.setError("vacio");
             return false;
         }
-
-
         return true;
     }
 
     private boolean submitForm() {
+
         if (!checkDNI()) {
             usernamelogin.setAnimation(animation);
             usernamelogin.startAnimation(animation);

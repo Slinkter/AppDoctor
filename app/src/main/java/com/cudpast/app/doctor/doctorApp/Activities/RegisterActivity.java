@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 //if (submitForm()) {
 
                 if (true) {
-                    final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.CustomSDialog);
+                    final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
                     waitingDialog.show();
                     // Validar foto
                     if (mUriImage != null) {

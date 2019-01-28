@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".Activities.VerificacionLoginActivity">
+
+    <TextView
+        android:id="@+id/id_login_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Verificación"
+        android:theme="@style/ThemeOverlay.MyTitleText" />
+
+    <TextView
+        android:id="@+id/id_login_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Verificación"
+        android:theme="@style/ThemeOverlay.MyTitleText" />
 
 
     <com.google.android.gms.common.SignInButton
@@ -12,7 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"></com.google.android.gms.common.SignInButton>
+        android:layout_centerVertical="true">
+
+    </com.google.android.gms.common.SignInButton>
 
 
-</RelativeLayout>
+</LinearLayout>

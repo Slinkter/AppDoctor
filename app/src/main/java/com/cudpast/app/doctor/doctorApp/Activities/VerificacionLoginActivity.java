@@ -5,9 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -17,7 +20,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 
-
 public class VerificacionLoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -25,12 +27,42 @@ public class VerificacionLoginActivity extends AppCompatActivity implements
     private SignInButton signInButton;
     public static final int SIGN_IN_CODE = 777;
 
+    private TextView id_login_name,id_login_mail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verificacion_login);
         getSupportActionBar().hide();
+
+
+        id_login_name = findViewById(R.id.id_login_name);
+        id_login_mail = findViewById(R.id.id_login_main);
+
+        if (getIntent() != null){
+            try {
+
+                String name = getIntent().getExtras().getString("usuario");
+                String mail = getIntent().getExtras().getString("correo");
+
+
+                id_login_name.setText(name);
+                id_login_mail.setText(mail);
+
+
+                Log.e("getIntent", "id_login_name -->" +name);
+                Log.e("getIntent", "id_login_mail -->" +mail);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -50,6 +82,9 @@ public class VerificacionLoginActivity extends AppCompatActivity implements
                 startActivityForResult(intent, SIGN_IN_CODE);
             }
         });
+
+
+
 
 
 
@@ -86,6 +121,8 @@ public class VerificacionLoginActivity extends AppCompatActivity implements
     private void goMainScreen() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.putExtra("usuario", Common.currentUser.getFirstname());
+//        intent.putExtra("correo", Common.currentUser.getCorreoG());
         startActivity(intent);
     }
 }
