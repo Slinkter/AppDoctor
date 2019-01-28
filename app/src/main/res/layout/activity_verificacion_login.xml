@@ -4,25 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".Activities.VerificacionLoginActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BIENVENIDO"
+        android:layout_marginBottom="30dp"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/id_login_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Verificación"
-        android:theme="@style/ThemeOverlay.MyTitleText" />
+        android:layout_marginBottom="30dp"
+        android:text="name"
+        android:theme="@style/NameGoogle" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/id_login_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="Verificación"
-        android:theme="@style/ThemeOverlay.MyTitleText" />
+        android:text="name"
+        android:theme="@style/NameGoogle" />
 
 
     <com.google.android.gms.common.SignInButton
@@ -30,7 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="70dp">
 
     </com.google.android.gms.common.SignInButton>
 

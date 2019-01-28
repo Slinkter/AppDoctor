@@ -35,13 +35,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
-
-        photoImageView = findViewById(R.id.idFotoUsuario);
-        nameTextView = findViewById(R.id.nameTextView);
-        emailTextView = findViewById(R.id.emailTextView);
-        idTextView = findViewById(R.id.idTextView);
 
         //-->Login silencioso
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -53,6 +46,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         //<--
+        setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
+
+        photoImageView = findViewById(R.id.idFotoUsuario);
+        nameTextView = findViewById(R.id.nameTextView);
+        emailTextView = findViewById(R.id.emailTextView);
+        idTextView = findViewById(R.id.idTextView);
+
+
     }
     // METODO PRINCIPAL
     @Override
@@ -107,23 +109,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         if (result.isSuccess()) {
 
             if (getIntent() != null){
-                try {
-
-                    String name = getIntent().getExtras().getString("usuario");
 
 
-                    GoogleSignInAccount account = result.getSignInAccount();
-                    nameTextView.setText(name);
-                    emailTextView.setText(name);
-                    idTextView.setText(account.getId());
-                    Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+                String name = getIntent().getExtras().getString("usuario");
+                GoogleSignInAccount account = result.getSignInAccount();
+                nameTextView.setText(name);
+                emailTextView.setText(name);
+                idTextView.setText(account.getId());
+                Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
 
 
-                    Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
+                Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
 
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
 
 
             }

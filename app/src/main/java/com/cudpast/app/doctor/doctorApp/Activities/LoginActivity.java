@@ -251,7 +251,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Funcional 100%
     public void signup(View view) {
-        Intent intent = new Intent(this, VerificacionRegistroActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
         finish();
     }

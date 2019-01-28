@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
+import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 
 import com.firebase.geofire.GeoFire;
@@ -77,8 +78,8 @@ public class DoctorHome extends AppCompatActivity implements
 
     private static final String TAG_ERROR = "DoctorHome ";
 
-    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
-    private static final int PLAY_SERVICE_RES_REQUEST = 7001;
+    private static final int MY_PERMISSION_REQUEST_CODE = 1000;
+    private static final int PLAY_SERVICE_RES_REQUEST = 1001;
 
     private GoogleApiClient mGoogleApiCliente;
     private LocationRequest mLocationRequest;
@@ -99,7 +100,8 @@ public class DoctorHome extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_home);
-        //-->
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -140,24 +142,21 @@ public class DoctorHome extends AppCompatActivity implements
             @Override
             public void onCheckedChanged(boolean isOnline) {
                 if (isOnline) {
-                    try {
-                        FirebaseDatabase.getInstance().goOnline();
-                        startLocationUpdate();
-                        displayLocation();// crear un marker : mCurrent
-                        Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+
+                    FirebaseDatabase.getInstance().goOnline();
+                    startLocationUpdate();
+                    displayLocation();// crear un marker : mCurrent
+                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+
 
                 } else {
-                    try {
-                        FirebaseDatabase.getInstance().goOffline();
-                        stopLocationUpdate();
+
+                    FirebaseDatabase.getInstance().goOffline();
+                    stopLocationUpdate();
+                    if (mCurrent != null) {
                         mCurrent.remove();// eliminar un marker : mCurrent
                         mMap.clear();// Limpiar mapa
                         Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
 
@@ -318,8 +317,11 @@ public class DoctorHome extends AppCompatActivity implements
             return;
         }
         //<--
+        LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
         Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
         Log.e(TAG_ERROR, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
+
+
         if (Common.mLastLocation != null) {
             if (location_switch.isChecked()) {
 
@@ -340,15 +342,14 @@ public class DoctorHome extends AppCompatActivity implements
                                 .position(new LatLng(latitude, longitud))
                                 .icon(BitmapDoctorApp(DoctorHome.this, R.drawable.ic_doctorapp))
                                 .title("Usted");
-                        // mMap.addMarker(m1);  //<--Dibujar al doctor en el mapa
 
-                        mCurrent = mMap.addMarker(m1); // ....revisar
+                        mCurrent = mMap.addMarker(m1); // <--Dibujar al doctor en el mapa
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitud), 16.0f));
                     }
                 });
             }
         } else {
-            // Log.d("displayLocation()", "ERROR: Cannot get your location");
+            Log.d("displayLocation()", "ERROR: Cannot get your location");
         }
 
         Log.e(TAG_ERROR, "displayLocation() : fin ");
@@ -356,11 +357,20 @@ public class DoctorHome extends AppCompatActivity implements
 
     //todo:revisar
     private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+        try {
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return;
+            }
+
+            Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
+
+        } catch (Exception e) {
+            Log.e(TAG_ERROR, "startLocationUpdate() : ERROR " + e.getMessage());
+            Toast.makeText(this, "ERORR AL ACTIVAR PERMISOSS", Toast.LENGTH_SHORT).show();
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
-        Log.e(TAG_ERROR, "startLocationUpdate() --> Permiso");
+
     }
 
     @Override

@@ -451,14 +451,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    //
-    private String uploadFileAndGetUrlImage(String idDNI) {
-        String urlimage = "";
-
-
-        return urlimage;
-
-    }
 
 
 }
