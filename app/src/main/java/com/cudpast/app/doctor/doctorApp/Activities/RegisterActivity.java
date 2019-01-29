@@ -3,6 +3,9 @@ package com.cudpast.app.doctor.doctorApp.Activities;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Vibrator;
 
@@ -64,7 +67,6 @@ import dmax.dialog.SpotsDialog;
 
 public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-
     private static final String IP_REGISTRAR = "http://www.cudpast.com/AppDoctor/Registro_INSERT.php";
     public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;
@@ -76,7 +78,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private ImageView signupImagePhoto;
     private Uri mUriImage;
     private UploadTask uploadTask;
-
 
     private DatabaseReference databaseReference;
     private DatabaseReference tb_Info_Doctor;
@@ -137,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String especialidad = signupEsp.getText().toString();
                 final String dni = signupDNI.getText().toString();// <-- 123456789@doctor.com
                 final String password = signupPassword.getText().toString();
-                final String correoG = getIntent().getExtras().getString("correog");
+                final String correoG = "paciente@arsi.com";
                 final String fecha = getCurrentTimeStamp();
 
                 // Validar Formulario
@@ -183,20 +184,25 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         auth.createUserWithEmailAndPassword(dni + "@doctor.com", password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                             @Override
                                             public void onSuccess(AuthResult authResult) {
-                                                tb_Info_Doctor.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                Log.e("getuid", authResult.getUser().getUid());
+
+
+                                                tb_Info_Doctor.child(authResult.getUser().getUid())
                                                         .setValue(user1)
                                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                             @Override
                                                             public void onSuccess(Void aVoid) {
                                                                 waitingDialog.dismiss();
-                                                                Toast.makeText(RegisterActivity.this, "Usuarios Registrador", Toast.LENGTH_SHORT).show();
-
+                                                                //Toast.makeText(RegisterActivity.this, "Usuario Registrado", Toast.LENGTH_SHORT).show();
+                                                                Log.e("RegisterActivity " , "onSuccess ");
+                                                                Log.e("RegisterActivity " , "user1 " + user1);
                                                             }
                                                         }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
                                                         waitingDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
+                                                        Log.e("RegisterActivity " , "onFailure ");
+                                                       // Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
 
                                                     }
                                                 });
@@ -206,14 +212,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 waitingDialog.dismiss();
-                                                Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(RegisterActivity.this, "Fallo de Internet", Toast.LENGTH_SHORT).show();
                                             }
                                         });
 
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
-                                        Log.e("error" , "" +e);
+                                        Log.e("RegisterActivity", "Error : -->" + e);
                                     }
 
                                 } else {
@@ -224,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(RegisterActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Error : -->" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -440,7 +446,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriImage = data.getData();
-            Picasso.with(this).load(mUriImage).into(signupImagePhoto);
+
+            Picasso.with(this).load(mUriImage).fit().centerInside().into(signupImagePhoto);
         }
     }
 
@@ -451,6 +458,12 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
 
 
 }
