@@ -111,26 +111,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             if (getIntent() != null){
 
 
-                String name = getIntent().getExtras().getString("usuario");
-                GoogleSignInAccount account = result.getSignInAccount();
-                nameTextView.setText(name);
-                emailTextView.setText(name);
-                idTextView.setText(account.getId());
-                Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+                try {
+                    if (getIntent().getExtras().getString("usuario") != null){
+                        String name = getIntent().getExtras().getString("usuario");
+                        GoogleSignInAccount account = result.getSignInAccount();
+                        nameTextView.setText(name);
+                        emailTextView.setText(name);
+                        idTextView.setText(account.getId());
+                        Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
+                        Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
+
+                    }else {
+                        goLogIngScreen();
+                    }
+                }catch (Exception e){
+                    goLogIngScreen();
+                    e.printStackTrace();
+                }
 
 
-                Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
 
 
-
+            }else {
+                goLogIngScreen();
             }
 
 
-//            GoogleSignInAccount account = result.getSignInAccount();
-//            nameTextView.setText(account.getDisplayName());
-//            emailTextView.setText(account.getEmail());
-//            idTextView.setText(account.getId());
-//            Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
         } else {
             //SI NO ESTA LOGEADO
             goLogIngScreen();
