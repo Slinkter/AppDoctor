@@ -114,15 +114,12 @@ public class VerificacionLoginActivity extends AppCompatActivity implements
         } else {
             Toast.makeText(this, "No inicio sesion", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     private void goMainScreen() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("usuario", Common.currentUser.getFirstname());
-//        intent.putExtra("correo", Common.currentUser.getCorreoG());
         startActivity(intent);
     }
 }
