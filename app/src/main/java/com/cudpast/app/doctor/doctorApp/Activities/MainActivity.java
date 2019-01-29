@@ -129,9 +129,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     e.printStackTrace();
                 }
 
-
-
-
             }else {
                 goLogIngScreen();
             }

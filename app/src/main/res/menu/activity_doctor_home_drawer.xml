@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_a"
 
-            android:title="Historial" />
+            android:title="Cuenta" />
         <item
             android:id="@+id/nav_b"
 
