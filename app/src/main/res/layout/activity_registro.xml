@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/backgroundRegistro"
     android:fitsSystemWindows="false"
     tools:context=".Activities.RegisterActivity">
 
@@ -11,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingTop="56dp"
-        android:paddingRight="24dp">
+        android:paddingLeft="20dp"
+        android:paddingTop="36dp"
+        android:paddingRight="20dp">
 
         <TextView
             android:id="@+id/nameg"
@@ -21,172 +22,236 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:textColor="@color/colorPrimary"
             android:text="REGISTRO"
-            android:textStyle="bold"
-            android:textSize="40sp" />
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Usuario"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupName"
+        <android.support.v7.widget.CardView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Nombres"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp">
 
-            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupLast"
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:gravity="center"
+                    android:hint="Correo"
+                    android:inputType="textEmailAddress"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Datos Personales "
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+
+        <android.support.v7.widget.CardView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Apellidos"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp">
 
-            />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupNumPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="Telefono"
-            android:inputType="phone"
-            android:maxLength="9"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupDir"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="6"
-            android:gravity="center"
-            android:hint="Dirección"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupCodMePe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:freezesText="false"
-            android:gravity="center"
-            android:hint="Codigo Medico Perú"
-            android:inputType="phone"
-            android:maxLength="6"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupEsp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="6"
-            android:gravity="center"
-            android:hint="Especilidad"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
 
 
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Nombres"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false"
+
+                    />
 
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupDNI"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="DNI"
-            android:inputType="none|numberSigned"
-            android:maxLength="8"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupLast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Apellidos"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false"
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupMail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="6"
-            android:gravity="center"
-            android:hint="Correo"
-            android:inputType="textEmailAddress"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
+                    />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/signupPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
-            android:text=""
-            android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
-            android:textSize="20dp"
-            app:met_baseColor="@color/colorPrimary"
-            app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
-            app:met_singleLineEllipsis="false" />
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupNumPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Telefono"
+                    android:inputType="phone"
+                    android:maxLength="9"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupDir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:gravity="center"
+                    android:hint="Dirección"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupCodMePe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:freezesText="false"
+                    android:gravity="center"
+                    android:hint="Codigo Medico Perú"
+                    android:inputType="phone"
+                    android:maxLength="6"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupEsp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:gravity="center"
+                    android:hint="Especilidad"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupDNI"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="DNI"
+                    android:inputType="none|numberSigned"
+                    android:maxLength="8"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
 
         <Button
             android:id="@+id/btn_choose_image"
