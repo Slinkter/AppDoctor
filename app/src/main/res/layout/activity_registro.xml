@@ -136,6 +136,8 @@
             app:met_singleLineEllipsis="false" />
 
 
+
+
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/signupDNI"
             android:layout_width="match_parent"
@@ -144,6 +146,23 @@
             android:hint="DNI"
             android:inputType="none|numberSigned"
             android:maxLength="8"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/signupMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:gravity="center"
+            android:hint="Correo"
+            android:inputType="textEmailAddress"
             android:text=""
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"

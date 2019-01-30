@@ -37,6 +37,7 @@ import com.cudpast.app.doctor.doctorApp.Model.User;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Continuation;
@@ -46,6 +47,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupDir, signupPassword;
+    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupDir, signupPassword;
     private Button guardar, salir, uploadPhoto;
     private Animation animation;
     private Vibrator vib;
@@ -114,6 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         signupDir = findViewById(R.id.signupDir); //<--- dirección
         signupCodMePe = findViewById(R.id.signupCodMePe);
         signupEsp = findViewById(R.id.signupEsp);
+        signupMail = findViewById(R.id.signupMail);
         signupDNI = findViewById(R.id.signupDNI);
         signupPassword = findViewById(R.id.signupPassword);
         signupImagePhoto = findViewById(R.id.image_view);
@@ -138,15 +141,15 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String especialidad = signupEsp.getText().toString();
                 final String dni = signupDNI.getText().toString();// <-- 123456789@doctor.com
                 final String password = signupPassword.getText().toString();
-                final String correoG = "paciente@arsi.com";
+                final String mail = signupMail.getText().toString();
                 final String fecha = getCurrentTimeStamp();
 
                 // Validar Formulario
-                //if (submitForm()) {
 
-                if (true) {
-                    final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
-                    waitingDialog.show();
+
+                if (submitForm()) {
+//                    final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
+//                    waitingDialog.show();
                     // Validar foto
                     if (mUriImage != null) {
 
@@ -170,9 +173,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         String imageUrl = downloadUri.toString();
 
                                         //Base de datos : Archivo Php
-                                        registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, correoG, fecha);
+                                        registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha);
                                         //Base de datos : Firebase
-                                        final Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, correoG, fecha);
+                                        Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha);
                                         Usuario user2 = new Usuario(dni, password);
                                         Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
 
@@ -181,37 +184,44 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
 
                                         //Crear correo en firebase
-                                        auth.createUserWithEmailAndPassword(dni + "@doctor.com", password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                            @Override
-                                            public void onSuccess(AuthResult authResult) {
-                                                Log.e("getuid", authResult.getUser().getUid());
-
-
-                                                tb_Info_Doctor.child(authResult.getUser().getUid())
-                                                        .setValue(user1)
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                waitingDialog.dismiss();
-                                                                //Toast.makeText(RegisterActivity.this, "Usuario Registrado", Toast.LENGTH_SHORT).show();
-                                                                Log.e("RegisterActivity " , "onSuccess ");
-                                                                Log.e("RegisterActivity " , "user1 " + user1);
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
+                                        auth.createUserWithEmailAndPassword(mail, password)
+                                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                                     @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        waitingDialog.dismiss();
-                                                        Log.e("RegisterActivity " , "onFailure ");
-                                                       // Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
+                                                    public void onSuccess(AuthResult authResult) {
+                                                        Log.e("RegisterActivity", "authResult.getUser().getUid()"+authResult.getUser().getUid());
+                                                        Log.e("RegisterActivity", "mAuth.getCurrentUser() " + auth.getCurrentUser().toString());
+                                                        Log.e("RegisterActivity", "Correo y password : " + mail + password);
+
+                                                        final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha);
+                                                        tb_Info_Doctor.child(authResult.getUser().getUid())
+                                                                .setValue(FirebaseUser)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+//                                                                        waitingDialog.dismiss();
+                                                                        //Toast.makeText(RegisterActivity.this, "Usuario Registrado", Toast.LENGTH_SHORT).show();
+                                                                        Log.e("RegisterActivity ", "onSuccess ");
+                                                                        Log.e("RegisterActivity ", "user1 " + FirebaseUser);
+
+                                                                        sendEmailVerification();
+
+                                                                    }
+                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+//                                                                waitingDialog.dismiss();
+                                                                Log.e("RegisterActivity ", "onFailure ");
+                                                                // Toast.makeText(RegisterActivity.this, "Fallo de red", Toast.LENGTH_SHORT).show();
+
+                                                            }
+                                                        });
+
 
                                                     }
-                                                });
-
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
+                                                }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                waitingDialog.dismiss();
+//                                                waitingDialog.dismiss();
                                                 Toast.makeText(RegisterActivity.this, "Fallo de Internet", Toast.LENGTH_SHORT).show();
                                             }
                                         });
@@ -236,7 +246,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
                     }
 
-                    waitingDialog.dismiss();
+//                    waitingDialog.dismiss();
                     iniciarActivity();
                 }
             }
@@ -458,11 +468,24 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                matrix, true);
+
+    private void sendEmailVerification() {
+
+        final FirebaseUser user = auth.getCurrentUser();
+        user.sendEmailVerification()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this,"Verification email sent to " + user.getEmail(),Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e("RegisterActivity", "sendEmailVerification", task.getException());
+                            Toast.makeText(RegisterActivity.this,"Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
     }
 
 
