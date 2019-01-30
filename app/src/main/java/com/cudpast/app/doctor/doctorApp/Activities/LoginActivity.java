@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "Login";
     private static String IP = "http://www.cudpast.com/AppDoctor/Login_GETID.php?id=";
 
-    private EditText usernamelogin;
+    private EditText emailLogin;
     private EditText passwordlogin;
 
 
@@ -70,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         //XML
-        usernamelogin = findViewById(R.id.loginUsername);
+        emailLogin = findViewById(R.id.loginUsernameEmail);
         passwordlogin = findViewById(R.id.loginPassword);
         btnIngresar = findViewById(R.id.btnLogin);
         //FIREBASE INIT
@@ -81,7 +82,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (submitForm()) {
                     //Login con Godaddy
-                    VerificarLogin(usernamelogin.getText().toString());
+                   // VerificarLogin(emailLogin.getText().toString());
+
+                    VerificacionFirebase(emailLogin.getText().toString(), passwordlogin.getText().toString());
                 }
             }
         });
@@ -105,11 +108,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         JSONObject jsondatos = new JSONObject(datos.getString("datos"));
                         String usuario = jsondatos.getString("dniusuario");
-                        String emailLogin = usernamelogin.getText().toString();
+                        String emailLogin = LoginActivity.this.emailLogin.getText().toString();
                         String passwordLogin = passwordlogin.getText().toString();
 
                         if (usuario.equalsIgnoreCase(emailLogin)) {
-                            VerificacionFirebase(emailLogin, passwordLogin);
+                          //  VerificacionFirebase(emailLogin, passwordLogin);
                         }
                         waitingDialog.dismiss();
                     } else {
@@ -135,57 +138,71 @@ public class LoginActivity extends AppCompatActivity {
     //2.AUTENTICACION CON FIREBASE
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
 
-        String emailLogin = usernamelogin + "@doctor.com";
+        String emailLogin = usernamelogin;
         String passwordLogin = passwordlogin;
+
+        Log.e(TAG, "emailLogin" + emailLogin);
+        Log.e(TAG, "passwordLogin" + passwordLogin);
+
+
 
 
         auth.signInWithEmailAndPassword(emailLogin, passwordLogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        Log.e(TAG, "signInWithEmail:success");
 
-                        FirebaseDatabase
-                                .getInstance()//Conexion a base de datos --> projectmedical001
-                                .getReference(Common.tb_Info_Doctor)//nombre de la tabla-->
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())//recuperar el Uid
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                        try {
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user.isEmailVerified()){
+                            updateUI(user);
+                            FirebaseDatabase
+                                    .getInstance()//Conexion a base de datos --> projectmedical001
+                                    .getReference(Common.tb_Info_Doctor)//nombre de la tabla-->
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())//recuperar el Uid
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                            Usuario user001 = dataSnapshot.getValue(Usuario.class);
-                                            Common.currentUser = user001;
+                                            try {
+                                                Usuario user001 = dataSnapshot.getValue(Usuario.class);
+                                                Common.currentUser = user001;
 
-                                            valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
-                                            valor2 = Common.currentUser.getDni();
-                                            Log.e("LoginActivity", "onDataChange  1 --> " + Common.currentUser.getFirstname());
-                                            Log.e("LoginActivity", "onDataChange  2 --> " + user001.getFirstname());
-                                            Log.e("LoginActivity", "valor1  1 --> " + valor1);
-                                            Log.e("LoginActivity", "valor2  2 --> " + valor2);
-                                            Log.e("LoginActivity", "Common.currentUser  --> " + Common.currentUser);
+                                                valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
+                                                valor2 = Common.currentUser.getDni();
+                                                Log.e("LoginActivity", "onDataChange  1 --> " + Common.currentUser.getFirstname());
+                                                Log.e("LoginActivity", "onDataChange  2 --> " + user001.getFirstname());
+                                                Log.e("LoginActivity", "valor1  1 --> " + valor1);
+                                                Log.e("LoginActivity", "valor2  2 --> " + valor2);
+                                                Log.e("LoginActivity", "Common.currentUser  --> " + Common.currentUser);
 
-                                            Intent intent = new Intent(LoginActivity.this, VerificacionLoginActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            intent.putExtra("usuario", valor1);
-                                            intent.putExtra("correo", valor2);
+                                                Intent intent = new Intent(LoginActivity.this, VerificacionLoginActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                intent.putExtra("usuario", valor1);
+                                                intent.putExtra("correo", valor2);
 
-                                            startActivity(intent);
-                                            finish();
+                                                startActivity(intent);
+                                                finish();
 
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            Log.e("LoginActivity", "Common.currentUser -->" + dataSnapshot.getValue(User.class));
                                         }
 
-                                        Log.e("LoginActivity", "Common.currentUser -->" + dataSnapshot.getValue(User.class));
-                                    }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            Log.e("ERROR", "DatabaseError -->" + databaseError.toString());
+                                            updateUI(null);
+                                        }
+                                    });
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Log.e("ERROR", "DatabaseError -->" + databaseError.toString());
-                                    }
-                                });
 
+                        }else {
+                            updateUI(null);
+                        }
 
 
 
@@ -193,8 +210,9 @@ public class LoginActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "signInWithEmail:failure  "+ e.getMessage());
                 Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
-
+                updateUI(null);
 
             }
         });
@@ -205,12 +223,12 @@ public class LoginActivity extends AppCompatActivity {
     //Validación de formulario parte 2
     private boolean checkDNI() {
 
-        if (usernamelogin.length() < 8) {
-            usernamelogin.setError("Error : ingresar  8 digitos");
+        if (emailLogin.length() < 8) {
+            emailLogin.setError("Error : ingresar  8 digitos");
             return false;
         }
-        if (usernamelogin.getText().toString().trim().isEmpty()) {
-            usernamelogin.setError("vacio");
+        if (emailLogin.getText().toString().trim().isEmpty()) {
+            emailLogin.setError("vacio");
             return false;
         }
         return true;
@@ -232,15 +250,15 @@ public class LoginActivity extends AppCompatActivity {
     private boolean submitForm() {
 
         if (!checkDNI()) {
-            usernamelogin.setAnimation(animation);
-            usernamelogin.startAnimation(animation);
+            emailLogin.setAnimation(animation);
+            emailLogin.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
 
         if (!checkPassword()) {
-            usernamelogin.setAnimation(animation);
-            usernamelogin.startAnimation(animation);
+            emailLogin.setAnimation(animation);
+            emailLogin.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
@@ -256,5 +274,33 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+//        FirebaseUser currentUser = auth.getCurrentUser();
+//        updateUI(currentUser);
+
+
+    }
+
+    private void updateUI(FirebaseUser usuarioFirebase ) {
+
+        if (usuarioFirebase !=null){
+            if (usuarioFirebase.isEmailVerified() )   {
+                Toast.makeText(this, "correo verificado", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Toast.makeText(this, "correo NO verificado", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        auth.signOut();
+//        updateUI(null);
+    }
 }

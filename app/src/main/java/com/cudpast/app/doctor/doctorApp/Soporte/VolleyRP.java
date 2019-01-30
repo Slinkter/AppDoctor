@@ -13,6 +13,7 @@ public class VolleyRP {
     private static VolleyRP mVolleyRP = null;
     private RequestQueue mRequestQueue;
 
+
     private VolleyRP(Context context) {
         mRequestQueue = Volley.newRequestQueue(context);
     }

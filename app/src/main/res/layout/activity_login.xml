@@ -34,16 +34,14 @@
                 android:src="@drawable/ic_hospital" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/loginUsername"
+                android:id="@+id/loginUsernameEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
                 android:ems="8"
                 android:gravity="center"
-                android:hint="DNI"
-                android:inputType="none|numberSigned"
-                android:maxLength="8"
-                android:text=""
+                android:hint="EMAIL"
+                android:inputType="textEmailAddress"
                 android:textColor="@color/colorPrimary"
                 android:textColorHint="@color/colorPrimary"
                 android:textSize="20dp"
