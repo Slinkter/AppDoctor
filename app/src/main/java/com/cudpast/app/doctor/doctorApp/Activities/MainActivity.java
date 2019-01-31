@@ -32,22 +32,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private TextView nameTextView;
     private TextView emailTextView;
     private TextView idTextView;
-    private GoogleApiClient googleApiClient;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //-->Login silencioso
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        //<--
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
@@ -57,8 +50,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         idTextView = findViewById(R.id.idTextView);
 
 
+
+
     }
     // METODO PRINCIPAL
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Usuario usuario = Common.currentUser;
         if (usuario != null) {
             Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show();
+            metodoSignInResult();
         } else {
             goLogIngScreen();
         }
@@ -82,39 +79,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     //3.OBTENER DATOS DEL USUARIO
-    private void metodoSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-
-            if (getIntent() != null){
-
+    private void metodoSignInResult() {
 
                 try {
-                    if (getIntent().getExtras().getString("usuario") != null){
-                        String name = getIntent().getExtras().getString("usuario");
-                        GoogleSignInAccount account = result.getSignInAccount();
-                        nameTextView.setText(name);
-                        emailTextView.setText(name);
-                        idTextView.setText(account.getId());
-                        Glide.with(this).load(account.getPhotoUrl()).into(photoImageView);
-                        Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
 
-                    }else {
-                        goLogIngScreen();
-                    }
+                        Usuario usuario = Common.currentUser;
+                        Log.e("usuario" , usuario.getFirstname()  + " \n" + usuario.getImage() );
+
+                        nameTextView.setText(usuario.getFirstname());
+                        emailTextView.setText(usuario.getCorreoG());
+                        idTextView.setText(usuario.getDni());
+                        Glide.with(this).load(usuario.getImage()).into(photoImageView);
+                      //  Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
+
+
                 }catch (Exception e){
-                    goLogIngScreen();
+
                     e.printStackTrace();
                 }
 
-            }else {
-                goLogIngScreen();
-            }
 
-
-        } else {
-            //SI NO ESTA LOGEADO
-            goLogIngScreen();
-        }
     }
     //4.LOGEAR
     private void goLogIngScreen() {
