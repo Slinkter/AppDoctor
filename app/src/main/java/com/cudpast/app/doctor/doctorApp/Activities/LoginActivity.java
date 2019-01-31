@@ -177,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 Log.e("LoginActivity", "valor2  2 --> " + valor2);
                                                 Log.e("LoginActivity", "Common.currentUser  --> " + Common.currentUser);
 
-                                                Intent intent = new Intent(LoginActivity.this, VerificacionLoginActivity.class);
+                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                 intent.putExtra("usuario", valor1);
                                                 intent.putExtra("correo", valor2);

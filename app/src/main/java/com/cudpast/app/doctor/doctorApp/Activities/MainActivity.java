@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
+import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -60,49 +62,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     protected void onStart() {
         super.onStart();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-        if (opr.isDone()) {
-            GoogleSignInResult result = opr.get();
-            metodoSignInResult(result);
+
+        Usuario usuario = Common.currentUser;
+        if (usuario != null) {
+            Toast.makeText(this, "Hola", Toast.LENGTH_SHORT).show();
         } else {
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Override
-                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    metodoSignInResult(googleSignInResult);
-                }
-            });
+            goLogIngScreen();
         }
+
     }
 
 
     //METODO SUPORTE
     //1.SALIR
     public void Salir(View view) {
-        Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    goLogIngScreen();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No se puedo salir", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
 
     }
-    //2.CERRAR
-    public void Cerra_sesion(View view) {
-        Auth.GoogleSignInApi.revokeAccess(googleApiClient).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    goLogIngScreen();
-                } else {
-                    Toast.makeText(getApplicationContext(), "no se puedo salir", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+
 
     //3.OBTENER DATOS DEL USUARIO
     private void metodoSignInResult(GoogleSignInResult result) {
