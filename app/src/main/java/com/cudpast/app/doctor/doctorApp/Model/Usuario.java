@@ -18,7 +18,7 @@ public class Usuario {
 
     }
     //Firebase db_doctor_register
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha , String imagen) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -29,6 +29,7 @@ public class Usuario {
         this.password = password;
         this.correoG = correoG;
         this.fecha = fecha;
+        this.image = imagen;
     }
     //Firebase db_doctor_login
     public Usuario(String dni, String password) {

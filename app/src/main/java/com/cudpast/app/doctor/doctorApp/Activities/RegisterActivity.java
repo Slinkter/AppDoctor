@@ -170,12 +170,12 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                 if (task.isSuccessful()) {
                                     try {
                                         Uri downloadUri = task.getResult();
-                                        String imageUrl = downloadUri.toString();
+                                        final String imageUrl = downloadUri.toString();
                                         //Base de datos : Archivo Php
                                         if (registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha)) {
                                             //Base de datos : Firebase
 
-                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha);
+                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha,imageUrl);
                                             Usuario user2 = new Usuario(dni, password);
                                             Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
 
@@ -192,7 +192,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                                             Log.e("RegisterActivity", "mAuth.getCurrentUser() " + auth.getCurrentUser().toString());
                                                             Log.e("RegisterActivity", "Correo y password : " + mail + password);
 
-                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha);
+                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha,imageUrl);
                                                             tb_Info_Doctor.child(authResult.getUser().getUid())
                                                                     .setValue(FirebaseUser)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

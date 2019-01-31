@@ -84,13 +84,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 try {
 
                         Usuario usuario = Common.currentUser;
-                        Log.e("usuario" , usuario.getFirstname()  + " \n" + usuario.getImage() );
+                        Log.e("usuario ------> " , usuario.getFirstname()  + " \n" + usuario.getImage() );
 
                         nameTextView.setText(usuario.getFirstname());
                         emailTextView.setText(usuario.getCorreoG());
                         idTextView.setText(usuario.getDni());
                         Glide.with(this).load(usuario.getImage()).into(photoImageView);
-                      //  Log.e("MAINACTIVITY ", " getIntent : id_login_name -->" +name);
+
 
 
                 }catch (Exception e){
