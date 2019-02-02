@@ -145,8 +145,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String fecha = getCurrentTimeStamp();
 
                 // Validar Formulario
-
-
                 if (submitForm()) {
                     final SpotsDialog waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
                     waitingDialog.show();
@@ -175,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         if (registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha)) {
                                             //Base de datos : Firebase
 
-                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha,imageUrl);
+                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl);
                                             Usuario user2 = new Usuario(dni, password);
                                             Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
 
@@ -192,8 +190,9 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                                             Log.e("RegisterActivity", "mAuth.getCurrentUser() " + auth.getCurrentUser().toString());
                                                             Log.e("RegisterActivity", "Correo y password : " + mail + password);
 
-                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha,imageUrl);
-                                                            tb_Info_Doctor.child(authResult.getUser().getUid())
+                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl);
+                                                            tb_Info_Doctor.
+                                                                    child(authResult.getUser().getUid())
                                                                     .setValue(FirebaseUser)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
@@ -208,13 +207,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
                                                                         }
                                                                     }).addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    waitingDialog.dismiss();
-                                                                    Log.e("RegisterActivity ", "onFailure ");
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            waitingDialog.dismiss();
+                                                                            Log.e("RegisterActivity ", "onFailure ");
 
 
-                                                                }
+                                                                        }
                                                             });
 
 
@@ -222,7 +221,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-//                                                waitingDialog.dismiss();
+                                                    waitingDialog.dismiss();
                                                     Toast.makeText(RegisterActivity.this, "Fallo de Internet", Toast.LENGTH_SHORT).show();
                                                 }
                                             });

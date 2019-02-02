@@ -25,15 +25,13 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity {
 
 
     private ImageView photoImageView;
     private TextView nameTextView;
     private TextView emailTextView;
     private TextView idTextView;
-
-
 
 
     @Override
@@ -48,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         nameTextView = findViewById(R.id.nameTextView);
         emailTextView = findViewById(R.id.emailTextView);
         idTextView = findViewById(R.id.idTextView);
-
-
 
 
     }
@@ -81,31 +77,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //3.OBTENER DATOS DEL USUARIO
     private void metodoSignInResult() {
 
-                try {
+        try {
 
-                        Usuario usuario = Common.currentUser;
-                        Log.e("usuario ------> " , usuario.getFirstname()  + " \n" + usuario.getImage() );
+            Usuario usuario = Common.currentUser;
+            Log.e("usuario ------> ", usuario.getFirstname() + " \n" + usuario.getImage());
 
-                        nameTextView.setText(usuario.getFirstname());
-                        emailTextView.setText(usuario.getCorreoG());
-                        idTextView.setText(usuario.getDni());
-                        Glide.with(this).load(usuario.getImage()).into(photoImageView);
+            nameTextView.setText(usuario.getFirstname());
+            emailTextView.setText(usuario.getCorreoG());
+            idTextView.setText(usuario.getDni());
+            Glide.with(this).load(usuario.getImage()).into(photoImageView);
 
 
+        } catch (Exception e) {
 
-                }catch (Exception e){
-
-                    e.printStackTrace();
-                }
+            e.printStackTrace();
+        }
 
 
     }
-    //4.LOGEAR
+
+    //4.LOGIN_ACTIVITY
     private void goLogIngScreen() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
     //5.IR A LA ACTIVIDDAD PRINCIPAL
     public void Atender(View view) {
         Intent intent = new Intent(this, DoctorHome.class);
@@ -114,8 +111,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 }

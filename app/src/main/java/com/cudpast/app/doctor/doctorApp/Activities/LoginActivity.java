@@ -288,10 +288,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (usuarioFirebase !=null){
             if (usuarioFirebase.isEmailVerified() )   {
-                Toast.makeText(this, "correo verificado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
             }
         }else {
-            Toast.makeText(this, "correo NO verificado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
         }
 
 
