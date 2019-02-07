@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
 
-    String valor1, valor2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,15 +170,15 @@ public class LoginActivity extends AppCompatActivity {
                                                 Usuario userAndroid = dataSnapshot.getValue(Usuario.class);
                                                 Common.currentUser = userAndroid;
                                                 //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
-                                                valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
-                                                valor2 = Common.currentUser.getDni();
+//                                                valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
+//                                                valor2 = Common.currentUser.getDni();
 
                                                 Log.e("LoginActivity", "176:Common.currentUser  --> " + Common.currentUser);
 
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                intent.putExtra("usuario", valor1);
-                                                intent.putExtra("correo", valor2);
+//                                                intent.putExtra("usuario", valor1);
+//                                                intent.putExtra("correo", valor2);
 
                                                 startActivity(intent);
                                                 finish();
@@ -253,15 +253,12 @@ public class LoginActivity extends AppCompatActivity {
             vib.vibrate(120);
             return false;
         }
-
         if (!checkPassword()) {
             emailLogin.setAnimation(animation);
             emailLogin.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
-
-
         return true;
     }
 
@@ -275,30 +272,22 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         FirebaseUser currentUser = auth.getCurrentUser();
         updateUI(currentUser);
-
-
     }
 
     private void updateUI(FirebaseUser usuarioFirebase ) {
-
         if (usuarioFirebase !=null){
             if (usuarioFirebase.isEmailVerified() )   {
-                Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
             }
         }else {
             Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        auth.signOut();
-//        updateUI(null);
     }
 }
