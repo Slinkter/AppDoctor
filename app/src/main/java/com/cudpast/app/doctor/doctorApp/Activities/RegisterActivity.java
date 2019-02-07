@@ -169,7 +169,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                     try {
                                         Uri downloadUri = task.getResult();
                                         final String imageUrl = downloadUri.toString();
-                                        //Base de datos : Archivo Php
+                                        //Guardar en GoDaddy
                                         if (registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha)) {
                                             //Base de datos : Firebase
 
@@ -181,7 +181,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                             databaseReference.child("db_doctor_login").child(dni).setValue(user2);
                                             databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
 
-                                            //Crear correo en firebase
+                                            //Guardar en firebase
                                             auth.createUserWithEmailAndPassword(mail, password)
                                                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                                         @Override
@@ -207,13 +207,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
                                                                         }
                                                                     }).addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            waitingDialog.dismiss();
-                                                                            Log.e("RegisterActivity ", "onFailure ");
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    waitingDialog.dismiss();
+                                                                    Log.e("RegisterActivity ", "onFailure ");
 
 
-                                                                        }
+                                                                }
                                                             });
 
 

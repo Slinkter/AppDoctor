@@ -41,7 +41,7 @@ import dmax.dialog.SpotsDialog;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "Login";
+    private static final String TAG = "LoginActivity";
     private static String IP = "http://www.cudpast.com/AppDoctor/Login_GETID.php?id=";
 
     private EditText emailLogin;
@@ -145,14 +145,11 @@ public class LoginActivity extends AppCompatActivity {
         Log.e(TAG, "passwordLogin" + passwordLogin);
 
 
-
-
         auth.signInWithEmailAndPassword(emailLogin, passwordLogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         Log.e(TAG, "signInWithEmail:success");
-
 
                         FirebaseUser user = auth.getCurrentUser();
                         if (user.isEmailVerified()){
@@ -166,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                             try {
+
                                                 Usuario user001 = dataSnapshot.getValue(Usuario.class);
                                                 Common.currentUser = user001;
 

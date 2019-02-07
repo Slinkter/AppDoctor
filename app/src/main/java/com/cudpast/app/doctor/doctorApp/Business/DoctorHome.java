@@ -1,17 +1,14 @@
 package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,13 +23,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 
 import com.firebase.geofire.GeoFire;
@@ -78,30 +73,29 @@ public class DoctorHome extends AppCompatActivity implements
 
     private static final String TAG_ERROR = "DoctorHome ";
 
-    private static final int MY_PERMISSION_REQUEST_CODE = 1000;
-    private static final int PLAY_SERVICE_RES_REQUEST = 1001;
+    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+    private static final int PLAY_SERVICE_RES_REQUEST = 7001;
 
     private GoogleApiClient mGoogleApiCliente;
     private LocationRequest mLocationRequest;
+    public IGoogleAPI mService;
 
     private static int UPDATE_INTERVAL = 5000;
     private static int FATEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
 
-    private DatabaseReference drivers, onlineRef, currentUserRef;
+    private DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
     private GeoFire geoFire;
     private Marker mCurrent;
 
     private MaterialAnimatedSwitch location_switch;// ON or OFF
-    public IGoogleAPI mService;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_home);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -110,21 +104,18 @@ public class DoctorHome extends AppCompatActivity implements
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
         //<--
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //variables
         location_switch = findViewById(R.id.location_switch);
         //El doctor se pone online o offline ..
-        onlineRef = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child(".info/connected");
-
-        onlineRef.addValueEventListener(new ValueEventListener() {
+        FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentUserRef.onDisconnect().removeValue();
+                FirebaseDB_currentUserRef.onDisconnect().removeValue();
             }
 
             @Override
@@ -132,10 +123,10 @@ public class DoctorHome extends AppCompatActivity implements
             }
         });
         //al estar en Online , se crea la tabla Drivers
-        currentUserRef = FirebaseDatabase
-                .getInstance()
-                .getReference(Common.tb_Business_Doctor)
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDB_currentUserRef = FirebaseDatabase.getInstance()
+                                                    .getReference(Common.tb_Business_Doctor)
+                                                    .child(Userid);
 
         // Inicio de la vista
         location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
@@ -151,22 +142,30 @@ public class DoctorHome extends AppCompatActivity implements
 
                 } else {
 
-                    FirebaseDatabase.getInstance().goOffline();
-                    stopLocationUpdate();
-                    if (mCurrent != null) {
+                    try {
+                        FirebaseDatabase.getInstance().goOffline();
+                        stopLocationUpdate();
                         mCurrent.remove();// eliminar un marker : mCurrent
                         mMap.clear();// Limpiar mapa
                         Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
+//                        if (mCurrent != null) {
+//                            mCurrent.remove();// eliminar un marker : mCurrent
+//                            mMap.clear();// Limpiar mapa
+//                            Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
+//                        }
+                    }catch (Exception e ){
+                        e.printStackTrace();
                     }
+
 
 
                 }
             }
         });
         //
-        drivers = FirebaseDatabase.getInstance().getReference(Common.tb_Business_Doctor);
-        Log.e(TAG_ERROR, " drivers");
-        geoFire = new GeoFire(drivers);
+        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.tb_Business_Doctor);
+        Log.e(TAG_ERROR, " FirebaseDB_drivers");
+        geoFire = new GeoFire(FirebaseDB_drivers);
         Log.e(TAG_ERROR, " geoFire ");
         setUpLocation();//displayLocation();
         Log.e(TAG_ERROR, " setUpLocation() ");

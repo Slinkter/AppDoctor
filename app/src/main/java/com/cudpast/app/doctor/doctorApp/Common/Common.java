@@ -16,11 +16,9 @@ public class Common {
     public static final String tb_Info_Paciente = "tb_Info_Paciente";
     public static final String pickup_request_tbl = "pickup_request_tbl";
     public static final String token_tbl = "Tokens";
-
-
-
     public static Usuario currentUser;
     public static Location mLastLocation;
+
     public static final String baseURL = "https://maps.googleapis.com";
     public static final String fcmURL = "https://fcm.googleapis.com/";
 
