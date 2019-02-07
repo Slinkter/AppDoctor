@@ -150,12 +150,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onSuccess(AuthResult authResult) {
                         Log.e(TAG, "148:signInWithEmail:success");
 
-                        FirebaseUser user = auth.getCurrentUser();
-                        String userAuthId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        Log.e(TAG, "FirebaseUser "+user);
-                        Log.e(TAG, "FirebaseUser "+userAuthId);
-                        if (user.isEmailVerified()){
-                            updateUI(user);
+                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                        String userAuthId = firebaseUser.getUid();
+
+                        Log.e(TAG, "user "+firebaseUser);
+                        Log.e(TAG, "userAuthId "+userAuthId);
+                        if (firebaseUser.isEmailVerified()){
+                            updateUI(firebaseUser);
                             FirebaseDatabase
                                     .getInstance()//Conexion a base de datos --> projectmedical001
                                     .getReference(Common.tb_Info_Doctor)//tabla-->
@@ -166,15 +167,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                             try {
 
-                                                Usuario user001 = dataSnapshot.getValue(Usuario.class);
-                                                Common.currentUser = user001;
-
+                                                Usuario userAndroid = dataSnapshot.getValue(Usuario.class);
+                                                Common.currentUser = userAndroid;
+                                                //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
                                                 valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
                                                 valor2 = Common.currentUser.getDni();
-                                                Log.e("LoginActivity", "172:onDataChange  1 --> " + Common.currentUser.getFirstname());
-                                                Log.e("LoginActivity", "onDataChange  2 --> " + user001.getFirstname());
-                                                Log.e("LoginActivity", "valor1  1 --> " + valor1);
-                                                Log.e("LoginActivity", "valor2  2 --> " + valor2);
+
                                                 Log.e("LoginActivity", "176:Common.currentUser  --> " + Common.currentUser);
 
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -189,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-                                            Log.e("LoginActivity", "190 : tu usuario no existe en la tabla tb_info_doctor" + dataSnapshot.getValue(User.class));
+                                            Log.e("LoginActivity", "190 : tu usuario " + dataSnapshot.getValue(User.class));
                                         }
 
                                         @Override
