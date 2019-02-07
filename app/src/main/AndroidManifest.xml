@@ -19,7 +19,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".Business.TripDetail"/>
+        <activity android:name=".Business.TripDetail" />
         <activity android:name=".Business.DoctorTracking" />
         <activity android:name=".Business.CustomerCallActivity" />
         <activity android:name=".Activities.VerificacionLoginActivity" />

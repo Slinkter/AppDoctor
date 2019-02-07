@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (submitForm()) {
                     //Login con Godaddy
                    // VerificarLogin(emailLogin.getText().toString());
-
                     VerificacionFirebase(emailLogin.getText().toString(), passwordlogin.getText().toString());
                 }
             }
@@ -91,49 +90,49 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //1.VERIFICACION DE GODADDY
-    private void VerificarLogin(String sUser) {
-
-        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
-        waitingDialog.show();
-        String URL = IP + sUser;
-        JsonObjectRequest solicitudGoDaddy;
-
-        solicitudGoDaddy = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject datos) {
-
-                try {
-                    String estado = datos.getString("resultado");
-                    if (estado.equals("CC")) {
-
-                        JSONObject jsondatos = new JSONObject(datos.getString("datos"));
-                        String usuario = jsondatos.getString("dniusuario");
-                        String emailLogin = LoginActivity.this.emailLogin.getText().toString();
-                        String passwordLogin = passwordlogin.getText().toString();
-
-                        if (usuario.equalsIgnoreCase(emailLogin)) {
-                          //  VerificacionFirebase(emailLogin, passwordLogin);
-                        }
-                        waitingDialog.dismiss();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_SHORT).show();
-                        waitingDialog.dismiss();
-                    }
-
-                } catch (JSONException e) {
-
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                waitingDialog.dismiss();
-                Toast.makeText(LoginActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        VolleyRP.addToQueue(solicitudGoDaddy, mRequest, this, volleyRP);
-    }
+//    private void VerificarLogin(String sUser) {
+//
+//        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
+//        waitingDialog.show();
+//        String URL = IP + sUser;
+//        JsonObjectRequest solicitudGoDaddy;
+//
+//        solicitudGoDaddy = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject datos) {
+//
+//                try {
+//                    String estado = datos.getString("resultado");
+//                    if (estado.equals("CC")) {
+//
+//                        JSONObject jsondatos = new JSONObject(datos.getString("datos"));
+//                        String usuario = jsondatos.getString("dniusuario");
+//                        String emailLogin = LoginActivity.this.emailLogin.getText().toString();
+//                        String passwordLogin = passwordlogin.getText().toString();
+//
+//                        if (usuario.equalsIgnoreCase(emailLogin)) {
+//                          //  VerificacionFirebase(emailLogin, passwordLogin);
+//                        }
+//                        waitingDialog.dismiss();
+//                    } else {
+//                        Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_SHORT).show();
+//                        waitingDialog.dismiss();
+//                    }
+//
+//                } catch (JSONException e) {
+//
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                waitingDialog.dismiss();
+//                Toast.makeText(LoginActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//
+//        VolleyRP.addToQueue(solicitudGoDaddy, mRequest, this, volleyRP);
+//    }
 
     //2.AUTENTICACION CON FIREBASE
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
@@ -141,23 +140,26 @@ public class LoginActivity extends AppCompatActivity {
         String emailLogin = usernamelogin;
         String passwordLogin = passwordlogin;
 
-        Log.e(TAG, "emailLogin" + emailLogin);
-        Log.e(TAG, "passwordLogin" + passwordLogin);
+        Log.e(TAG, "143:emailLogin" + emailLogin);
+        Log.e(TAG, "144:passwordLogin" + passwordLogin);
 
 
         auth.signInWithEmailAndPassword(emailLogin, passwordLogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Log.e(TAG, "signInWithEmail:success");
+                        Log.e(TAG, "148:signInWithEmail:success");
 
                         FirebaseUser user = auth.getCurrentUser();
+                        String userAuthId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        Log.e(TAG, "FirebaseUser "+user);
+                        Log.e(TAG, "FirebaseUser "+userAuthId);
                         if (user.isEmailVerified()){
                             updateUI(user);
                             FirebaseDatabase
                                     .getInstance()//Conexion a base de datos --> projectmedical001
-                                    .getReference(Common.tb_Info_Doctor)//nombre de la tabla-->
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())//recuperar el Uid
+                                    .getReference(Common.tb_Info_Doctor)//tabla-->
+                                    .child(userAuthId)//recuperar el Uid
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -169,11 +171,11 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
                                                 valor2 = Common.currentUser.getDni();
-                                                Log.e("LoginActivity", "onDataChange  1 --> " + Common.currentUser.getFirstname());
+                                                Log.e("LoginActivity", "172:onDataChange  1 --> " + Common.currentUser.getFirstname());
                                                 Log.e("LoginActivity", "onDataChange  2 --> " + user001.getFirstname());
                                                 Log.e("LoginActivity", "valor1  1 --> " + valor1);
                                                 Log.e("LoginActivity", "valor2  2 --> " + valor2);
-                                                Log.e("LoginActivity", "Common.currentUser  --> " + Common.currentUser);
+                                                Log.e("LoginActivity", "176:Common.currentUser  --> " + Common.currentUser);
 
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -187,7 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-                                            Log.e("LoginActivity", "Common.currentUser -->" + dataSnapshot.getValue(User.class));
+                                            Log.e("LoginActivity", "190 : tu usuario no existe en la tabla tb_info_doctor" + dataSnapshot.getValue(User.class));
                                         }
 
                                         @Override
@@ -276,8 +278,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-//        FirebaseUser currentUser = auth.getCurrentUser();
-//        updateUI(currentUser);
+        FirebaseUser currentUser = auth.getCurrentUser();
+        updateUI(currentUser);
 
 
     }

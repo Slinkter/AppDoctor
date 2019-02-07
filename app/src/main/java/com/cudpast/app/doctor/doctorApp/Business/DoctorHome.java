@@ -226,10 +226,12 @@ public class DoctorHome extends AppCompatActivity implements
     }
 
     private void updateFirebaseToken() {
-        Log.e(TAG_ERROR, " updateFirebaseToken() ");
+
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
         Token token = new Token(FirebaseInstanceId.getInstance().getToken());
         tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
+
+        Log.e(TAG_ERROR, " updateFirebaseToken() ");
         Log.e(TAG_ERROR, "FirebaseAuth.getInstance().getCurrentUser().getUid() -------->" + FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
@@ -245,7 +247,7 @@ public class DoctorHome extends AppCompatActivity implements
                 }
             }
         }
-        Log.e("*setUpLocation()", "432");
+        Log.e(TAG_ERROR, "*setUpLocation()");
     }
 
     private void builGoogleApiClient() {
@@ -255,11 +257,11 @@ public class DoctorHome extends AppCompatActivity implements
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiCliente.connect();
-        Log.e("*builGoogleApiClient()", " 442" + mGoogleApiCliente);
+        Log.e(TAG_ERROR, " *builGoogleApiClient()" + mGoogleApiCliente);
     }
 
     private void createLocationRequest() {
-        Log.e("createLocationRequest()", "Linea : 444");
+        Log.e(TAG_ERROR, "*createLocationRequest()");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FATEST_INTERVAL);
@@ -278,7 +280,7 @@ public class DoctorHome extends AppCompatActivity implements
             }
             return false;
         }
-        Log.e("* checkPlayService()", "Linea : 503");
+        Log.e(TAG_ERROR, "*checkPlayService()");
         return true;
     }
 
@@ -292,7 +294,7 @@ public class DoctorHome extends AppCompatActivity implements
                         createLocationRequest();
                         if (location_switch.isChecked()) {
                             displayLocation();
-                            Log.e("onRequ", "displayLocation()");
+                            Log.e(TAG_ERROR, "displayLocation()" + "onRequestPermissionsResult");
                         }
                     }
                 }
@@ -307,7 +309,7 @@ public class DoctorHome extends AppCompatActivity implements
         }
         //<--
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiCliente, this);
-        Log.e("stopLocationUpdate()", " location_switch : OFF");
+        Log.e(TAG_ERROR,  " stopLocationUpdate() "+" location_switch : OFF");
     }
 
     private void displayLocation() {
@@ -316,7 +318,7 @@ public class DoctorHome extends AppCompatActivity implements
             return;
         }
         //<--
-        LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
+      //  LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
         Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
         Log.e(TAG_ERROR, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
 
@@ -330,6 +332,8 @@ public class DoctorHome extends AppCompatActivity implements
                 //update to Firebase latitud y longitud de cada usuario
                 String geoFireGetUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 Log.e(TAG_ERROR, "displayLocation() : geoFireGetUID --> " + geoFireGetUID);
+                Log.e(TAG_ERROR, "geoFire() : latitude --> " + latitude);
+                Log.e(TAG_ERROR, "geoFire() : longitud --> " + longitud);
                 geoFire.setLocation(geoFireGetUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                     @Override
                     public void onComplete(String key, DatabaseError error) {
@@ -337,39 +341,31 @@ public class DoctorHome extends AppCompatActivity implements
                             mCurrent.remove();
                         }
                         //crear
-                        MarkerOptions m1 = new MarkerOptions()
-                                .position(new LatLng(latitude, longitud))
-                                .icon(BitmapDoctorApp(DoctorHome.this, R.drawable.ic_doctorapp))
-                                .title("Usted");
+                        MarkerOptions m1 = new MarkerOptions().position(new LatLng(latitude, longitud))
+                                                              .icon(BitmapDoctorApp(DoctorHome.this, R.drawable.ic_doctorapp))
+                                                              .title("Usted");
 
                         mCurrent = mMap.addMarker(m1); // <--Dibujar al doctor en el mapa
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitud), 16.0f));
+                        LatLng doctorLL = new LatLng(latitude, longitud);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
                     }
                 });
+            }else{
+                Log.d(TAG_ERROR, "displayLocation()"+"ERROR: no es checkeado");
             }
         } else {
-            Log.d("displayLocation()", "ERROR: Cannot get your location");
+            Log.d(TAG_ERROR, "displayLocation()"+"ERROR: Cannot get your location");
         }
 
-        Log.e(TAG_ERROR, "displayLocation() : fin ");
     }
 
     //todo:revisar
     private void startLocationUpdate() {
-        try {
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                return;
-            }
-
-            Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
-
-        } catch (Exception e) {
-            Log.e(TAG_ERROR, "startLocationUpdate() : ERROR " + e.getMessage());
-            Toast.makeText(this, "ERORR AL ACTIVAR PERMISOSS", Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
-
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
+        Log.e(TAG_ERROR, "startLocationUpdate() --> Permiso");
     }
 
     @Override
