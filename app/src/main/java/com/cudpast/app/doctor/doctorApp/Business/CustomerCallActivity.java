@@ -18,6 +18,12 @@ import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CustomerCallActivity extends AppCompatActivity {
+public class CustomerCallActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     TextView textTime, textAddress, textDistance;
     Button btnCancel, btnAccept;
@@ -40,10 +46,16 @@ public class CustomerCallActivity extends AppCompatActivity {
 
     double doclat,doclng;
 
+    private GoogleMap mMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_call);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
+        mapFragment.getMapAsync(this);
+
+        getSupportActionBar().hide();
 
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
@@ -187,4 +199,15 @@ public class CustomerCallActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(lat, lng);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Cliente"));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14.99f));
+
+    }
 }
