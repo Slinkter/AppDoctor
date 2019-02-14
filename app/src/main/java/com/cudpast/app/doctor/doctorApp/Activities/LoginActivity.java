@@ -59,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (submitForm()) {
                     //Login con Godaddy
-                   // VerificarLogin(emailLogin.getText().toString());
+                    // VerificarLogin(emailLogin.getText().toString());
                     VerificacionFirebase(emailLogin.getText().toString(), passwordlogin.getText().toString());
                 }
             }
@@ -133,7 +132,6 @@ public class LoginActivity extends AppCompatActivity {
 //
 //        VolleyRP.addToQueue(solicitudGoDaddy, mRequest, this, volleyRP);
 //    }
-
     //2.AUTENTICACION CON FIREBASE
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
 
@@ -143,19 +141,22 @@ public class LoginActivity extends AppCompatActivity {
         Log.e(TAG, "143:emailLogin" + emailLogin);
         Log.e(TAG, "144:passwordLogin" + passwordLogin);
 
+        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
+        waitingDialog.show();
 
-        auth.signInWithEmailAndPassword(emailLogin, passwordLogin)
+        auth
+                .signInWithEmailAndPassword(emailLogin, passwordLogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         Log.e(TAG, "148:signInWithEmail:success");
-
                         FirebaseUser firebaseUser = auth.getCurrentUser();
                         String userAuthId = firebaseUser.getUid();
 
-                        Log.e(TAG, "user "+firebaseUser);
-                        Log.e(TAG, "userAuthId "+userAuthId);
-                        if (firebaseUser.isEmailVerified()){
+                        Log.e(TAG, "user " + firebaseUser);
+                        Log.e(TAG, "userAuthId " + userAuthId);
+
+                        if (firebaseUser.isEmailVerified()) {
                             updateUI(firebaseUser);
                             FirebaseDatabase
                                     .getInstance()//Conexion a base de datos --> projectmedical001
@@ -166,23 +167,13 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                             try {
-
+                                                waitingDialog.dismiss();
                                                 Usuario userAndroid = dataSnapshot.getValue(Usuario.class);
                                                 Common.currentUser = userAndroid;
-                                                //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
-//                                                valor1 = Common.currentUser.getFirstname() + " " + Common.currentUser.getLastname() ;
-//                                                valor2 = Common.currentUser.getDni();
-
-                                                Log.e("LoginActivity", "176:Common.currentUser  --> " + Common.currentUser);
-
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                                intent.putExtra("usuario", valor1);
-//                                                intent.putExtra("correo", valor2);
-
                                                 startActivity(intent);
                                                 finish();
-
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
@@ -192,25 +183,27 @@ public class LoginActivity extends AppCompatActivity {
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            waitingDialog.dismiss();
                                             Log.e("ERROR", "DatabaseError -->" + databaseError.toString());
                                             updateUI(null);
                                         }
                                     });
 
 
-                        }else {
+                        } else {
                             updateUI(null);
+                            waitingDialog.dismiss();
                         }
-
 
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "signInWithEmail:failure  "+ e.getMessage());
+                Log.w(TAG, "signInWithEmail:failure  " + e.getMessage());
                 Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
                 updateUI(null);
+                waitingDialog.dismiss();
 
             }
         });
@@ -276,12 +269,12 @@ public class LoginActivity extends AppCompatActivity {
         updateUI(currentUser);
     }
 
-    private void updateUI(FirebaseUser usuarioFirebase ) {
-        if (usuarioFirebase !=null){
-            if (usuarioFirebase.isEmailVerified() )   {
-               // Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
+    private void updateUI(FirebaseUser usuarioFirebase) {
+        if (usuarioFirebase != null) {
+            if (usuarioFirebase.isEmailVerified()) {
+                // Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
             }
-        }else {
+        } else {
             Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
         }
     }

@@ -72,7 +72,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
         if (getIntent() != null) {
             lat = getIntent().getDoubleExtra("lat", -1.0);
             lng = getIntent().getDoubleExtra("lng", -1.0);
-            IdTokenPaciente = getIntent().getStringExtra("token");
+            IdTokenPaciente = getIntent().getStringExtra("tokenPaciente");
             getDirection(lat, lng);
 
         }
@@ -97,10 +97,8 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
     private void cancelBooking(String IdToken) {
 
         Token token = new Token(IdToken);
-
         Notification notification = new Notification("Cancel", "el doctor ha cancelado la cita");
         Sender sender = new Sender(token.getToken(), notification);
-
 
         Log.e("CustomerCallActivity", "token        : ------->" + token);
         Log.e("CustomerCallActivity", "notification : ------->" + notification);
@@ -129,6 +127,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void aceptBooking( ){
+
         Intent intent = new Intent(CustomerCallActivity.this,DoctorTracking.class);
         doclat= Common.mLastLocation.getLatitude() ;
         doclng= Common.mLastLocation.getLongitude();
@@ -203,7 +202,6 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Cliente"));
