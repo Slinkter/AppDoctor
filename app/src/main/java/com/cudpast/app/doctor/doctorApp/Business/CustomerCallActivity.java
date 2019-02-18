@@ -97,14 +97,17 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
     private void cancelBooking(String IdToken) {
 
         Token token = new Token(IdToken);
-        Notification notification = new Notification("Cancel", "el doctor ha cancelado la cita");
+        String title = "Cancel";
+        String body = "el doctor ha cancelado la cita";
+        Notification notification = new Notification(title, body);
         Sender sender = new Sender(token.getToken(), notification);
 
         Log.e("CustomerCallActivity", "token        : ------->" + token);
         Log.e("CustomerCallActivity", "notification : ------->" + notification);
         Log.e("CustomerCallActivity", "sender       : ------->" + sender);
 
-        mFCMService.sendMessage(sender)
+        mFCMService
+                .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
 
                     @Override
