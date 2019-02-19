@@ -19,18 +19,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="Bienvenido"
             android:textSize="44sp"
             android:textStyle="bold" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/idFotoUsuario"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
             android:layout_margin="6dp"
-            android:background="@color/colorAccent" />
+             />
 
         <TextView
             android:id="@+id/nameTextView"

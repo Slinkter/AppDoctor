@@ -19,36 +19,56 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".Business.TripDetail" />
-        <activity android:name=".Business.DoctorTracking" />
-        <activity android:name=".Business.CustomerCallActivity" />
-        <activity android:name=".Activities.VerificacionLoginActivity" />
-        <activity android:name=".Activities.RegisterActivity" />
-        <activity android:name=".Activities.VerificacionRegistroActivity" />
+        <activity
+            android:name=".Business.TripDetail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.DoctorTracking"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.CustomerCallActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.VerificacionLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.VerificacionRegistroActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activities.MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Business.DoctorHome"
             android:label="@string/title_activity_doctor_home"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".Activities.SplashActivity">
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activities.LoginActivity">
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity">
+        <activity
+            android:name=".Activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />

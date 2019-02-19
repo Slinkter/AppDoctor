@@ -14,6 +14,7 @@ import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
             nameTextView.setText(usuario.getFirstname());
             emailTextView.setText(usuario.getCorreoG());
             idTextView.setText(usuario.getDni());
-            Glide.with(this).load(usuario.getImage()).into(photoImageView);
+            Picasso
+                    .with(this)
+                    .load(usuario.getImage())
+                    .placeholder(R.drawable.ic_boypng)
+                    .error(R.drawable.ic_boypng)
+                    .into(photoImageView);
         } catch (Exception e) {
             e.printStackTrace();
         }
