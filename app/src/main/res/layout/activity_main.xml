@@ -7,15 +7,6 @@
     android:orientation="vertical"
     tools:context=".Activities.MainActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="Bienvenido"
-        android:textSize="44sp"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -23,6 +14,16 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:text="Bienvenido"
+            android:textSize="44sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/idFotoUsuario"
@@ -42,7 +43,8 @@
             android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:layout_marginBottom="20dp"
+            android:text="correo"
             android:textSize="18sp"
             android:visibility="visible" />
 
@@ -52,24 +54,27 @@
             android:layout_height="wrap_content"
             android:text="Hello World!"
             android:textSize="16sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <Button
             style="@style/Widget.AppCompat.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/custome_bottom_5"
             android:onClick="Atender"
-            android:text="Iniciar" />
+            android:text="Iniciar"
+            android:textColor="@color/white" />
 
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_salir_MainActivity"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_salir_MainActivity"
-        android:text="Cerrar session" />
-
-
+        android:text="Cerrar session"
+        android:textColor="@color/colorRed" />
 </LinearLayout>

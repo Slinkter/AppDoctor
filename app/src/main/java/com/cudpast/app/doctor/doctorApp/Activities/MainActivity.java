@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView idTextView;
     private Button btn_salir_MainActivity;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
