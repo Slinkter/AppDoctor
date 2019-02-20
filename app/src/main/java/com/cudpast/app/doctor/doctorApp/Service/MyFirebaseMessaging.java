@@ -18,16 +18,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
+        //
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "                 MyFirebaseMessaging                    ");
+        Log.e(TAG, "        onMessageReceived - RemoteMessage               ");
+        String from = remoteMessage.getFrom();
+        Log.e(TAG, "from:" + from);
+       //
+        if (remoteMessage.getNotification() != null) {
+            Log.e(TAG, "Notificacion : getTitle " + remoteMessage.getNotification().getTitle());
+            Log.e(TAG, "Notificacion : getBody " + remoteMessage.getNotification().getBody());
+        }
+        if (remoteMessage.getData().size() > 0) {
+            Log.e(TAG, "Notificacion : getData " + remoteMessage.getData()); // <--- I need to receive this from android device
+        }
+        Log.e(TAG, "========================================================");
+        //
+
         LatLng customer_location = new Gson().fromJson(remoteMessage.getNotification().getBody(), LatLng.class);
         Token pacienteToken = new Gson().fromJson(remoteMessage.getNotification().getBody(), Token.class);
+
 
         Intent intent = new Intent(getBaseContext(), CustomerCallActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("lat", customer_location.latitude);
         intent.putExtra("lng", customer_location.longitude);
         intent.putExtra("customer", remoteMessage.getNotification().getTitle());
-        intent.putExtra("lat", customer_location.latitude);
-        intent.putExtra("lng", customer_location.longitude);
         intent.putExtra("tokenPaciente", remoteMessage.getNotification().getTitle());
 
 
