@@ -18,7 +18,7 @@
         // Notification
 
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_doctor" />
+            android:resource="@drawable/ic_hospital" />
 
         <meta-data android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />

@@ -22,49 +22,33 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-//        super.onMessageReceived(remoteMessage);
-
 
         if (remoteMessage.getNotification() != null && remoteMessage.getData().size() > 0) {
+
             Log.e(TAG, "========================================================");
             Log.e(TAG, "                 MyFirebaseMessaging                    ");
-            Log.e(TAG, "        onMessageReceived - RemoteMessage               ");
-            Log.e(TAG, "Notificacion : getData " + remoteMessage.getData());
+            mostrarNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
+            String pToken = remoteMessage.getData().get("title").toString();
+            LatLng customer_location2 = new Gson().fromJson(remoteMessage.getData().get("descripcion").toString(), LatLng.class);
 
-            String from = remoteMessage.getFrom();
-            String title = remoteMessage.getData().get("title").toString();
-            String descripcion = remoteMessage.getData().get("descripcion").toString();
 
-            Log.e(TAG, "title:" + title);
-            Log.e(TAG, "descripcion:" + descripcion);
 
-            Log.e(TAG, "from:" + from);
-            Log.e(TAG, "Notificacion : getTitle " + remoteMessage.getNotification().getTitle());
-            Log.e(TAG, "Notificacion : getBody " + remoteMessage.getNotification().getBody());
-            Log.e(TAG, "Notificacion : getData " + remoteMessage.getData()); // <--- I need to receive this from android device
-//            mostrarNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
-            mostrarNotification();
-            LatLng customer_location = new Gson().fromJson(remoteMessage.getNotification().getBody(), LatLng.class);
             Intent intent = new Intent(getBaseContext(), CustomerCallActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("lat", customer_location.latitude);
-            intent.putExtra("lng", customer_location.longitude);
-            intent.putExtra("tokenPaciente", remoteMessage.getNotification().getTitle());
+            intent.putExtra("lat", customer_location2.latitude);
+            intent.putExtra("lng", customer_location2.longitude);
+            intent.putExtra("tokenPaciente", pToken);//
             startActivity(intent);
             Log.e(TAG, "========================================================");
         }
-
-
-
-
     }
 
 
-    public void mostrarNotification() {
+    public void mostrarNotification(String s1 , String s2) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,"hola")
                 .setSmallIcon(R.drawable.ic_hospital)
-                .setContentTitle("Cliente")
-                .setContentText("cliente")
+                .setContentTitle(s1)
+                .setContentText(s2)
                 .setAutoCancel(true);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
