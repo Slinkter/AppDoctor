@@ -8,6 +8,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.cudpast.app.doctor.doctorApp.Business.CustomerCallActivity;
+import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,23 +28,39 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         if (remoteMessage.getNotification() != null && remoteMessage.getData().size() > 0) {
 
+
+
             Log.e(TAG, "========================================================");
             Log.e(TAG, "                 MyFirebaseMessaging                    ");
             String title = remoteMessage.getNotification().getTitle();
-            String body = remoteMessage.getNotification().getBody();
-            String pToken = remoteMessage.getData().get("title").toString();
-            LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("descripcion").toString(), LatLng.class);
             Log.e(TAG, title);
-            Log.e(TAG, body);
-            Log.e(TAG, pToken);
-            Log.e(TAG,  " --> " +customer_location.latitude + " , " + customer_location.longitude);
-            Intent intent = new Intent(getBaseContext(), CustomerCallActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("lat", customer_location.latitude);
-            intent.putExtra("lng", customer_location.longitude);
-            intent.putExtra("tokenPaciente", pToken);//
-            startActivity(intent);
-            Log.e(TAG, "========================================================");
+
+            if (title.equalsIgnoreCase("el usuario ha cancelado")){
+                Intent intent = new Intent(getBaseContext(), DoctorHome.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }else {
+                String body = remoteMessage.getNotification().getBody();
+                String pToken = remoteMessage.getData().get("title").toString();
+                String json_lat_log = remoteMessage.getData().get("descripcion").toString();
+
+                LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
+                Log.e(TAG, title);
+                Log.e(TAG, body);
+                Log.e(TAG, pToken);
+                Log.e(TAG,  " --> " +customer_location.latitude + " , " + customer_location.longitude);
+                Intent intent = new Intent(getBaseContext(), CustomerCallActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("lat", customer_location.latitude);
+                intent.putExtra("lng", customer_location.longitude);
+                intent.putExtra("tokenPaciente", pToken);//
+                startActivity(intent);
+                Log.e(TAG, "========================================================");
+            }
+
+
+
+
         }
     }
 
