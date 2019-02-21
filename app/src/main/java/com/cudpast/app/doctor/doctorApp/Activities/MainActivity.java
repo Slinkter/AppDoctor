@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView idTextView;
     private Button btn_salir_MainActivity;
 
+        //todo al cerra session todavia se muestra al doctor en el mapa del paciente
 
 
     @Override
