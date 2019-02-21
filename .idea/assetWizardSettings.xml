@@ -204,8 +204,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_access_time" />
-                            <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_boy_svg" />
+                            <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva\Downloads\boy.svg" />
                           </map>
                         </option>
                       </PersistentState>

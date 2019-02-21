@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:background="@drawable/custome_bottom_5"
+            android:background="@drawable/custom_button_5"
             android:onClick="Atender"
             android:text="Iniciar"
             android:textColor="@color/white" />
