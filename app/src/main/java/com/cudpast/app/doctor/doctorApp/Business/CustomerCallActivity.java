@@ -88,8 +88,14 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
             getDirection(lat, lng);
 
         }
-
-
+        //.
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                aceptBooking(IdTokenPaciente);
+            }
+        });
+        //.
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,12 +104,23 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
             }
         });
 
-        btnAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                aceptBooking();
-            }
-        });
+
+    }
+
+    private void aceptBooking( String sIdTokenPaciente ){
+
+        Intent intent = new Intent(CustomerCallActivity.this,DoctorTracking.class);
+        doclat= Common.mLastLocation.getLatitude() ;
+        doclng= Common.mLastLocation.getLongitude();
+        //APP Doctor
+        intent.putExtra("doclat",doclat);
+        intent.putExtra("doclng",doclng);
+        //APP Paciente
+        intent.putExtra("pacienteLat",lat);
+        intent.putExtra("pacienteLng",lng);
+        intent.putExtra("sIdTokenPaciente",sIdTokenPaciente);
+        startActivity(intent);
+        finish();
     }
 
     private void cancelBooking(String IdToken) {
@@ -141,21 +158,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
                 });
     }
 
-    private void aceptBooking( ){
 
-        Intent intent = new Intent(CustomerCallActivity.this,DoctorTracking.class);
-        doclat= Common.mLastLocation.getLatitude() ;
-        doclng= Common.mLastLocation.getLongitude();
-        //APP Paciente
-        intent.putExtra("lat",lat);
-        intent.putExtra("lng",lng);
-        intent.putExtra("customerId",IdTokenPaciente);
-        //APP Doctor
-        intent.putExtra("doclat",doclat);
-        intent.putExtra("doclng",doclng);
-        startActivity(intent);
-        finish();
-    }
 
     //Cargar duración distancia y direccion final
     private void getDirection(double lat, double lng) {

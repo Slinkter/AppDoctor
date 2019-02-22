@@ -18,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +46,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
@@ -77,6 +77,8 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
 
+    private static String TAG = "DoctorTracking";
+
     //Google Play Service -->
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
     private GoogleApiClient mGoogleApiCliente;
@@ -87,9 +89,8 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
     //Google Play Service <--
 
     private GoogleMap mMap;
-    double riderlat, riderlng;
+    double pacienteLat, pacienteLng;
     String customerId;
-
 
     public Circle riderMarker;
     public Marker driverMarker;
@@ -109,34 +110,48 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_tracking);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDoctorTracking);
+        mapFragment.getMapAsync(this);
+
+
         if (getIntent() != null) {
-            riderlat = getIntent().getDoubleExtra("lat", -1.0);
-            riderlng = getIntent().getDoubleExtra("lng", -1.0);
-            customerId = getIntent().getStringExtra("customerId");
-            //
-
-
+            pacienteLat = getIntent().getDoubleExtra("pacienteLat", -1.0);
+            pacienteLng = getIntent().getDoubleExtra("pacienteLng", -1.0);
+            customerId = getIntent().getStringExtra("sIdTokenPaciente");
         }
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
         setUpLocation();
 
-        //mostrar resumen del servicio
+
         btnStartTrip = findViewById(R.id.btnStartTip);
+
         btnStartTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (btnStartTrip.getText().equals("START TRIP")) {
-                    pickupLocation = Common.mLastLocation;// Inicia servicio
-                    btnStartTrip.setText("DROP OFF HERE");
-                } else if (btnStartTrip.getText().equals("DROP OFF HERE")) {
-                    calculateCashFee(pickupLocation, Common.mLastLocation);
-                    // cuando finaliza el transporte  pickup sigo con el valor del primer if
-                    // y mLastLocation tiene el ultimo valor
+                //cambia el texto
+//                if (btnStartTrip.getText().equals("Empenzar")) {
+//                    pickupLocation = Common.mLastLocation;// Inicia servicio
+//                    btnStartTrip.setText("Avisar");
+//                    //metodo dibujo
+//
+//                } else if (btnStartTrip.getText().equals("Avisar")) {
+//                    calculateCashFee(pickupLocation, Common.mLastLocation);
+//                    // cuando finaliza el transporte  pickup sigo con el valor del primer if
+//                    // y mLastLocation tiene el ultimo valor
+//
+//                }
+                // solo se activa cuando llegar el doctor para enviar un mensaje(Notificacion)
+                avisarAlPaciente();
 
-                }
+
             }
         });
+
+
+    }
+
+    private void avisarAlPaciente() {
 
 
     }
@@ -224,14 +239,6 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
 
     }
 
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
-
     private void builGoogleApiClient() {
         mGoogleApiCliente = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -239,6 +246,14 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiCliente.connect();
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
     private boolean checkPlayService() {
@@ -272,14 +287,14 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
         mMap = googleMap;
 
         riderMarker = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(riderlat, riderlng))
+                .center(new LatLng(pacienteLat, pacienteLng))
                 .radius(50)// 50 metros 5  000000000000000
                 .strokeColor(Color.GREEN)
                 .fillColor(0x220000FF)
                 .strokeWidth(5.0f));
 
         geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.tb_Business_Doctor));
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(riderlat, riderlng), 0.05f);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
@@ -336,6 +351,7 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
     }
 
     private void displayLocation() {
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -343,53 +359,53 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
         }
 
         Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
-
-
         if (Common.mLastLocation != null) {
-
             final double latitude = Common.mLastLocation.getLatitude();
             final double longitud = Common.mLastLocation.getLongitude();
 
-            Log.e("ERROR", "Line :175--------> Common.mLastLocation :" + longitud + " , " + latitude);
-
             if (driverMarker != null) {
                 driverMarker.remove();
-
             }
 
-            driverMarker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(latitude, longitud))
-                    .title("doctor")
-                    .icon(BitmapDoctorApp(DoctorTracking.this, R.drawable.ic_doctorapp)));
+            LatLng dmlatlng = new LatLng(latitude, longitud);
+            MarkerOptions dm = new MarkerOptions()
+                    .position(dmlatlng)
+                    .title("USTED")
+                    .icon(BitmapDoctorApp(DoctorTracking.this, R.drawable.ic_doctorapp));
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitud), 17.0f));
+            driverMarker = mMap.addMarker(dm);
+
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dmlatlng, 17.0f));
 
             if (direction != null) {
                 direction.remove();//remote old direction
-                direction.remove();
+//                driverMarker.remove();
             }
             getDirection();
+            Log.e(TAG, "displayLocation() :  Common.mLastLocation :" + longitud + " , " + latitude);
 
         } else {
-            Log.d("ERROR", "Cannot get your location");
+            Log.d(TAG, "displayLocation()  : Error " + "Cannot get your location");
         }
-
 
     }
 
     private void getDirection() {
+        Log.e(TAG, "=============================================================");
+        Log.e(TAG, "                     getDirection()                          ");
 
         LatLng currentPosition = new LatLng(Common.mLastLocation.getLatitude(), Common.mLastLocation.getLongitude());
         String requestApi = null;
 
         try {
 
-            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
-                    "mode=driving&" +
-                    "transit_routing_preference=less_driving&" +
-                    "origin=" + currentPosition.latitude + "," + currentPosition.longitude + "&" +
-                    "destination=" + riderlat + "," + riderlng + "&" +
-                    "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
+            requestApi =
+                    "https://maps.googleapis.com/maps/api/directions/json?" +
+                            "mode=driving&" +
+                            "transit_routing_preference=less_driving&" +
+                            "origin=" + currentPosition.latitude + "," + currentPosition.longitude + "&" +
+                            "destination=" + pacienteLat + "," + pacienteLng + "&" +
+                            "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
 
             mService.getPath(requestApi)
                     .enqueue(new Callback<String>() {
@@ -397,7 +413,8 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
                         public void onResponse(Call<String> call, Response<String> response) {
                             try {
 
-                                new ParserTask().execute(response.body().toString());
+                                new getDireccionParserTask().execute(response.body().toString());
+
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -460,7 +477,7 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
     }
 
 
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+    private class getDireccionParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         ProgressDialog mDialog = new ProgressDialog(DoctorTracking.this);
 

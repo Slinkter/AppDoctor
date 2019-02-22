@@ -8,22 +8,23 @@
 
 
     <fragment
-        android:id="@+id/map"
+        android:id="@+id/mapDoctorTracking"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DoctorTracking" />
-    />
+        tools:context=".DoctorTracking"/>
+
 
     <Button
         android:id="@+id/btnStartTip"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="64dp"
+        android:layout_alignBottom="@id/mapDoctorTracking"
         android:layout_margin="6dp"
-
+        android:background="@drawable/custom_button_5"
         android:enabled="false"
-        android:text="START TRIP"
+        android:text="Notificar"
         android:textColor="@color/white" />
+
 
 </RelativeLayout>
