@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Model.Data;
 import com.cudpast.app.doctor.doctorApp.Model.FCMResponse;
 import com.cudpast.app.doctor.doctorApp.Model.Notification;
 import com.cudpast.app.doctor.doctorApp.Model.Sender;
@@ -34,6 +35,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,9 +48,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CustomerCallActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static String TAG = "CustomerCallActivity";
+    private static String TAG = "DoctorBooking";
 
     TextView textTime, textAddress, textDistance;
     Button btnCancel, btnAccept;
@@ -53,10 +58,12 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
     IGoogleAPI mService;
     IFCMService mFCMService;
     String IdTokenPaciente;
+    String IdTokenDoctor;
 
-    double lat,lng;
+    double lat, lng;
+    private FirebaseAuth auth;
 
-    double doclat,doclng;
+    double doclat, doclng;
 
     private GoogleMap mMap;
 
@@ -68,6 +75,8 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
         mapFragment.getMapAsync(this);
 
         getSupportActionBar().hide();
+
+        auth = FirebaseAuth.getInstance();
 
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
@@ -85,6 +94,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
             lat = getIntent().getDoubleExtra("lat", -1.0);
             lng = getIntent().getDoubleExtra("lng", -1.0);
             IdTokenPaciente = getIntent().getStringExtra("tokenPaciente");
+            IdTokenDoctor = getIntent().getStringExtra("tokenDoctor");
             getDirection(lat, lng);
 
         }
@@ -107,18 +117,43 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
 
     }
 
-    private void aceptBooking( String sIdTokenPaciente ){
+    private void aceptBooking(String sIdTokenPaciente) {
 
-        Intent intent = new Intent(CustomerCallActivity.this,DoctorTracking.class);
-        doclat= Common.mLastLocation.getLatitude() ;
-        doclng= Common.mLastLocation.getLongitude();
+        Intent intent = new Intent(DoctorBooking.this, DoctorAcepta.class);
+        doclat = Common.mLastLocation.getLatitude();
+        doclng = Common.mLastLocation.getLongitude();
         //APP Doctor
-        intent.putExtra("doclat",doclat);
-        intent.putExtra("doclng",doclng);
+        intent.putExtra("doclat", doclat);
+        intent.putExtra("doclng", doclng);
         //APP Paciente
-        intent.putExtra("pacienteLat",lat);
-        intent.putExtra("pacienteLng",lng);
-        intent.putExtra("sIdTokenPaciente",sIdTokenPaciente);
+        intent.putExtra("pacienteLat", lat);
+        intent.putExtra("pacienteLng", lng);
+        intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
+
+        //Enviar Notificacion hacia el paciente
+        String doctorToken = FirebaseInstanceId.getInstance().getToken();
+
+        Log.e("doctorToken",doctorToken);
+        Log.e("IdTokenDoctor",IdTokenDoctor);
+        Notification notification = new Notification("Acepta", "Su medico ha llegado");
+        Data data = new Data(IdTokenDoctor);
+        Sender sender = new Sender(sIdTokenPaciente, notification, data);
+        mFCMService
+                .sendMessage(sender)
+                .enqueue(new Callback<FCMResponse>() {
+                    @Override
+                    public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                        if (response.body().success == 1) {
+                            Log.e(TAG, "onResponse: success");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FCMResponse> call, Throwable t) {
+                        Log.e(TAG, "onFailure : " + t.getMessage());
+                    }
+                });
+
         startActivity(intent);
         finish();
     }
@@ -131,9 +166,9 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
         Notification notification = new Notification(title, body);
         Sender sender = new Sender(token.getToken(), notification);
 
-        Log.e("CustomerCallActivity", "token        : ------->" + token);
-        Log.e("CustomerCallActivity", "notification : ------->" + notification);
-        Log.e("CustomerCallActivity", "sender       : ------->" + sender);
+        Log.e("DoctorBooking", "token        : ------->" + token);
+        Log.e("DoctorBooking", "notification : ------->" + notification);
+        Log.e("DoctorBooking", "sender       : ------->" + sender);
 
         mFCMService
                 .sendMessage(sender)
@@ -142,14 +177,15 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
 
-                        Log.e("CustomerCallActivity", "response.body().success:--------->" + response.body().success);
+                        Log.e("DoctorBooking", "response.body().success:--------->" + response.body().success);
                         if (response.body().success == 1) {
-                            Toast.makeText(CustomerCallActivity.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
-                            Toast.makeText(CustomerCallActivity.this, "Failed ! ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorBooking.this, "Failed ! ", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
                         Log.e("ERROR", t.getMessage());
@@ -157,7 +193,6 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
 
                 });
     }
-
 
 
     //Cargar duración distancia y direccion final
@@ -174,7 +209,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
                     "destination=" + lat + "," + lng + "&" +
                     "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
 
-            Log.e("CustomerCallActivity", "requestApi:--------->" + requestApi);
+            Log.e("DoctorBooking", "requestApi:--------->" + requestApi);
 
             mService.getPath(requestApi)
                     .enqueue(new Callback<String>() {
@@ -203,7 +238,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(CustomerCallActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorBooking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                             //59:06
                         }
                     });
@@ -214,8 +249,7 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
         }
 
     }
-
-
+    //.
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -233,13 +267,11 @@ public class CustomerCallActivity extends AppCompatActivity implements OnMapRead
         mMap.addMarker(new MarkerOptions()
                 .position(sydney)
                 .title("Cliente")
-                .icon(BitmapDoctorApp(CustomerCallActivity.this,R.drawable.ic_boy_svg)));
+                .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
 
     }
-
-
-    //metodos auxiliar para imagenes .svg
+    //.
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());

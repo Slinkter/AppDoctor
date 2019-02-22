@@ -1,22 +1,14 @@
 package com.cudpast.app.doctor.doctorApp.Service;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.cudpast.app.doctor.doctorApp.Business.CustomerCallActivity;
+import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
-import com.cudpast.app.doctor.doctorApp.Model.Token;
-import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-
-import javax.xml.validation.TypeInfoProvider;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -43,17 +35,20 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 String body = remoteMessage.getNotification().getBody();
                 String pToken = remoteMessage.getData().get("title").toString();
                 String json_lat_log = remoteMessage.getData().get("descripcion").toString();
+                String dToken = remoteMessage.getData().get("extradata").toString();
 
                 LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
                 Log.e(TAG, title);
                 Log.e(TAG, body);
                 Log.e(TAG, pToken);
+                Log.e(TAG, dToken);
                 Log.e(TAG,  " --> " +customer_location.latitude + " , " + customer_location.longitude);
-                Intent intent = new Intent(getBaseContext(), CustomerCallActivity.class);
+                Intent intent = new Intent(getBaseContext(), DoctorBooking.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("lat", customer_location.latitude);
                 intent.putExtra("lng", customer_location.longitude);
                 intent.putExtra("tokenPaciente", pToken);//
+                intent.putExtra("tokenDoctor", pToken);//
                 startActivity(intent);
                 Log.e(TAG, "========================================================");
             }
@@ -70,7 +65,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 //        Log.e(TAG, "========================================================");
 //        Log.e(TAG, "                 MyFirebaseMessaging                    ");
 //
-//        Intent intent = new Intent(this, CustomerCallActivity.class);
+//        Intent intent = new Intent(this, DoctorBooking.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        intent.putExtra("tokenPaciente", pToken);
 //        intent.putExtra("lat", customer_location.latitude);

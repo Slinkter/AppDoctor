@@ -31,10 +31,10 @@
             android:name=".Business.TripDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Business.DoctorTracking"
+            android:name=".Business.DoctorAcepta"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Business.CustomerCallActivity"
+            android:name=".Business.DoctorBooking"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.VerificacionLoginActivity"

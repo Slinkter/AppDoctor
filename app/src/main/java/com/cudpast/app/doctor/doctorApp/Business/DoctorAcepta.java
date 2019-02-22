@@ -3,7 +3,6 @@ package com.cudpast.app.doctor.doctorApp.Business;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -60,7 +59,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,12 +70,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DoctorTracking extends FragmentActivity implements OnMapReadyCallback,
+public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
 
-    private static String TAG = "DoctorTracking";
+    private static String TAG = "DoctorAcepta";
 
     //Google Play Service -->
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -149,6 +147,7 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
         });
 
 
+
     }
 
     private void avisarAlPaciente() {
@@ -156,78 +155,7 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
 
     }
 
-    private void calculateCashFee(final Location pickupLocation, Location mLastLocation) {
 
-        String requestApi = null;
-
-        try {
-
-            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
-                    "mode=driving&" +
-                    "transit_routing_preference=less_driving&" +
-                    "origin=" + pickupLocation.getLatitude() + "," + pickupLocation.getLongitude() + "&" +
-                    "destination=" + mLastLocation.getLatitude() + "," + mLastLocation.getLongitude() + "&" +
-                    "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-
-            mService.getPath(requestApi)
-                    .enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            try {
-
-                                JSONObject jsonObject = new JSONObject(response.body().toString());
-                                JSONArray routes = jsonObject.getJSONArray("routes");
-
-                                JSONObject object = routes.getJSONObject(0);
-                                JSONArray legs = object.getJSONArray("legs");
-                                JSONObject legsObject = legs.getJSONObject(0);
-
-                                //Obtener Distancia //Obtener valor numerico
-                                JSONObject distance = legsObject.getJSONObject("distance");
-                                String distance_text = distance.getString("text");
-                                //
-                                Double distance_value = Double.parseDouble(distance_text.replaceAll("[^0-9\\\\.]+", ""));
-                                Log.e("DOCTORTRACKING", "distance_value -->" + distance_text);
-
-
-                                //Obtener duracion
-                                JSONObject timeObject = legsObject.getJSONObject("duration");
-                                String time_text = timeObject.getString("text");
-                                //Obtener valor numerico
-                                Double time_value = Double.parseDouble(time_text.replaceAll("[^0-9\\\\.]+", ""));
-
-                                // go to maps -->21:55 parte 19
-                                Intent intent;
-                                intent = new Intent(DoctorTracking.this, TripDetail.class);
-                                intent.putExtra("start_address", legsObject.getString("start_address"));
-                                intent.putExtra("end_address", legsObject.getString("end_address"));
-
-                                intent.putExtra("time", String.valueOf(time_value));
-                                intent.putExtra("distance", String.valueOf(distance_value));
-
-                                intent.putExtra("total", Common.formulaPrecio(distance_value, time_value));
-                                intent.putExtra("location_start", String.format("%f,%f", pickupLocation.getLatitude(), pickupLocation.getLongitude()));
-                                intent.putExtra("location_end", String.format("%f,%f", Common.mLastLocation.getLatitude(), Common.mLastLocation.getLongitude()));
-
-                                startActivity(intent);
-                                finish();
-                                // <--
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(DoctorTracking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } catch (Exception e) {
-
-        }
-
-    }
 
     private void setUpLocation() {
 
@@ -286,6 +214,11 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
 
         mMap = googleMap;
 
+        if (direction != null) {
+            direction.remove();//remote old direction
+
+        }
+
         riderMarker = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(pacienteLat, pacienteLng))
                 .radius(50)// 50 metros 5  000000000000000
@@ -324,22 +257,23 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
             }
         });
 
-
     }
 
     private void sendArriveNotification(String customerId) {
+
         Token token = new Token(customerId);
+        String tokenpaciente = token.getToken();
         String titile = "Arrived";
         String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
         Notification notification = new Notification(titile, body);
-        Sender sender = new Sender(token.getToken(), notification);
+
+        Sender sender = new Sender(tokenpaciente, notification );
 
         mFCMService.sendMessage(sender).enqueue(new Callback<FCMResponse>() {
             @Override
             public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                 if (response.body().success != 1) {
-                    Toast.makeText(DoctorTracking.this, "Failed", Toast.LENGTH_SHORT).show();
-                    //parte 15
+                    Toast.makeText(DoctorAcepta.this, "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -363,24 +297,26 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
             final double latitude = Common.mLastLocation.getLatitude();
             final double longitud = Common.mLastLocation.getLongitude();
 
-            if (driverMarker != null) {
+            if (driverMarker != null && direction != null) {
                 driverMarker.remove();
+                direction.remove();
+            }
+            if (direction != null) {
+                direction.remove();//remote old direction
+
             }
 
             LatLng dmlatlng = new LatLng(latitude, longitud);
             MarkerOptions dm = new MarkerOptions()
                     .position(dmlatlng)
                     .title("USTED")
-                    .icon(BitmapDoctorApp(DoctorTracking.this, R.drawable.ic_doctorapp));
+                    .icon(BitmapDoctorApp(DoctorAcepta.this, R.drawable.ic_doctorapp));
 
             driverMarker = mMap.addMarker(dm);
 
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dmlatlng, 17.0f));
 
-            if (direction != null) {
-                direction.remove();//remote old direction
-//                driverMarker.remove();
-            }
+
             getDirection();
             Log.e(TAG, "displayLocation() :  Common.mLastLocation :" + longitud + " , " + latitude);
 
@@ -413,6 +349,11 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
                         public void onResponse(Call<String> call, Response<String> response) {
                             try {
 
+                                if (direction != null) {
+                                    direction.remove();//remote old direction
+
+                                }
+
                                 new getDireccionParserTask().execute(response.body().toString());
 
 
@@ -423,7 +364,7 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(DoctorTracking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorAcepta.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } catch (Exception e) {
@@ -475,11 +416,10 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
-
+    //.
     private class getDireccionParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-        ProgressDialog mDialog = new ProgressDialog(DoctorTracking.this);
+        ProgressDialog mDialog = new ProgressDialog(DoctorAcepta.this);
 
         @Override
         protected void onPreExecute() {
@@ -504,10 +444,10 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+
             mDialog.dismiss();
             ArrayList points = null;
             PolylineOptions polylineOptions = null;
-
 
             for (int i = 0; i < lists.size(); i++) {
                 points = new ArrayList();
@@ -523,8 +463,8 @@ public class DoctorTracking extends FragmentActivity implements OnMapReadyCallba
                 }
                 //<--
                 polylineOptions.addAll(points);
-                polylineOptions.width(7);
-                polylineOptions.color(Color.RED);
+                polylineOptions.width(5);
+                polylineOptions.color(Color.MAGENTA);
                 polylineOptions.geodesic(true);
             }
 

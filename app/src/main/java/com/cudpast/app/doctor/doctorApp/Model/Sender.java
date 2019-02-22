@@ -3,6 +3,7 @@ package com.cudpast.app.doctor.doctorApp.Model;
 public class Sender {
     public String to ;
     public Notification notification;
+    public Data data;
 
     public Sender() {
     }
@@ -10,6 +11,13 @@ public class Sender {
     public Sender(String to, Notification notification) {
         this.to = to;
         this.notification = notification;
+
+    }
+
+    public Sender(String to, Notification notification, Data data) {
+        this.to = to;
+        this.notification = notification;
+        this.data = data;
     }
 
     public String getTo() {
@@ -26,5 +34,13 @@ public class Sender {
 
     public void setNotification(Notification notification) {
         this.notification = notification;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
     }
 }

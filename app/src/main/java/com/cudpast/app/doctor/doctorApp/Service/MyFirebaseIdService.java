@@ -25,7 +25,7 @@ public class MyFirebaseIdService extends FirebaseInstanceIdService {
         Token token = new Token(refreshedToken);
         if (FirebaseAuth.getInstance().getCurrentUser() !=null){
             tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
-
+            Common.token_doctor = token.getToken();
         }
 
     }

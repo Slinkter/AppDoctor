@@ -16,6 +16,7 @@ public class Common {
     public static final String tb_Info_Paciente = "tb_Info_Paciente";
     public static final String pickup_request_tbl = "pickup_request_tbl";
     public static final String token_tbl = "Tokens";
+    public static String token_doctor ;
     public static Usuario currentUser;
     public static Location mLastLocation;
 
