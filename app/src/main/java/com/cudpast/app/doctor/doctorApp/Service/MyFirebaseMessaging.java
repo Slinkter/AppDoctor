@@ -47,8 +47,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("lat", customer_location.latitude);
                 intent.putExtra("lng", customer_location.longitude);
-                intent.putExtra("tokenPaciente", pToken);//
-                intent.putExtra("tokenDoctor", pToken);//
+                intent.putExtra("tokenPaciente", pToken);
+                intent.putExtra("tokenDoctor", pToken);
                 startActivity(intent);
                 Log.e(TAG, "========================================================");
             }

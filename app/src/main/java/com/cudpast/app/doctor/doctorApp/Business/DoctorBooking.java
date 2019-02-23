@@ -153,7 +153,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Log.e(TAG, "onFailure : " + t.getMessage());
                     }
                 });
-
+        //
         startActivity(intent);
         finish();
     }
