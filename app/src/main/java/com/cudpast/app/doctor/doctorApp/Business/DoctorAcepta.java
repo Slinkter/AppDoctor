@@ -226,7 +226,7 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x220000FF)
                 .strokeWidth(5.0f));
 
-        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.tb_Business_Doctor));
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR));
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -306,15 +306,15 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
 
             }
 
-            LatLng dmlatlng = new LatLng(latitude, longitud);
-            MarkerOptions dm = new MarkerOptions()
-                    .position(dmlatlng)
+            LatLng doctorlatlng = new LatLng(latitude, longitud);
+            MarkerOptions doctorMO = new MarkerOptions()
+                    .position(doctorlatlng)
                     .title("USTED")
                     .icon(BitmapDoctorApp(DoctorAcepta.this, R.drawable.ic_doctorapp));
 
-            driverMarker = mMap.addMarker(dm);
+            driverMarker = mMap.addMarker(doctorMO);
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(dmlatlng, 17.0f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 17.0f));
 
 
             getDirection();

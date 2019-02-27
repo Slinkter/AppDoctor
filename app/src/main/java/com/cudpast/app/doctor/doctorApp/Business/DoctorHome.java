@@ -86,10 +86,9 @@ public class DoctorHome extends AppCompatActivity implements
 
     private DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
     private GeoFire geoFire;
-    private Marker mCurrent;
+    private Marker marketDoctorCurrent;
 
     private MaterialAnimatedSwitch location_switch;// ON or OFF
-
 
 
     @Override
@@ -111,6 +110,9 @@ public class DoctorHome extends AppCompatActivity implements
         //variables
         location_switch = findViewById(R.id.location_switch);
         //El doctor se pone online o offline ..
+        //al estar en Online , se crea la tabla Drivers
+        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
         FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
         FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -122,57 +124,36 @@ public class DoctorHome extends AppCompatActivity implements
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-        //al estar en Online , se crea la tabla Drivers
-        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDB_currentUserRef = FirebaseDatabase.getInstance()
-                                                    .getReference(Common.tb_Business_Doctor)
-                                                    .child(Userid);
 
-        // Inicio de la vista
+        //Online-Offline Doctor
         location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(boolean isOnline) {
                 if (isOnline) {
-
                     FirebaseDatabase.getInstance().goOnline();
                     startLocationUpdate();
-                    displayLocation();// crear un marker : mCurrent
+                    displayLocation();// crear un marker : marketDoctorCurrent
                     Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-
-
                 } else {
-
                     try {
                         FirebaseDatabase.getInstance().goOffline();
                         stopLocationUpdate();
-                        mCurrent.remove();// eliminar un marker : mCurrent
-                        mMap.clear();// Limpiar mapa
+                        marketDoctorCurrent.remove();
+                        mMap.clear();
                         Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-//                        if (mCurrent != null) {
-//                            mCurrent.remove();// eliminar un marker : mCurrent
-//                            mMap.clear();// Limpiar mapa
-//                            Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-//                        }
-                    }catch (Exception e ){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
-
                 }
             }
         });
         //
-        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.tb_Business_Doctor);
-        Log.e(TAG_ERROR, " FirebaseDB_drivers");
+        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
         geoFire = new GeoFire(FirebaseDB_drivers);
-        Log.e(TAG_ERROR, " geoFire ");
-        setUpLocation();//displayLocation();
-        Log.e(TAG_ERROR, " setUpLocation() ");
+        setUpLocation();
         mService = Common.getGoogleAPI();
-        Log.e(TAG_ERROR, " mService ");
         updateFirebaseToken();
-        Log.e(TAG_ERROR, "  updateFirebaseToken() ");
+
 
 
     }
@@ -303,60 +284,59 @@ public class DoctorHome extends AppCompatActivity implements
     }
 
     private void stopLocationUpdate() {
-        //-->Permisos
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        //<--
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiCliente, this);
-        Log.e(TAG_ERROR,  " stopLocationUpdate() "+" location_switch : OFF");
+        Log.e(TAG_ERROR, " stopLocationUpdate() " + " location_switch : OFF");
     }
 
     private void displayLocation() {
-        //-->Permisos
+        Log.e(TAG_ERROR, "=================================================================");
+        Log.e(TAG_ERROR, "                          displayLocation()                      ");
+        //.Permisos
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        //<--
-      //  LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
-        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);//Obtener GPS del movil
+        //.Obtener GPS del movil
+        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
         Log.e(TAG_ERROR, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
-
-
+        //.Update to firebaseUserUID latitud y longitud de cada usuario
         if (Common.mLastLocation != null) {
             if (location_switch.isChecked()) {
 
                 final double latitude = Common.mLastLocation.getLatitude();
                 final double longitud = Common.mLastLocation.getLongitude();
+                String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
 
-                //update to Firebase latitud y longitud de cada usuario
-                String geoFireGetUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                Log.e(TAG_ERROR, "displayLocation() : geoFireGetUID --> " + geoFireGetUID);
-                Log.e(TAG_ERROR, "geoFire() : latitude --> " + latitude);
-                Log.e(TAG_ERROR, "geoFire() : longitud --> " + longitud);
-                geoFire.setLocation(geoFireGetUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                Log.e(TAG_ERROR, " firebaseUserUID : --> " + firebaseUserUID);
+                Log.e(TAG_ERROR, " Common.mLastLocation.getLatitude() : --> " + latitude);
+                Log.e(TAG_ERROR, " Common.mLastLocation.getLongitude(): --> " + longitud);
+
+                geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                     @Override
                     public void onComplete(String key, DatabaseError error) {
-                        if (mCurrent != null) {
-                            mCurrent.remove();
-                        }
-                        //crear
-                        MarkerOptions m1 = new MarkerOptions().position(new LatLng(latitude, longitud))
-                                                              .icon(BitmapDoctorApp(DoctorHome.this, R.drawable.ic_doctorapp))
-                                                              .title("Usted");
 
-                        mCurrent = mMap.addMarker(m1); // <--Dibujar al doctor en el mapa
+                        if (marketDoctorCurrent != null) {
+                            marketDoctorCurrent.remove();
+                        }
+                        MarkerOptions m1 = new MarkerOptions()
+                                .position(new LatLng(latitude, longitud))
+                                .icon(BitmapDoctorApp(DoctorHome.this, R.drawable.ic_doctorapp))
+                                .title("Usted");
+                        //Dibujar al doctor en el mapa
+                        marketDoctorCurrent = mMap.addMarker(m1);
                         LatLng doctorLL = new LatLng(latitude, longitud);
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
                     }
                 });
-            }else{
-                Log.d(TAG_ERROR, "displayLocation()"+"ERROR: no es checkeado");
+            } else {
+                Log.e(TAG_ERROR, "displayLocation()" + "ERROR: no es checkeado");
             }
         } else {
-            Log.d(TAG_ERROR, "displayLocation()"+"ERROR: Cannot get your location");
+            Log.e(TAG_ERROR, "displayLocation()" + "ERROR: Cannot get your location");
         }
-
+        Log.e(TAG_ERROR, "=================================================================");
     }
 
     //todo:revisar
@@ -388,12 +368,16 @@ public class DoctorHome extends AppCompatActivity implements
     public void onLocationChanged(Location location) {
         Common.mLastLocation = location;
         displayLocation();
-        Log.e(TAG_ERROR, "Can't find style. Error: ");
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //--> Agregar estido de mapa
+        mMap = googleMap;
+        mMap.setTrafficEnabled(false);
+        mMap.setIndoorEnabled(false);
+        mMap.setBuildingsEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
         try {
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
             if (!success) {
@@ -402,16 +386,11 @@ public class DoctorHome extends AppCompatActivity implements
         } catch (Resources.NotFoundException e) {
             Log.e(TAG_ERROR, "Can't find style. Error: ", e);
         }
-        //<--
 
-        mMap = googleMap;
-        mMap.setTrafficEnabled(false);
-        mMap.setIndoorEnabled(false);
-        mMap.setBuildingsEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+
     }
 
-    //metodos auxiliar para imagenes .svg
+    //.metodos auxiliar para imagenes .svg
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());

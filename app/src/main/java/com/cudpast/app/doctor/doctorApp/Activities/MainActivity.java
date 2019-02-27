@@ -79,18 +79,17 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //.LOGIN_ACTIVITY
-    private void goToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
     //.IR A LA ACTIVIDDAD PRINCIPAL
     public void Atender(View view) {
         Intent intent = new Intent(this, DoctorHome.class);
-      //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-      //  finish();
     }
+    //.LOGIN_ACTIVITY
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 }
