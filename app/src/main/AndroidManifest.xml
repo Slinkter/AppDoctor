@@ -31,7 +31,7 @@
             android:name=".Business.TripDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Business.DoctorAcepta"
+            android:name=".Business.DoctorRuta"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Business.DoctorBooking"

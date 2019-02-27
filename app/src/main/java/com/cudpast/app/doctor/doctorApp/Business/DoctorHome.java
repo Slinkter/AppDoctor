@@ -112,8 +112,11 @@ public class DoctorHome extends AppCompatActivity implements
         //El doctor se pone online o offline ..
         //al estar en Online , se crea la tabla Drivers
         String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
+
         FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+
         FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -153,8 +156,6 @@ public class DoctorHome extends AppCompatActivity implements
         setUpLocation();
         mService = Common.getGoogleAPI();
         updateFirebaseToken();
-
-
 
     }
 
@@ -217,6 +218,7 @@ public class DoctorHome extends AppCompatActivity implements
     }
 
     private void setUpLocation() {
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
         } else {

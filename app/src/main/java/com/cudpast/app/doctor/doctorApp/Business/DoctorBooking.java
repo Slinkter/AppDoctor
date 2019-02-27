@@ -36,9 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -119,7 +116,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
     private void aceptBooking(String sIdTokenPaciente) {
 
-        Intent intent = new Intent(DoctorBooking.this, DoctorAcepta.class);
+        Intent intent = new Intent(DoctorBooking.this, DoctorRuta.class);
         doclat = Common.mLastLocation.getLatitude();
         doclng = Common.mLastLocation.getLongitude();
         //APP Doctor

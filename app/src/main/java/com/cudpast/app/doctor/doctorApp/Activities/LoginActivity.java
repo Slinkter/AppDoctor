@@ -91,8 +91,8 @@ public class LoginActivity extends AppCompatActivity {
         String emailLogin = usernamelogin;
         String passwordLogin = passwordlogin;
 
-        Log.e(TAG, "143:emailLogin" + emailLogin);
-        Log.e(TAG, "144:passwordLogin" + passwordLogin);
+        Log.e(TAG, "emailLogin   --->" + emailLogin);
+        Log.e(TAG, "passwordLogin  --->" + passwordLogin);
 
         final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         waitingDialog.show();
@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         Log.e(TAG, "148:signInWithEmail:success");
+
                         FirebaseUser firebaseUser = auth.getCurrentUser();
                         String userAuthId = firebaseUser.getUid();
 
@@ -153,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "signInWithEmail:failure  " + e.getMessage());
+                Log.e(TAG, "signInWithEmail:failure  " + e.getMessage());
                 Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
                 updateUI(null);
                 waitingDialog.dismiss();

@@ -36,9 +36,11 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -56,8 +58,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,17 +72,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback,
+public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
 
-    private static String TAG = "DoctorAcepta";
+    private static String TAG = "DoctorRuta";
 
     //Google Play Service -->
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -89,6 +97,9 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     double pacienteLat, pacienteLng;
     String customerId;
+    private FusedLocationProviderClient ubicacion;
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
 
     public Circle riderMarker;
     public Marker driverMarker;
@@ -98,7 +109,8 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
     IFCMService mFCMService;
     GeoFire geoFire;
 
-    //parte 19
+    private MaterialAnimatedSwitch location_switch_ruta;// ON or OFF
+
 
     Button btnStartTrip;
     Location pickupLocation;
@@ -107,9 +119,15 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_tracking);
-
+        ubicacion = LocationServices.getFusedLocationProviderClient(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDoctorTracking);
         mapFragment.getMapAsync(this);
+
+
+
+
+
+
 
 
         if (getIntent() != null) {
@@ -119,52 +137,35 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
         }
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
+
+        //.
+
+
         setUpLocation();
 
-
-        btnStartTrip = findViewById(R.id.btnStartTip);
-
-        btnStartTrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //cambia el texto
-//                if (btnStartTrip.getText().equals("Empenzar")) {
-//                    pickupLocation = Common.mLastLocation;// Inicia servicio
-//                    btnStartTrip.setText("Avisar");
-//                    //metodo dibujo
-//
-//                } else if (btnStartTrip.getText().equals("Avisar")) {
-//                    calculateCashFee(pickupLocation, Common.mLastLocation);
-//                    // cuando finaliza el transporte  pickup sigo con el valor del primer if
-//                    // y mLastLocation tiene el ultimo valor
-//
-//                }
-                // solo se activa cuando llegar el doctor para enviar un mensaje(Notificacion)
-                avisarAlPaciente();
-
-
-            }
-        });
-
-
-
     }
-
-    private void avisarAlPaciente() {
-
-
-    }
-
-
 
     private void setUpLocation() {
-
         if (checkPlayService()) {
             builGoogleApiClient();
             createLocationRequest();
             displayLocation();
         }
+    }
 
+    //
+    private boolean checkPlayService() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
+            } else {
+                Toast.makeText(this, "this device is support ", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     private void builGoogleApiClient() {
@@ -184,18 +185,75 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-    private boolean checkPlayService() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
-            } else {
-                Toast.makeText(this, "this device is support ", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-            return false;
+    //
+    private void displayLocation() {
+        Log.e(TAG, "=================================================================");
+        Log.e(TAG, "                          displayLocation()                      ");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(DoctorRuta.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            return;
         }
-        return true;
+
+        try {
+
+            ubicacion
+                    .getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+
+                            if (location != null) {
+                                final double latitude = location.getLatitude();
+                                final double longitud = location.getLongitude();
+                                final String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
+                                Log.e(TAG, " firebaseUserUID : --> " + firebaseUserUID);
+                                Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
+                                Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
+                                //-->
+                                if (driverMarker != null && direction != null) {
+                                    driverMarker.remove();
+                                    direction.remove();
+                                }
+
+
+                                LatLng doctorlatlng = new LatLng(latitude, longitud);
+                                MarkerOptions doctorMO = new MarkerOptions()
+                                        .position(doctorlatlng)
+                                        .title("USTED")
+                                        .icon(BitmapDoctorApp(DoctorRuta.this, R.drawable.ic_doctorapp));
+
+                                driverMarker = mMap.addMarker(doctorMO);
+
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 17.0f));
+
+                                Log.e(TAG, "displayLocation() :  Common.mLastLocation :" + longitud + " , " + latitude);
+                                //<--
+
+                                //guardar cada vez que cambie la ubicacion del usario
+                                geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                                    @Override
+                                    public void onComplete(String key, DatabaseError error) {
+                                        Log.e(TAG, "==========  geofire  ======== ");
+                                        Log.e(TAG, "inserto en la geofire");
+                                        Log.e(TAG, "key" + key);
+                                        Log.e(TAG, "firebaseUserUID" + firebaseUserUID);
+                                        Log.e(TAG, "latitude" + latitude);
+                                        Log.e(TAG, "longitud" + longitud);
+                                        Log.e(TAG, "==========  FIN  ======== ");
+                                    }
+                                });
+
+                                getDirection();
+
+
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
@@ -226,7 +284,7 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x220000FF)
                 .strokeWidth(5.0f));
 
-        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR));
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -267,13 +325,13 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
         String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
         Notification notification = new Notification(titile, body);
 
-        Sender sender = new Sender(tokenpaciente, notification );
+        Sender sender = new Sender(tokenpaciente, notification);
 
         mFCMService.sendMessage(sender).enqueue(new Callback<FCMResponse>() {
             @Override
             public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                 if (response.body().success != 1) {
-                    Toast.makeText(DoctorAcepta.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DoctorRuta.this, "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -284,47 +342,6 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void displayLocation() {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return;
-        }
-
-        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
-        if (Common.mLastLocation != null) {
-            final double latitude = Common.mLastLocation.getLatitude();
-            final double longitud = Common.mLastLocation.getLongitude();
-
-            if (driverMarker != null && direction != null) {
-                driverMarker.remove();
-                direction.remove();
-            }
-            if (direction != null) {
-                direction.remove();//remote old direction
-
-            }
-
-            LatLng doctorlatlng = new LatLng(latitude, longitud);
-            MarkerOptions doctorMO = new MarkerOptions()
-                    .position(doctorlatlng)
-                    .title("USTED")
-                    .icon(BitmapDoctorApp(DoctorAcepta.this, R.drawable.ic_doctorapp));
-
-            driverMarker = mMap.addMarker(doctorMO);
-
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 17.0f));
-
-
-            getDirection();
-            Log.e(TAG, "displayLocation() :  Common.mLastLocation :" + longitud + " , " + latitude);
-
-        } else {
-            Log.d(TAG, "displayLocation()  : Error " + "Cannot get your location");
-        }
-
-    }
 
     private void getDirection() {
         Log.e(TAG, "=============================================================");
@@ -364,7 +381,7 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(DoctorAcepta.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorRuta.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } catch (Exception e) {
@@ -416,10 +433,11 @@ public class DoctorAcepta extends FragmentActivity implements OnMapReadyCallback
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
     //.
     private class getDireccionParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-        ProgressDialog mDialog = new ProgressDialog(DoctorAcepta.this);
+        ProgressDialog mDialog = new ProgressDialog(DoctorRuta.this);
 
         @Override
         protected void onPreExecute() {

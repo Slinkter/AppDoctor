@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Business.DoctorAcepta">
+    tools:context=".Business.DoctorRuta">
 
 
     <fragment
@@ -24,7 +24,24 @@
         android:background="@drawable/custom_button_5"
         android:enabled="false"
         android:text="Notificar"
+        android:visibility="gone"
         android:textColor="@color/white" />
+
+
+    <com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch
+        android:id="@+id/location_switch_ruta"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center"
+
+
+        app:ball_press_color="@color/ballPressColor"
+        app:ball_release_color="@color/ballReleaseColor"
+        app:base_press_color="@color/basePressColor"
+        app:base_release_color="@color/baseReleaseColor"
+        app:icon_press="@drawable/ic_action_on"
+        app:icon_release="@drawable/ic_action_off" />
 
 
 </RelativeLayout>
