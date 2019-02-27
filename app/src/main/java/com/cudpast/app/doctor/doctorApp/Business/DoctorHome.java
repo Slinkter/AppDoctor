@@ -114,7 +114,6 @@ public class DoctorHome extends AppCompatActivity implements
         String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
-
         FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
 
         FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
