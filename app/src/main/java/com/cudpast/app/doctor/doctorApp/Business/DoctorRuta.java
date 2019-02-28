@@ -93,12 +93,12 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     private FusedLocationProviderClient ubicacion;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
-
     public Circle pacienteMarker;
     public Marker driverMarker;
     Polyline direction;
-    IGoogleAPI mService;
 
+
+    IGoogleAPI mService;
     IFCMService mFCMService;
     GeoFire geoFire;
     String doctorUid;
@@ -125,7 +125,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
             idTokenPaciente = getIntent().getStringExtra("sIdTokenPaciente");
         }
 
-        doctorUid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        doctorUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         referenceService = FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE);
         doctorService = referenceService.child(doctorUid);
 
@@ -149,6 +149,27 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    //.
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        try {
+            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
+            if (!success) {
+                Log.e("error", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("error", "Can't find style. Error: ", e);
+        }
+
+        mMap = googleMap;
+
+
+
+
+    }
+
+
     private void setUpLocation() {
         if (checkPlayService()) {
             builGoogleApiClient();
@@ -156,6 +177,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
             displayLocation();
         }
     }
+
 
     //
     private boolean checkPlayService() {
@@ -193,6 +215,11 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
+
+        int count = 0;
+        count++;
+        Log.e(TAG, "CONTADOR " + count);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(DoctorRuta.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             return;
@@ -212,22 +239,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                                 Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
                                 Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
                                 //-->
-                                if (driverMarker != null && direction != null) {
-                                    driverMarker.remove();
-                                    direction.remove();
-                                }
-
-
-                                LatLng doctorlatlng = new LatLng(latitude, longitud);
-
-                                MarkerOptions doctorMO = new MarkerOptions()
-                                        .position(doctorlatlng)
-                                        .title("USTED")
-                                        .icon(BitmapDoctorApp(DoctorRuta.this, R.drawable.ic_doctorapp));
-
-                                mMap.addMarker(doctorMO);
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 16.0f));
-
                                 //guardar cada vez que cambie la ubicacion del usario
                                 geoFire.setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                                     @Override
@@ -242,41 +253,20 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                                         Log.e(TAG, "==========  FIN  ======== ");
                                     }
                                 });
-
+                                mMap.clear();
+                                pacienteMarker = mMap.addCircle(new CircleOptions()
+                                        .center(new LatLng(pacienteLat, pacienteLng))
+                                        .radius(50)// 50 metros 5  000000000000000
+                                        .strokeColor(Color.GREEN)
+                                        .fillColor(0x220000FF)
+                                        .strokeWidth(5.0f));
                                 getDirection();
-
-
                             }
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-    }
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-        try {
-            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
-            if (!success) {
-                Log.e("error", "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e("error", "Can't find style. Error: ", e);
-        }
-
-        mMap = googleMap;
-
-        pacienteMarker = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(pacienteLat, pacienteLng))
-                .radius(50)// 50 metros 5  000000000000000
-                .strokeColor(Color.GREEN)
-                .fillColor(0x220000FF)
-                .strokeWidth(5.0f));
     }
     //.
     private void getDirection() {
@@ -293,16 +283,20 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                             "destination=" + pacienteLat + "," + pacienteLng + "&" +
                             "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
 
+            final LatLng doctorlatlng = new LatLng(currentPosition.latitude, currentPosition.longitude);
+
             mService.getPath(requestApi)
                     .enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
                             try {
 
-                                if (direction != null) {
-                                    direction.remove();
+                                driverMarker = mMap.addMarker(new MarkerOptions()
+                                        .position(doctorlatlng)
+                                        .title("USTED")
+                                        .icon(BitmapDoctorApp(DoctorRuta.this, R.drawable.ic_doctorapp)));
 
-                                }
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 16.0f));
 
                                 new getDireccionParserTask().execute(response.body().toString());
 
@@ -321,38 +315,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         }
 
-    }
-
-    //.
-    private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        displayLocation();
-        startLocationUpdate();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiCliente.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Common.mLastLocation = location;
-        displayLocation();
     }
 
     //.
@@ -412,6 +374,40 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         }
     }
+
+
+    //.
+    private void startLocationUpdate() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        displayLocation();
+        startLocationUpdate();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiCliente.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Common.mLastLocation = location;
+        displayLocation();
+    }
+
 
     //.
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
