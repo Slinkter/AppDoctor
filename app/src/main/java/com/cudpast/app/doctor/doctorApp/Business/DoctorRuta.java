@@ -85,7 +85,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     private static int UPDATE_INTERVAL = 5000;
     private static int FATEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
-    //Google Play Service <--
+
 
     private GoogleMap mMap;
     double pacienteLat, pacienteLng;
@@ -163,10 +163,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         }
 
         mMap = googleMap;
-
-
-
-
     }
 
 
@@ -215,11 +211,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
-
-        int count = 0;
-        count++;
-        Log.e(TAG, "CONTADOR " + count);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(DoctorRuta.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             return;
@@ -268,6 +259,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
             e.printStackTrace();
         }
     }
+
     //.
     private void getDirection() {
         Log.e(TAG, "=============================================================");
