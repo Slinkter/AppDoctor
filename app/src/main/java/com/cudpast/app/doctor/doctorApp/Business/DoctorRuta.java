@@ -19,8 +19,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -34,9 +32,6 @@ import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 import com.cudpast.app.doctor.doctorApp.Soporte.DirectionJSONParser;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryEventListener;
-import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -72,7 +67,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,8 +77,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
 
-    private static String TAG = "DoctorRuta";
-
+    private static String TAG = DoctorRuta.class.getName();
     //Google Play Service -->
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
     private GoogleApiClient mGoogleApiCliente;
@@ -96,61 +89,62 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
     private GoogleMap mMap;
     double pacienteLat, pacienteLng;
-    String customerId;
+    String idTokenPaciente;
     private FusedLocationProviderClient ubicacion;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
 
 
-    public Circle riderMarker;
+    public Circle pacienteMarker;
     public Marker driverMarker;
     Polyline direction;
     IGoogleAPI mService;
 
     IFCMService mFCMService;
     GeoFire geoFire;
+    String doctorUid;
 
-
-    private DatabaseReference FirebaseDB_drivers1, FirebaseDB_currentUserRef1, FirebaseDB_onlineRef;
+    private DatabaseReference referenceService, doctorService, onlineRef;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_tracking);
-        ubicacion = LocationServices.getFusedLocationProviderClient(this);
+        //*************************************************
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDoctorTracking);
         mapFragment.getMapAsync(this);
+        //*************************************************
+        ubicacion = LocationServices.getFusedLocationProviderClient(this);
+
+        mService = Common.getGoogleAPI();
+        mFCMService = Common.getIFCMService();
 
         if (getIntent() != null) {
             pacienteLat = getIntent().getDoubleExtra("pacienteLat", -1.0);
             pacienteLng = getIntent().getDoubleExtra("pacienteLng", -1.0);
-            customerId = getIntent().getStringExtra("sIdTokenPaciente");
+            idTokenPaciente = getIntent().getStringExtra("sIdTokenPaciente");
         }
-        mService = Common.getGoogleAPI();
-        mFCMService = Common.getIFCMService();
 
-        //.
+        doctorUid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+        referenceService = FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE);
+        doctorService = referenceService.child(doctorUid);
 
-        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDB_currentUserRef1 = FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE).child(Userid);
-
-        FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-        FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
+        onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        onlineRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.e(TAG, " onDataChange       -----> " + dataSnapshot.getValue());
-                FirebaseDB_currentUserRef1.onDisconnect().removeValue();
+                doctorService.onDisconnect().removeValue();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
         FirebaseDatabase.getInstance().goOnline();
-        FirebaseDB_drivers1 = FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE);
-        geoFire = new GeoFire(FirebaseDB_drivers1);
 
-
+        geoFire = new GeoFire(referenceService);
         setUpLocation();
 
     }
@@ -213,8 +207,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                             if (location != null) {
                                 final double latitude = location.getLatitude();
                                 final double longitud = location.getLongitude();
-                                final String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
-                                Log.e(TAG, " firebaseUserUID : --> " + firebaseUserUID);
+
+                                Log.e(TAG, " firebaseUserUID : --> " + doctorUid);
                                 Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
                                 Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
                                 //-->
@@ -225,26 +219,23 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
 
                                 LatLng doctorlatlng = new LatLng(latitude, longitud);
+
                                 MarkerOptions doctorMO = new MarkerOptions()
                                         .position(doctorlatlng)
                                         .title("USTED")
                                         .icon(BitmapDoctorApp(DoctorRuta.this, R.drawable.ic_doctorapp));
 
-                                driverMarker = mMap.addMarker(doctorMO);
-
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 17.0f));
-
-                                Log.e(TAG, "displayLocation() :  Common.mLastLocation :" + longitud + " , " + latitude);
-                                //<--
+                                mMap.addMarker(doctorMO);
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 16.0f));
 
                                 //guardar cada vez que cambie la ubicacion del usario
-                                geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                                geoFire.setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                                     @Override
                                     public void onComplete(String key, DatabaseError error) {
                                         Log.e(TAG, "==========  geofire  ======== ");
                                         Log.e(TAG, "inserto en la geofire");
                                         Log.e(TAG, "key" + key);
-                                        Log.e(TAG, "firebaseUserUID" + firebaseUserUID);
+                                        Log.e(TAG, "firebaseUserUID" + doctorUid);
                                         Log.e(TAG, "latitude" + latitude);
                                         Log.e(TAG, "longitud" + longitud);
                                         Log.e(TAG, "error" + error);
@@ -270,7 +261,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
 
         try {
-
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
             if (!success) {
                 Log.e("error", "Style parsing failed.");
@@ -281,60 +271,20 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         mMap = googleMap;
 
-//        if (direction != null) {
-//            direction.remove();//remote old direction
-//
-//
-//        }
-
-        riderMarker = mMap.addCircle(new CircleOptions()
+        pacienteMarker = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(pacienteLat, pacienteLng))
                 .radius(50)// 50 metros 5  000000000000000
                 .strokeColor(Color.GREEN)
                 .fillColor(0x220000FF)
                 .strokeWidth(5.0f));
-//
-//        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
-//        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
-//        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-//            @Override
-//            public void onKeyEntered(String key, GeoLocation location) {
-////                sendArriveNotification(customerId);
-////                btnStartTrip.setEnabled(true);
-//                // btnStartTrip.setText("REVISAR");
-//            }
-//
-//            @Override
-//            public void onKeyExited(String key) {
-//
-//            }
-//
-//            @Override
-//            public void onKeyMoved(String key, GeoLocation location) {
-//
-//            }
-//
-//            @Override
-//            public void onGeoQueryReady() {
-//
-//            }
-//
-//            @Override
-//            public void onGeoQueryError(DatabaseError error) {
-//
-//            }
-//        });
-
     }
-
-
+    //.
     private void getDirection() {
         Log.e(TAG, "=============================================================");
         Log.e(TAG, "                     getDirection()                          ");
         LatLng currentPosition = new LatLng(Common.mLastLocation.getLatitude(), Common.mLastLocation.getLongitude());
         String requestApi = null;
         try {
-
             requestApi =
                     "https://maps.googleapis.com/maps/api/directions/json?" +
                             "mode=driving&" +
