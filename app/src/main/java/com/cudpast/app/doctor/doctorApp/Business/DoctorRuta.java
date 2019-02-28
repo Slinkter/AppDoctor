@@ -99,7 +99,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     String customerId;
     private FusedLocationProviderClient ubicacion;
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
-    private DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
+
 
     public Circle riderMarker;
     public Marker driverMarker;
@@ -109,11 +109,9 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     IFCMService mFCMService;
     GeoFire geoFire;
 
-    private MaterialAnimatedSwitch location_switch_ruta;// ON or OFF
 
+    private DatabaseReference FirebaseDB_drivers1, FirebaseDB_currentUserRef1, FirebaseDB_onlineRef;
 
-    Button btnStartTrip;
-    Location pickupLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,13 +120,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         ubicacion = LocationServices.getFusedLocationProviderClient(this);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDoctorTracking);
         mapFragment.getMapAsync(this);
-
-
-
-
-
-
-
 
         if (getIntent() != null) {
             pacienteLat = getIntent().getDoubleExtra("pacienteLat", -1.0);
@@ -139,6 +130,25 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         mFCMService = Common.getIFCMService();
 
         //.
+
+        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDB_currentUserRef1 = FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE).child(Userid);
+
+        FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e(TAG, " onDataChange       -----> " + dataSnapshot.getValue());
+                FirebaseDB_currentUserRef1.onDisconnect().removeValue();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+        FirebaseDatabase.getInstance().goOnline();
+        FirebaseDB_drivers1 = FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE);
+        geoFire = new GeoFire(FirebaseDB_drivers1);
 
 
         setUpLocation();
@@ -193,9 +203,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
             ActivityCompat.requestPermissions(DoctorRuta.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             return;
         }
-
         try {
-
             ubicacion
                     .getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -239,6 +247,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                                         Log.e(TAG, "firebaseUserUID" + firebaseUserUID);
                                         Log.e(TAG, "latitude" + latitude);
                                         Log.e(TAG, "longitud" + longitud);
+                                        Log.e(TAG, "error" + error);
                                         Log.e(TAG, "==========  FIN  ======== ");
                                     }
                                 });
@@ -272,10 +281,11 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         mMap = googleMap;
 
-        if (direction != null) {
-            direction.remove();//remote old direction
-
-        }
+//        if (direction != null) {
+//            direction.remove();//remote old direction
+//
+//
+//        }
 
         riderMarker = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(pacienteLat, pacienteLng))
@@ -283,73 +293,46 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                 .strokeColor(Color.GREEN)
                 .fillColor(0x220000FF)
                 .strokeWidth(5.0f));
+//
+//        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
+//        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
+//        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+//            @Override
+//            public void onKeyEntered(String key, GeoLocation location) {
+////                sendArriveNotification(customerId);
+////                btnStartTrip.setEnabled(true);
+//                // btnStartTrip.setText("REVISAR");
+//            }
+//
+//            @Override
+//            public void onKeyExited(String key) {
+//
+//            }
+//
+//            @Override
+//            public void onKeyMoved(String key, GeoLocation location) {
+//
+//            }
+//
+//            @Override
+//            public void onGeoQueryReady() {
+//
+//            }
+//
+//            @Override
+//            public void onGeoQueryError(DatabaseError error) {
+//
+//            }
+//        });
 
-        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                sendArriveNotification(customerId);
-                btnStartTrip.setEnabled(true);
-                // btnStartTrip.setText("REVISAR");
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    private void sendArriveNotification(String customerId) {
-
-        Token token = new Token(customerId);
-        String tokenpaciente = token.getToken();
-        String titile = "Arrived";
-        String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
-        Notification notification = new Notification(titile, body);
-
-        Sender sender = new Sender(tokenpaciente, notification);
-
-        mFCMService.sendMessage(sender).enqueue(new Callback<FCMResponse>() {
-            @Override
-            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                if (response.body().success != 1) {
-                    Toast.makeText(DoctorRuta.this, "Failed", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FCMResponse> call, Throwable t) {
-
-            }
-        });
     }
 
 
     private void getDirection() {
         Log.e(TAG, "=============================================================");
         Log.e(TAG, "                     getDirection()                          ");
-
         LatLng currentPosition = new LatLng(Common.mLastLocation.getLatitude(), Common.mLastLocation.getLongitude());
         String requestApi = null;
-
         try {
 
             requestApi =
@@ -367,7 +350,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                             try {
 
                                 if (direction != null) {
-                                    direction.remove();//remote old direction
+                                    direction.remove();
 
                                 }
 
@@ -390,6 +373,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
     }
 
+    //.
     private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -419,19 +403,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     public void onLocationChanged(Location location) {
         Common.mLastLocation = location;
         displayLocation();
-    }
-
-    //metodos auxiliar para imagenes .svg
-    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
-        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
-        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        background.draw(canvas);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     //.
@@ -491,4 +462,43 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         }
     }
+
+    //.
+    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void sendArriveNotification(String customerId) {
+
+        Token token = new Token(customerId);
+        String tokenpaciente = token.getToken();
+        String titile = "Arrived";
+        String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
+        Notification notification = new Notification(titile, body);
+
+        Sender sender = new Sender(tokenpaciente, notification);
+
+        mFCMService.sendMessage(sender).enqueue(new Callback<FCMResponse>() {
+            @Override
+            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                if (response.body().success != 1) {
+                    Toast.makeText(DoctorRuta.this, "Failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FCMResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
 }

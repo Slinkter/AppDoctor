@@ -84,7 +84,7 @@ public class DoctorHome extends AppCompatActivity implements
     private static int FATEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
 
-    private DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
+    public DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
 
@@ -114,6 +114,9 @@ public class DoctorHome extends AppCompatActivity implements
         String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
+
+
+
         FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
 
         FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
