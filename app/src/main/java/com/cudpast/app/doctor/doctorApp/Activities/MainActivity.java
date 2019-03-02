@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView idTextView;
     private Button btn_salir_MainActivity;
 
-        //todo al cerra session todavia se muestra al doctor en el mapa del paciente
+    //todo al cerra session todavia se muestra al doctor en el mapa del paciente
 
 
     @Override
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     //.METODO PRINCIPAL
     //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
     //User Android
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             goToLoginActivity();
         }
     }
+
     //METODO SUPORTE
     //.OBTENER DATOS DEL USUARIO
     private void metodoSignInResult() {
@@ -79,11 +81,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     //.IR A LA ACTIVIDDAD PRINCIPAL
     public void Atender(View view) {
         Intent intent = new Intent(this, DoctorHome.class);
         startActivity(intent);
     }
+
     //.LOGIN_ACTIVITY
     private void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);

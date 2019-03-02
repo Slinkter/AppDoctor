@@ -165,7 +165,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         mMap = googleMap;
     }
 
-
+    //.
     private void setUpLocation() {
         if (checkPlayService()) {
             builGoogleApiClient();
@@ -174,8 +174,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         }
     }
 
-
-    //
+    //.
     private boolean checkPlayService() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -190,6 +189,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         return true;
     }
 
+    //.
     private void builGoogleApiClient() {
         mGoogleApiCliente = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -366,7 +366,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         }
     }
-
 
     //.
     private void startLocationUpdate() {

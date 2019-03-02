@@ -19,9 +19,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         if (remoteMessage.getNotification() != null && remoteMessage.getData().size() > 0) {
-
-
-
+            //son dos casos
+            //1.El usuario enviar una solicitud de atencion
+            //2.El usuario cancela en cualquier momento la solicutud de atencion
             Log.e(TAG, "========================================================");
             Log.e(TAG, "                 MyFirebaseMessaging                    ");
             String title = remoteMessage.getNotification().getTitle();
@@ -31,7 +31,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Intent intent = new Intent(getBaseContext(), DoctorHome.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-            }else {
+            }else if (title.equalsIgnoreCase("CUDPAST")){
                 String body = remoteMessage.getNotification().getBody();
                 String pToken = remoteMessage.getData().get("title").toString();
                 String json_lat_log = remoteMessage.getData().get("descripcion").toString();
@@ -43,6 +43,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Log.e(TAG, pToken);
                 Log.e(TAG, dToken);
                 Log.e(TAG,  " --> " +customer_location.latitude + " , " + customer_location.longitude);
+
                 Intent intent = new Intent(getBaseContext(), DoctorBooking.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("lat", customer_location.latitude);
@@ -52,10 +53,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 startActivity(intent);
                 Log.e(TAG, "========================================================");
             }
-
-
-
-
         }
     }
 
