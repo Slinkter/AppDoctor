@@ -67,7 +67,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_call);
+        setContentView(R.layout.activity_doctor_booking);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
 
