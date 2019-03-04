@@ -21,28 +21,27 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        //son dos casos
+        //1.El usuario enviar una solicitud de atencion
+        //2.El usuario cancela en cualquier momento la solicutud de atencion
 
-        // Check if message contains a data payload.
-        //parte 11 mejora de diseño
-        //parte 11 mejora de diseño
+        //primer plano  Notificacion
+        //segundo plano Data
+
+
+
 
         if (remoteMessage.getData().size() > 0) {
-
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-//            if (remoteMessage.getNotification() != null) {
-            //son dos casos
-            //1.El usuario enviar una solicitud de atencion
-            //2.El usuario cancela en cualquier momento la solicutud de atencion
             Log.e(TAG, "========================================================");
             Log.e(TAG, "                 MyFirebaseMessaging                    ");
             String title = remoteMessage.getNotification().getTitle();
-            Log.e(TAG, title);
 
             if (title.equalsIgnoreCase("el usuario ha cancelado")) {
+
                 Intent intent = new Intent(getBaseContext(), DoctorHome.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
             } else if (title.equalsIgnoreCase("CUDPAST")) {
 
                 String body = remoteMessage.getNotification().getBody();
@@ -51,11 +50,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 String dToken = remoteMessage.getData().get("extradata").toString();
                 LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
 
-                Log.e(TAG, title);
-                Log.e(TAG, body);
-                Log.e(TAG, pToken);
-                Log.e(TAG, dToken);
-                Log.e(TAG, " --> " + customer_location.latitude + " , " + customer_location.longitude);
+                Log.e(TAG, " title : " + title);
+                Log.e(TAG, " body : " + body);
+                Log.e(TAG, " pToken : " + pToken);
+                Log.e(TAG, " dToken : " + dToken);
+                Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
 
                 Intent intent = new Intent(getBaseContext(), DoctorBooking.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -78,25 +77,16 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 startActivity(intent);
                 Log.e(TAG, "========================================================");
             }
-            //}
 
-//            sendNotification(remoteMessage.getData().get("message"));
         }
         // Check if message contains a notification payload.
         else if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+
         }
 
 
     }
-
-
-    private void sendNotification(String message) {
-
-
-    }
-
 
 }
 

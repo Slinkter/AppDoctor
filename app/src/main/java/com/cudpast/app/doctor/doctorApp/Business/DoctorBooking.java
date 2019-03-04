@@ -47,7 +47,7 @@ import retrofit2.Response;
 
 public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static String TAG = "DoctorBooking";
+    private static String TAG = DoctorBooking.class.getSimpleName();
 
     TextView textTime, textAddress, textDistance;
     Button btnCancel, btnAccept;
@@ -113,9 +113,10 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
-
+    //.
     private void aceptBooking(String sIdTokenPaciente) {
-
+        Log.e(TAG, "==========================================");
+        Log.e(TAG, "                aceptBooking              ");
         Intent intent = new Intent(DoctorBooking.this, DoctorRuta.class);
         doclat = Common.mLastLocation.getLatitude();
         doclng = Common.mLastLocation.getLongitude();
@@ -129,10 +130,15 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         startActivity(intent);
 
         //Enviar Notificacion hacia el paciente
-        String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
+        String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         Notification notification = new Notification("Acepta", "Su medico ha llegado");
-        Data data = new Data(firebaseUserUID);
+        Data data = new Data(doctorUID);
         Sender sender = new Sender(sIdTokenPaciente, notification, data);
+
+        Log.e(TAG, "notification : " + notification);
+        Log.e(TAG, "data        : " + data);
+        Log.e(TAG, "sender       : " + sender);
 
         mFCMService
                 .sendMessage(sender)
@@ -143,40 +149,39 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                             Log.e(TAG, "onResponse: success");
                         }
                     }
-
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
                         Log.e(TAG, "onFailure : " + t.getMessage());
                     }
                 });
-        //
 
         finish();
     }
-
+    //.
     private void cancelBooking(String IdToken) {
+        Log.e(TAG, "==========================================");
+        Log.e(TAG, "                cancelBooking             ");
 
         Token token = new Token(IdToken);
         String title = "Cancel";
-        String body = "el doctor ha cancelado la cita";
+        String body = "el doctor ha cancelado la solicitud";
+
         Notification notification = new Notification(title, body);
         Sender sender = new Sender(token.getToken(), notification);
 
-        Log.e("DoctorBooking", "token        : ------->" + token);
-        Log.e("DoctorBooking", "notification : ------->" + notification);
-        Log.e("DoctorBooking", "sender       : ------->" + sender);
+        Log.e(TAG, "token        : " + token);
+        Log.e(TAG, "notification : " + notification);
+        Log.e(TAG, "sender       : " + sender);
 
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
-
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-
-                        Log.e("DoctorBooking", "response.body().success:--------->" + response.body().success);
                         if (response.body().success == 1) {
+                            Log.e(TAG, "response.body().success : " + response.body().success);
                             Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
-                            finish();
+
                         } else {
                             Toast.makeText(DoctorBooking.this, "Failed ! ", Toast.LENGTH_SHORT).show();
                         }
@@ -184,10 +189,11 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        Log.e("ERROR", t.getMessage());
+                        Log.e(TAG, "error : "+t.getMessage());
                     }
 
                 });
+        finish();
     }
 
 
@@ -205,7 +211,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     "destination=" + lat + "," + lng + "&" +
                     "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
 
-            Log.e("DoctorBooking", "requestApi:--------->" + requestApi);
+            Log.e(TAG, "requestApiGoogleMaps:" + "\n" + requestApi);
 
             mService.getPath(requestApi)
                     .enqueue(new Callback<String>() {
@@ -245,6 +251,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         }
 
     }
+
     //.
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -267,6 +274,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
 
     }
+
     //.
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
