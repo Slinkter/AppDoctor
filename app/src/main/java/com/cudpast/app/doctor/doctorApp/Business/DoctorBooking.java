@@ -36,9 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,7 +67,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_call);
+        setContentView(R.layout.activity_doctor_booking);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
 
@@ -119,7 +116,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
     private void aceptBooking(String sIdTokenPaciente) {
 
-        Intent intent = new Intent(DoctorBooking.this, DoctorAcepta.class);
+        Intent intent = new Intent(DoctorBooking.this, DoctorRuta.class);
         doclat = Common.mLastLocation.getLatitude();
         doclng = Common.mLastLocation.getLongitude();
         //APP Doctor
@@ -129,15 +126,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         intent.putExtra("pacienteLat", lat);
         intent.putExtra("pacienteLng", lng);
         intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
+        startActivity(intent);
 
         //Enviar Notificacion hacia el paciente
-        String doctorToken = FirebaseInstanceId.getInstance().getToken();
-
-        Log.e("doctorToken",doctorToken);
-        Log.e("IdTokenDoctor",IdTokenDoctor);
+        String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
         Notification notification = new Notification("Acepta", "Su medico ha llegado");
-        Data data = new Data(IdTokenDoctor);
+        Data data = new Data(firebaseUserUID);
         Sender sender = new Sender(sIdTokenPaciente, notification, data);
+
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
@@ -154,7 +150,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     }
                 });
         //
-        startActivity(intent);
+
         finish();
     }
 

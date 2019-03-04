@@ -15,8 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-
-
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_hospital" />
 
@@ -31,19 +29,13 @@
             android:name=".Business.TripDetail"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Business.DoctorAcepta"
+            android:name=".Business.DoctorRuta"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Business.DoctorBooking"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.VerificacionLoginActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Activities.RegisterActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.VerificacionRegistroActivity"
             android:screenOrientation="portrait" />
 
         <activity

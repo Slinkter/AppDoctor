@@ -11,11 +11,13 @@ import com.cudpast.app.doctor.doctorApp.Remote.RetrofitClient;
 
 public class Common {
 
-    public static final String tb_Business_Doctor = "tb_Business_Doctor";
-    public static final String tb_Info_Doctor = "tb_Info_Doctor";
-    public static final String tb_Info_Paciente = "tb_Info_Paciente";
-    public static final String pickup_request_tbl = "pickup_request_tbl";
+    public static final String TB_AVAILABLE_DOCTOR = "TB_AVAILABLE_DOCTOR";
+    public static final String TB_INFO_DOCTOR = "tb_Info_Doctor";
+    public static final String TB_INFO_PACIENTE = "tb_Info_Paciente";
+    public static final String TB_SERVICIO_DOCTOR_PACIENTE = "TB_SERVICIO_DOCTOR_PACIENTE";
     public static final String token_tbl = "Tokens";
+
+
     public static String token_doctor ;
     public static Usuario currentUser;
     public static Location mLastLocation;

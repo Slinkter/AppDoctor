@@ -3,9 +3,6 @@ package com.cudpast.app.doctor.doctorApp.Activities;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Vibrator;
 
@@ -21,8 +18,6 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -33,11 +28,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.User;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Continuation;
@@ -48,8 +41,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -59,7 +50,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -108,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
         //Firebase init
         auth = FirebaseAuth.getInstance();
-        tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.tb_Info_Doctor);
+        tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
 
         signupName = findViewById(R.id.signupName);
         signupLast = findViewById(R.id.signupLast);

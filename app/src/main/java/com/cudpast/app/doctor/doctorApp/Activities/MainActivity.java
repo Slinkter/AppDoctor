@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView idTextView;
     private Button btn_salir_MainActivity;
 
-        //todo al cerra session todavia se muestra al doctor en el mapa del paciente
+    //todo al cerra session todavia se muestra al doctor en el mapa del paciente
 
 
     @Override
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     //.METODO PRINCIPAL
     //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
     //User Android
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             goToLoginActivity();
         }
     }
+
     //METODO SUPORTE
     //.OBTENER DATOS DEL USUARIO
     private void metodoSignInResult() {
@@ -79,18 +81,19 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //.LOGIN_ACTIVITY
-    private void goToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
+
     //.IR A LA ACTIVIDDAD PRINCIPAL
     public void Atender(View view) {
         Intent intent = new Intent(this, DoctorHome.class);
-      //  intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | intent.FLAG_ACTIVITY_CLEAR_TASK | intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-      //  finish();
     }
+
+    //.LOGIN_ACTIVITY
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 }
