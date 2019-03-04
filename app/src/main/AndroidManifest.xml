@@ -19,7 +19,7 @@
             android:resource="@drawable/ic_hospital" />
 
         <meta-data android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:resource="@color/backgroundGray" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -31,10 +31,14 @@
         <activity
             android:name=".Business.DoctorRuta"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".Business.DoctorBooking"
             android:screenOrientation="portrait" >
-
+            <intent-filter>
+                <action android:name=".Business.DoctorBooking" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
 
 

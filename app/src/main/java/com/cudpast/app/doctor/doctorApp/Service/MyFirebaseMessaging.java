@@ -1,10 +1,15 @@
 package com.cudpast.app.doctor.doctorApp.Service;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
@@ -15,27 +20,33 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
+import java.util.Map;
+import java.util.Random;
+
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     public static final String TAG = "MyFirebaseMessaging";
 
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "                 MyFirebaseMessaging                    ");
         //son dos casos
         //1.El usuario enviar una solicitud de atencion
         //2.El usuario cancela en cualquier momento la solicutud de atencion
-
         //primer plano  Notificacion
         //segundo plano Data
 
+        final String title = remoteMessage.getNotification().getTitle();
+        final String body = remoteMessage.getNotification().getBody();
+
+        Map<String, String> data = remoteMessage.getData();
 
 
-
-        if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "========================================================");
-            Log.e(TAG, "                 MyFirebaseMessaging                    ");
-            String title = remoteMessage.getNotification().getTitle();
-
+        if (remoteMessage.getData().isEmpty()) {
+            Log.e(TAG, "                 isEmpty                    ");
+        } else {
             if (title.equalsIgnoreCase("el usuario ha cancelado")) {
 
                 Intent intent = new Intent(getBaseContext(), DoctorHome.class);
@@ -44,7 +55,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
             } else if (title.equalsIgnoreCase("CUDPAST")) {
 
-                String body = remoteMessage.getNotification().getBody();
                 String pToken = remoteMessage.getData().get("title").toString();
                 String json_lat_log = remoteMessage.getData().get("descripcion").toString();
                 String dToken = remoteMessage.getData().get("extradata").toString();
@@ -62,31 +72,54 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 intent.putExtra("lng", customer_location.longitude);
                 intent.putExtra("tokenPaciente", pToken);
                 intent.putExtra("tokenDoctor", pToken);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "hola")
-                        .setSmallIcon(R.drawable.ic_hospital)
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
+
+
 
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(0, notificationBuilder.build());
+                String NOTIFICATION_CHANNEL_ID = "CUDPAST";
 
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "", NotificationManager.IMPORTANCE_DEFAULT);
+                    notificationChannel.setDescription("SLINKTER CHANNEL");
+                    notificationChannel.enableLights(true);
+                    notificationChannel.setLightColor(Color.BLUE);
+                    notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+                    notificationChannel.enableLights(true);
+                    notificationManager.createNotificationChannel(notificationChannel);
+                }
+
+
+                int color = getResources().getColor(R.color.colorRed);
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                builder
+                        .setSmallIcon(R.drawable.ic_hospital)
+
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setContentIntent(pendingIntent)
+                        .setContentInfo("Info")
+                        .setColor(color)
+                        .setAutoCancel(true);
+
+                Notification notification = builder.build();
+                NotificationManagerCompat.from(this).notify(0,notification);
+
+              //  notificationManager.notify(new Random().nextInt(), builder.build());
+
+//                startActivity(intent);
                 Log.e(TAG, "========================================================");
             }
 
-        }
-        // Check if message contains a notification payload.
-        else if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 
         }
 
 
     }
+
 
 }
 
