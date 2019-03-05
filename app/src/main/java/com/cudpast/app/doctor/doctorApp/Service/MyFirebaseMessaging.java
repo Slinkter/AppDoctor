@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
@@ -79,16 +80,48 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             // Set the Activity to start in a new, empty task
             notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             // Create the PendingIntent
-            PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT            );
+            PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+            int color = getResources().getColor(R.color.colorRed);
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID);
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 
+            notification
+                    .setContentTitle(title)
+                    .setSmallIcon(R.drawable.ic_hospital)
+                    .setContentIntent(notifyPendingIntent)
+                    .setContentText(body);
 
-            builder.setContentIntent(notifyPendingIntent);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, " ", NotificationManager.IMPORTANCE_HIGH);
+                notificationChannel.setDescription("SLINKTER CHANNEL");
+                notification.setLargeIcon(BitmapFactory.decodeResource(
+                        getResources(),
+                        R.drawable.ic_doctor));
+                notificationChannel.enableLights(true);
+
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+                notificationChannel.enableLights(true);
+                mNotificationManager.createNotificationChannel(notificationChannel);
+            } else {
+                notification
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setColor(color)
+                        .setLargeIcon(BitmapFactory.decodeResource(
+                                getResources(),
+                                R.drawable.ic_doctor))
+                        .setVibrate(new long[]{100, 250})
+                        .setLights(Color.YELLOW, 500, 5000)
+                        .setAutoCancel(true);
+            }
+
 ///
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.notify(NOTIFICATION_ID, builder.build());
+            notificationManager.notify(NOTIFICATION_ID, notification.build());
 
 
         }
