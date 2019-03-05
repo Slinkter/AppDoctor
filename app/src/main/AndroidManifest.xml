@@ -34,7 +34,10 @@
 
         <activity
             android:name=".Business.DoctorBooking"
-            android:parentActivityName=".Activities.MainActivity"
+            android:launchMode="singleTask"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name=".Business.DoctorBooking" />

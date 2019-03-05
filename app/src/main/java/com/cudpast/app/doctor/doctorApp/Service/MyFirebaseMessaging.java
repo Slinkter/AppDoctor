@@ -32,6 +32,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     //segundo plano Data
     public static final String TAG = MyFirebaseMessaging.class.getSimpleName();
     private static final String CHANNEL_ID = "MyMessagin";
+    private static final int NOTIFICATION_ID = 9;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -59,14 +60,35 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             Log.e(TAG, " dToken : " + dToken);
             Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
 
-            Intent resultIntent = new Intent(this, DoctorBooking.class);
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            resultIntent.putExtra("lat", customer_location.latitude);
-            resultIntent.putExtra("lng", customer_location.longitude);
-            resultIntent.putExtra("tokenPaciente", pToken);
-            resultIntent.putExtra("tokenDoctor", pToken);
-            startActivity(resultIntent);
+//            Intent resultIntent = new Intent(this, DoctorBooking.class);
+//            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            resultIntent.putExtra("lat", customer_location.latitude);
+//            resultIntent.putExtra("lng", customer_location.longitude);
+//            resultIntent.putExtra("tokenPaciente", pToken);
+//            resultIntent.putExtra("tokenDoctor", pToken);
+//            startActivity(resultIntent);
 
+
+            //
+            Intent notifyIntent = new Intent(this, DoctorBooking.class);
+            notifyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            notifyIntent.putExtra("lat", customer_location.latitude);
+            notifyIntent.putExtra("lng", customer_location.longitude);
+            notifyIntent.putExtra("tokenPaciente", pToken);
+            notifyIntent.putExtra("tokenDoctor", pToken);
+            // Set the Activity to start in a new, empty task
+            notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            // Create the PendingIntent
+            PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT            );
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+
+
+
+            builder.setContentIntent(notifyPendingIntent);
+///
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
 
 
         }
