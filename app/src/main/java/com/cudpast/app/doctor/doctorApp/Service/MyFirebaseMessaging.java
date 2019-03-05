@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
@@ -30,6 +31,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     //primer plano  Notificacion
     //segundo plano Data
     public static final String TAG = MyFirebaseMessaging.class.getSimpleName();
+    private static final String CHANNEL_ID = "MyMessagin";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -57,51 +59,17 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             Log.e(TAG, " dToken : " + dToken);
             Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
 
-
-            Intent intent = new Intent(getBaseContext(), DoctorBooking.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("lat", customer_location.latitude);
-            intent.putExtra("lng", customer_location.longitude);
-            intent.putExtra("tokenPaciente", pToken);
-            intent.putExtra("tokenDoctor", pToken);
-            startActivity(intent);
-
-//                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//                String NOTIFICATION_CHANNEL_ID = "CUDPAST";
-//
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "", NotificationManager.IMPORTANCE_DEFAULT);
-//                    notificationChannel.setDescription("SLINKTER CHANNEL");
-//                    notificationChannel.enableLights(true);
-//                    notificationChannel.setLightColor(Color.BLUE);
-//                    notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-//                    notificationChannel.enableLights(true);
-//                    notificationManager.createNotificationChannel(notificationChannel);
-//                }
-//
-//
-//                int color = getResources().getColor(R.color.colorRed);
-//
-//                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-//                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-//                builder
-//                        .setSmallIcon(R.drawable.ic_hospital)
-//                        .setContentTitle(title)
-//                        .setContentText(body)
-//                        .setDefaults(Notification.DEFAULT_ALL)
-//                        .setContentIntent(pendingIntent)
-//                        .setContentInfo("Info")
-//                        .setColor(color)
-//                        .setAutoCancel(true);
-//
-//                Notification notification = builder.build();
-//                NotificationManagerCompat.from(this).notify(0,notification);
+            Intent resultIntent = new Intent(this, DoctorBooking.class);
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            resultIntent.putExtra("lat", customer_location.latitude);
+            resultIntent.putExtra("lng", customer_location.longitude);
+            resultIntent.putExtra("tokenPaciente", pToken);
+            resultIntent.putExtra("tokenDoctor", pToken);
+            startActivity(resultIntent);
 
 
 
         }
-
-
 
 
     }
