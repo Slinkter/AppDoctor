@@ -24,98 +24,84 @@ import java.util.Map;
 import java.util.Random;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
-
-    public static final String TAG = "MyFirebaseMessaging";
-
+    //son dos casos
+    //1.El usuario enviar una solicitud de atencion
+    //2.El usuario cancela en cualquier momento la solicutud de atencion
+    //primer plano  Notificacion
+    //segundo plano Data
+    public static final String TAG = MyFirebaseMessaging.class.getSimpleName();
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                 MyFirebaseMessaging                    ");
-        //son dos casos
-        //1.El usuario enviar una solicitud de atencion
-        //2.El usuario cancela en cualquier momento la solicutud de atencion
-        //primer plano  Notificacion
-        //segundo plano Data
-
         final String title = remoteMessage.getNotification().getTitle();
         final String body = remoteMessage.getNotification().getBody();
 
-        Map<String, String> data = remoteMessage.getData();
+        if (title.equalsIgnoreCase("el usuario ha cancelado")) {
+            Log.e(TAG, "==========================el usuario ha cancelado==============================");
+            Intent intent = new Intent(getBaseContext(), DoctorHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+        } else if (title.equalsIgnoreCase("CUDPAST")) {
+            Log.e(TAG, "============================CUDPAST============================");
+            String pToken = remoteMessage.getData().get("title").toString();
+            String json_lat_log = remoteMessage.getData().get("descripcion").toString();
+            String dToken = remoteMessage.getData().get("extradata").toString();
+            LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
+
+            Log.e(TAG, " title : " + title);
+            Log.e(TAG, " body : " + body);
+            Log.e(TAG, " pToken : " + pToken);
+            Log.e(TAG, " dToken : " + dToken);
+            Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
 
 
-        if (remoteMessage.getData().isEmpty()) {
-            Log.e(TAG, "                 isEmpty                    ");
-        } else {
-            if (title.equalsIgnoreCase("el usuario ha cancelado")) {
+            Intent intent = new Intent(getBaseContext(), DoctorBooking.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("lat", customer_location.latitude);
+            intent.putExtra("lng", customer_location.longitude);
+            intent.putExtra("tokenPaciente", pToken);
+            intent.putExtra("tokenDoctor", pToken);
+            startActivity(intent);
 
-                Intent intent = new Intent(getBaseContext(), DoctorHome.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+//                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                String NOTIFICATION_CHANNEL_ID = "CUDPAST";
+//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "", NotificationManager.IMPORTANCE_DEFAULT);
+//                    notificationChannel.setDescription("SLINKTER CHANNEL");
+//                    notificationChannel.enableLights(true);
+//                    notificationChannel.setLightColor(Color.BLUE);
+//                    notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+//                    notificationChannel.enableLights(true);
+//                    notificationManager.createNotificationChannel(notificationChannel);
+//                }
+//
+//
+//                int color = getResources().getColor(R.color.colorRed);
+//
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+//                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+//                builder
+//                        .setSmallIcon(R.drawable.ic_hospital)
+//                        .setContentTitle(title)
+//                        .setContentText(body)
+//                        .setDefaults(Notification.DEFAULT_ALL)
+//                        .setContentIntent(pendingIntent)
+//                        .setContentInfo("Info")
+//                        .setColor(color)
+//                        .setAutoCancel(true);
+//
+//                Notification notification = builder.build();
+//                NotificationManagerCompat.from(this).notify(0,notification);
 
-            } else if (title.equalsIgnoreCase("CUDPAST")) {
-
-                String pToken = remoteMessage.getData().get("title").toString();
-                String json_lat_log = remoteMessage.getData().get("descripcion").toString();
-                String dToken = remoteMessage.getData().get("extradata").toString();
-                LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
-
-                Log.e(TAG, " title : " + title);
-                Log.e(TAG, " body : " + body);
-                Log.e(TAG, " pToken : " + pToken);
-                Log.e(TAG, " dToken : " + dToken);
-                Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
-
-                Intent intent = new Intent(getBaseContext(), DoctorBooking.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("lat", customer_location.latitude);
-                intent.putExtra("lng", customer_location.longitude);
-                intent.putExtra("tokenPaciente", pToken);
-                intent.putExtra("tokenDoctor", pToken);
-
-
-
-
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                String NOTIFICATION_CHANNEL_ID = "CUDPAST";
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "", NotificationManager.IMPORTANCE_DEFAULT);
-                    notificationChannel.setDescription("SLINKTER CHANNEL");
-                    notificationChannel.enableLights(true);
-                    notificationChannel.setLightColor(Color.BLUE);
-                    notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-                    notificationChannel.enableLights(true);
-                    notificationManager.createNotificationChannel(notificationChannel);
-                }
-
-
-                int color = getResources().getColor(R.color.colorRed);
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                builder
-                        .setSmallIcon(R.drawable.ic_hospital)
-
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setContentIntent(pendingIntent)
-                        .setContentInfo("Info")
-                        .setColor(color)
-                        .setAutoCancel(true);
-
-                Notification notification = builder.build();
-                NotificationManagerCompat.from(this).notify(0,notification);
-
-              //  notificationManager.notify(new Random().nextInt(), builder.build());
-
-//                startActivity(intent);
-                Log.e(TAG, "========================================================");
-            }
 
 
         }
+
+
 
 
     }

@@ -182,7 +182,6 @@ public class DoctorHome extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 

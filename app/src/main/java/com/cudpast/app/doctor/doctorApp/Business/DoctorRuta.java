@@ -19,6 +19,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -32,6 +34,8 @@ import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 import com.cudpast.app.doctor.doctorApp.Soporte.DirectionJSONParser;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -103,6 +107,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     GeoFire geoFire;
     String doctorUid;
 
+    Button btnSendNotiArrived;
+
     private DatabaseReference referenceService, doctorService, onlineRef;
 
 
@@ -115,6 +121,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(this);
         //*************************************************
         ubicacion = LocationServices.getFusedLocationProviderClient(this);
+
+        btnSendNotiArrived = findViewById(R.id.btnSendNotiArrived);
 
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
@@ -163,6 +171,52 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         }
 
         mMap = googleMap;
+
+
+        geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+
+                Log.e(TAG, "Send Notif key" + key);
+                Log.e(TAG, "Send Notif location" + location);
+
+
+                btnSendNotiArrived.setEnabled(true);
+                btnSendNotiArrived.setVisibility(View.VISIBLE);
+
+                btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sendArriveNotification(idTokenPaciente);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+
     }
 
     //.
@@ -247,10 +301,10 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                                 mMap.clear();
                                 pacienteMarker = mMap.addCircle(new CircleOptions()
                                         .center(new LatLng(pacienteLat, pacienteLng))
-                                        .radius(50)// 50 metros 5  000000000000000
-                                        .strokeColor(Color.GREEN)
+                                        .radius(40)// 50 metros 5  000000000000000
+                                        .strokeColor(Color.RED)
                                         .fillColor(0x220000FF)
-                                        .strokeWidth(5.0f));
+                                        .strokeWidth(6.0f));
                                 getDirection();
                             }
                         }
@@ -414,11 +468,14 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     }
 
     private void sendArriveNotification(String customerId) {
+        Log.e(TAG, "=====================================================");
+        Log.e(TAG, "             sendArriveNotification                  ");
 
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
         String titile = "Arrived";
         String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
+
         Notification notification = new Notification(titile, body);
 
         Sender sender = new Sender(tokenpaciente, notification);

@@ -12,36 +12,20 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DoctorTracking"/>
-
+        tools:context=".DoctorTracking" />
 
     <Button
-        android:id="@+id/btnStartTip"
-        android:layout_width="match_parent"
+        android:id="@+id/btnSendNotiArrived"
+        android:layout_width="150dp"
         android:layout_height="64dp"
         android:layout_alignBottom="@id/mapDoctorTracking"
+        android:layout_centerHorizontal="true"
         android:layout_margin="6dp"
         android:background="@drawable/custom_button_5"
         android:enabled="false"
         android:text="Notificar"
-        android:visibility="gone"
-        android:textColor="@color/white" />
-
-
-    <com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch
-        android:id="@+id/location_switch_ruta"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_gravity="center"
-
-
-        app:ball_press_color="@color/ballPressColor"
-        app:ball_release_color="@color/ballReleaseColor"
-        app:base_press_color="@color/basePressColor"
-        app:base_release_color="@color/baseReleaseColor"
-        app:icon_press="@drawable/ic_action_on"
-        app:icon_release="@drawable/ic_action_off" />
+        android:textColor="@color/white"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>

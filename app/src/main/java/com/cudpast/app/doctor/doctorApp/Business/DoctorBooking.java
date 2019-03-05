@@ -113,6 +113,17 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
     //.
     private void aceptBooking(String sIdTokenPaciente) {
         Log.e(TAG, "==========================================");

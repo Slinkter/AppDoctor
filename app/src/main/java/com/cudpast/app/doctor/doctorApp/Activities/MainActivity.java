@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//
+//    }
 
     //METODO SUPORTE
     //.OBTENER DATOS DEL USUARIO
