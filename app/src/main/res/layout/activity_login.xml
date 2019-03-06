@@ -80,19 +80,27 @@
 
                 <Button
                     android:id="@+id/btnLogin"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:textColor="@color/white"
+                    android:background="@drawable/custom_button_5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="28dp"
                     android:layout_weight="1"
                     android:text="Ingresar" />
 
+
+
                 <Button
                     android:id="@+id/button2"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:background="@drawable/custom_button_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="28dp"
+                    android:layout_marginBottom="28dp"
                     android:layout_weight="1"
                     android:onClick="signup"
                     android:text="Registrarse" />

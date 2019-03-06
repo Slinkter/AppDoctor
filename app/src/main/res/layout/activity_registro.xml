@@ -258,6 +258,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:background="@drawable/custom_button_1"
             android:text="subir foto" />
 
 
@@ -288,42 +289,28 @@
 
                 <Button
                     android:id="@+id/btnGuardar"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:background="@drawable/custom_button_5"
+                    android:textColor="@color/white"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:text="Guardar" />
 
                 <Button
                     android:id="@+id/btnSalir"
-                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/custom_button_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Salir"
+                    android:textColor="@color/white"
+                    android:text="Regresar"
 
                     />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/signedInButtons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:visibility="gone">
 
-                <Button
-                    android:id="@+id/signOutButton"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:text="sign_out" />
-
-            </LinearLayout>
 
         </RelativeLayout>
 
