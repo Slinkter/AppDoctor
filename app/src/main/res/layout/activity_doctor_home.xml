@@ -18,11 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#222231"
+        android:background="@color/white"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_doctor_home"
         app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        app:itemTextColor="@color/colorAccent"
         app:menu="@menu/activity_doctor_home_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
