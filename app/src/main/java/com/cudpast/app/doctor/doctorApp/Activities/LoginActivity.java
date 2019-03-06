@@ -75,10 +75,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (submitForm()) {
                     //Login con Godaddy
                     // VerificarLogin(emailLogin.getText().toString());
-                    String email =emailLogin.getText().toString();
+                    String email = emailLogin.getText().toString();
                     String pwd = passwordlogin.getText().toString();
 //                    VerificacionFirebase(emailLogin.getText().toString(), passwordlogin.getText().toString());
-                    VerificacionFirebase(email,pwd);
+                    VerificacionFirebase(email, pwd);
                 }
             }
         });
@@ -87,12 +87,11 @@ public class LoginActivity extends AppCompatActivity {
 
     //2.AUTENTICACION CON FIREBASE
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
+        Log.e(TAG, " ===========================================================");
+        Log.e(TAG, "                VerificacionFirebase");
 
         String emailLogin = usernamelogin;
         String passwordLogin = passwordlogin;
-
-        Log.e(TAG, "emailLogin   --->" + emailLogin);
-        Log.e(TAG, "passwordLogin  --->" + passwordLogin);
 
         final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         waitingDialog.show();
@@ -102,13 +101,9 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Log.e(TAG, "148:signInWithEmail:success");
-
+                        Log.e(TAG, " signInWithEmail : success");
                         FirebaseUser firebaseUser = auth.getCurrentUser();
                         String userAuthId = firebaseUser.getUid();
-
-                        Log.e(TAG, "user " + firebaseUser);
-                        Log.e(TAG, "userAuthId " + userAuthId);
 
                         if (firebaseUser.isEmailVerified()) {
                             updateUI(firebaseUser);

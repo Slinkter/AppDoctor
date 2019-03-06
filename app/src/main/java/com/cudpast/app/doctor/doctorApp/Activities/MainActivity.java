@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
             Picasso
                     .with(this)
                     .load(usuario.getImage())
-                    .placeholder(R.drawable.ic_boypng)
-                    .error(R.drawable.ic_boypng)
+                    .placeholder(R.drawable.ic_photo_doctor)
+                    .error(R.drawable.ic_photo_doctor)
                     .into(photoImageView);
         } catch (Exception e) {
             e.printStackTrace();

@@ -37,11 +37,11 @@
             android:inputType="textEmailAddress"
             android:text="consultingarsiapp@gmail.com"
             android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
+            android:textColorHint="@color/colorRed"
             android:textSize="20dp"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/colorRed"
             app:met_singleLineEllipsis="false" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -57,11 +57,11 @@
             android:inputType="textPassword"
             android:text="MUNDOarsi20"
             android:textColor="@color/colorPrimary"
-            android:textColorHint="@color/colorPrimary"
+            android:textColorHint="@color/colorRed"
             android:textSize="20dp"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
-            app:met_primaryColor="@color/colorPrimary"
+            app:met_primaryColor="@color/colorRed"
             app:met_singleLineEllipsis="false" />
 
         <LinearLayout
