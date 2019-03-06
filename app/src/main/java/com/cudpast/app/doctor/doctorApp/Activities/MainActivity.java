@@ -33,41 +33,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
-        photoImageView = findViewById(R.id.idFotoUsuario);
-        nameTextView = findViewById(R.id.nameTextView);
-        emailTextView = findViewById(R.id.emailTextView);
-        idTextView = findViewById(R.id.idTextView);
-        btn_salir_MainActivity = findViewById(R.id.btn_salir_MainActivity);
-
-        btn_salir_MainActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToLoginActivity();
-            }
-        });
+//        photoImageView = findViewById(R.id.idFotoUsuario);
+//        nameTextView = findViewById(R.id.nameTextView);
+//        emailTextView = findViewById(R.id.emailTextView);
+//        idTextView = findViewById(R.id.idTextView);
+//        btn_salir_MainActivity = findViewById(R.id.btn_salir_MainActivity);
+//
+//        btn_salir_MainActivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                goToLoginActivity();
+//            }
+//        });
 
 
     }
 
     //.METODO PRINCIPAL
-    //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
-    //User Android
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Usuario usuario = Common.currentUser;
-        if (usuario != null) {
-            metodoSignInResult();
-        } else {
-            goToLoginActivity();
-        }
-    }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//    }
 
     //METODO SUPORTE
     //.OBTENER DATOS DEL USUARIO
@@ -100,6 +83,26 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+
+    //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
+    //User Android
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Usuario usuario = Common.currentUser;
+        if (usuario != null) {
+            metodoSignInResult();
+        } else {
+            goToLoginActivity();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 
 }

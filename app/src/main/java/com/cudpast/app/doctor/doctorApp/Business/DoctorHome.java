@@ -2,6 +2,7 @@ package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -23,10 +24,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
+import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 
@@ -56,6 +62,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +78,7 @@ public class DoctorHome extends AppCompatActivity implements
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
 
-    private static final String TAG_ERROR = "DoctorHome ";
+    private static final String TAG = "DoctorHome ";
 
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -91,6 +98,12 @@ public class DoctorHome extends AppCompatActivity implements
     private MaterialAnimatedSwitch location_switch;// ON or OFF
 
 
+    //Header Menu
+    ImageView imageViewDoctor;
+    TextView nameDoctor;
+    TextView emailDoctor;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,12 +111,27 @@ public class DoctorHome extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //
+        imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
+        nameDoctor = (TextView)headerView.findViewById(R.id.nameDoctor);
+        emailDoctor = (TextView)headerView.findViewById(R.id.emailDoctor);
+
+
+
+
+
+
 
         //<--
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -115,7 +143,6 @@ public class DoctorHome extends AppCompatActivity implements
         String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
-
 
 
         FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
@@ -159,6 +186,7 @@ public class DoctorHome extends AppCompatActivity implements
         setUpLocation();
         mService = Common.getGoogleAPI();
         updateFirebaseToken();
+
 
     }
 
@@ -215,8 +243,8 @@ public class DoctorHome extends AppCompatActivity implements
         Token token = new Token(FirebaseInstanceId.getInstance().getToken());
         tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
 
-        Log.e(TAG_ERROR, " updateFirebaseToken() ");
-        Log.e(TAG_ERROR, "FirebaseAuth.getInstance().getCurrentUser().getUid() -------->" + FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Log.e(TAG, " updateFirebaseToken() ");
+        Log.e(TAG, "FirebaseAuth.getInstance().getCurrentUser().getUid() -------->" + FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     private void setUpLocation() {
@@ -232,7 +260,7 @@ public class DoctorHome extends AppCompatActivity implements
                 }
             }
         }
-        Log.e(TAG_ERROR, "*setUpLocation()");
+        Log.e(TAG, "*setUpLocation()");
     }
 
     private void builGoogleApiClient() {
@@ -242,11 +270,11 @@ public class DoctorHome extends AppCompatActivity implements
                 .addApi(LocationServices.API)
                 .build();
         mGoogleApiCliente.connect();
-        Log.e(TAG_ERROR, " *builGoogleApiClient()" + mGoogleApiCliente);
+        Log.e(TAG, " *builGoogleApiClient()" + mGoogleApiCliente);
     }
 
     private void createLocationRequest() {
-        Log.e(TAG_ERROR, "*createLocationRequest()");
+        Log.e(TAG, "*createLocationRequest()");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FATEST_INTERVAL);
@@ -265,7 +293,7 @@ public class DoctorHome extends AppCompatActivity implements
             }
             return false;
         }
-        Log.e(TAG_ERROR, "*checkPlayService()");
+        Log.e(TAG, "*checkPlayService()");
         return true;
     }
 
@@ -279,7 +307,7 @@ public class DoctorHome extends AppCompatActivity implements
                         createLocationRequest();
                         if (location_switch.isChecked()) {
                             displayLocation();
-                            Log.e(TAG_ERROR, "displayLocation()" + "onRequestPermissionsResult");
+                            Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
                         }
                     }
                 }
@@ -292,20 +320,21 @@ public class DoctorHome extends AppCompatActivity implements
             return;
         }
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiCliente, this);
-        Log.e(TAG_ERROR, " stopLocationUpdate() " + " location_switch : OFF");
+        Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
     }
 
     private void displayLocation() {
-        Log.e(TAG_ERROR, "=================================================================");
-        Log.e(TAG_ERROR, "                          displayLocation()                      ");
+        Log.e(TAG, "=================================================================");
+        Log.e(TAG, "                          displayLocation()                      ");
         //.Permisos
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         //.Obtener GPS del movil
         Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
-        Log.e(TAG_ERROR, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
+        Log.e(TAG, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
         //.Update to firebaseUserUID latitud y longitud de cada usuario
+
         if (Common.mLastLocation != null) {
             if (location_switch.isChecked()) {
 
@@ -313,9 +342,9 @@ public class DoctorHome extends AppCompatActivity implements
                 final double longitud = Common.mLastLocation.getLongitude();
                 String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
 
-                Log.e(TAG_ERROR, " firebaseUserUID : --> " + firebaseUserUID);
-                Log.e(TAG_ERROR, " Common.mLastLocation.getLatitude() : --> " + latitude);
-                Log.e(TAG_ERROR, " Common.mLastLocation.getLongitude(): --> " + longitud);
+                Log.e(TAG, " firebaseUserUID : --> " + firebaseUserUID);
+                Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
+                Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
 
                 geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                     @Override
@@ -335,12 +364,12 @@ public class DoctorHome extends AppCompatActivity implements
                     }
                 });
             } else {
-                Log.e(TAG_ERROR, "displayLocation()" + "ERROR: no es checkeado");
+                Log.e(TAG, "displayLocation()" + "ERROR: no es checkeado");
             }
         } else {
-            Log.e(TAG_ERROR, "displayLocation()" + "ERROR: Cannot get your location");
+            Log.e(TAG, "displayLocation()" + "ERROR: Cannot get your location");
         }
-        Log.e(TAG_ERROR, "=================================================================");
+        Log.e(TAG, "=================================================================");
     }
 
     //todo:revisar
@@ -349,7 +378,7 @@ public class DoctorHome extends AppCompatActivity implements
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
-        Log.e(TAG_ERROR, "startLocationUpdate() --> Permiso");
+        Log.e(TAG, "startLocationUpdate() --> Permiso");
     }
 
     @Override
@@ -385,10 +414,10 @@ public class DoctorHome extends AppCompatActivity implements
         try {
             boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
             if (!success) {
-                Log.e(TAG_ERROR, "Style parsing failed.");
+                Log.e(TAG, "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG_ERROR, "Can't find style. Error: ", e);
+            Log.e(TAG, "Can't find style. Error: ", e);
         }
 
 
@@ -408,7 +437,7 @@ public class DoctorHome extends AppCompatActivity implements
     }
 
     private List<LatLng> decodePoly(String encoded) {
-        Log.e(TAG_ERROR, "Linea : 379");
+        Log.e(TAG, "Linea : 379");
         List<LatLng> poly = new ArrayList<LatLng>();
         int index = 0, len = encoded.length();
         int lat = 0, lng = 0;
@@ -440,4 +469,64 @@ public class DoctorHome extends AppCompatActivity implements
 
         return poly;
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Usuario usuario = Common.currentUser;
+        if (usuario != null) {
+           Log.e(TAG,"ok");
+        } else {
+            goToLoginActivity();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
+
+    //.LOGIN_ACTIVITY
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
+    private void cargarDataDoctor(){
+        Usuario usuario = Common.currentUser;
+        String name = usuario.getFirstname();
+        String email = usuario.getCorreoG();
+
+        Log.e(TAG," name :" + name);
+        Log.e(TAG," email :" + email);
+        try {
+            nameDoctor.setText(name);
+            emailDoctor.setText(email);
+            Picasso
+                    .with(this)
+                    .load(Common.currentUser.getImage())
+                    .placeholder(R.drawable.ic_photo_doctor)
+                    .error(R.drawable.ic_photo_doctor)
+                    .into(imageViewDoctor);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
