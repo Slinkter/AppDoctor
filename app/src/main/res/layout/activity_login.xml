@@ -1,117 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
 
     <LinearLayout
 
+        android:id="@+id/formlogin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingTop="50dp"
-        android:paddingRight="20dp">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
 
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="50dp"
+            android:contentDescription="nada"
+            android:src="@drawable/ic_hospital" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/loginUsernameEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="20dp"
+            android:ems="8"
+            android:gravity="center"
+            android:hint="EMAIL"
+            android:inputType="textEmailAddress"
+            android:text="consultingarsiapp@gmail.com"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/loginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="20dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="CONTRASEÑA"
+            android:inputType="textPassword"
+            android:text="MUNDOverde20"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="20dp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="false" />
 
         <LinearLayout
-            android:id="@+id/formlogin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="28dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginTop="60dp"
-                android:layout_marginBottom="50dp"
-                android:contentDescription="nada"
-                android:src="@drawable/ic_hospital" />
-
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/loginUsernameEmail"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="145dp"
+                android:layout_marginRight="5dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:ems="8"
-                android:gravity="center"
-                android:hint="EMAIL"
-                android:inputType="textEmailAddress"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textSize="20dp"
-                app:met_baseColor="@color/colorPrimary"
-                android:text="consultingarsiapp@gmail.com"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="false" />
 
-            <com.rengwuxian.materialedittext.MaterialEditText
-                android:id="@+id/loginPassword"
-                android:layout_width="match_parent"
+                android:background="@drawable/custom_button_2"
+                android:text="Ingresar"
+                android:textColor="@color/white" />
+
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="145dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="CONTRASEÑA"
-
-                android:inputType="textPassword"
-                android:text="MUNDOverde20"
-                android:textColor="@color/colorPrimary"
-                android:textColorHint="@color/colorPrimary"
-                android:textSize="20dp"
-                app:met_baseColor="@color/colorPrimary"
-                app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/colorPrimary"
-                app:met_singleLineEllipsis="false" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/formlogin"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="100dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btnLogin"
-                    android:textColor="@color/white"
-                    android:background="@drawable/custom_button_5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="28dp"
-                    android:layout_weight="1"
-                    android:text="Ingresar" />
-
-
-
-                <Button
-                    android:id="@+id/button2"
-                    android:background="@drawable/custom_button_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="28dp"
-                    android:layout_marginBottom="28dp"
-                    android:layout_weight="1"
-                    android:onClick="signup"
-                    android:text="Registrarse" />
-
-
-            </LinearLayout>
-
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/custom_button_1"
+                android:onClick="signup"
+                android:text="Registrarse"
+                android:textColor="@color/white" />
         </LinearLayout>
 
 
     </LinearLayout>
-
-
-</ScrollView>
+</LinearLayout>
