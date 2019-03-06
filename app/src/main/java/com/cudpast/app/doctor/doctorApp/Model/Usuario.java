@@ -13,12 +13,13 @@ public class Usuario {
     private String lastname;
     private String numphone;
     private String password;
+    private String uid;
 
     public Usuario() {
 
     }
     //Firebase db_doctor_register
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha , String imagen) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha , String imagen,String uid) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -30,6 +31,7 @@ public class Usuario {
         this.correoG = correoG;
         this.fecha = fecha;
         this.image = imagen;
+        this.uid = uid;
     }
     //Firebase db_doctor_login
     public Usuario(String dni, String password) {
@@ -132,5 +134,14 @@ public class Usuario {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

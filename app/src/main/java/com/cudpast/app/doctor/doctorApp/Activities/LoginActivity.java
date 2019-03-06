@@ -75,8 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (submitForm()) {
                     //Login con Godaddy
                     // VerificarLogin(emailLogin.getText().toString());
-                    String email ="consultingarsiapp@gmail.com";
-                    String pwd = "MUNDOverde20";
+                    String email =emailLogin.getText().toString();
+                    String pwd = passwordlogin.getText().toString();
 //                    VerificacionFirebase(emailLogin.getText().toString(), passwordlogin.getText().toString());
                     VerificacionFirebase(email,pwd);
                 }
@@ -213,7 +213,6 @@ public class LoginActivity extends AppCompatActivity {
     public void signup(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
-        finish();
     }
 
     @Override

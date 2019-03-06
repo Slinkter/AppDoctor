@@ -4,53 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/backgroundRegistro"
     android:fitsSystemWindows="false"
     tools:context=".Activities.RegisterActivity">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingTop="36dp"
-        android:paddingRight="20dp">
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40sp"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="nada"
+            android:src="@drawable/ic_hospital" />
 
         <TextView
-            android:id="@+id/nameg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="REGISTRO"
-            android:textColor="@color/white"
-            android:textSize="35sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Usuario"
-            android:textColor="@color/white"
+            android:text="USUARIO"
+            android:textColor="@color/colorAccent"
             android:textSize="20sp" />
 
 
         <android.support.v7.widget.CardView
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="25dp">
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="18dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginBottom="8dp"
                 android:orientation="vertical">
 
@@ -64,14 +59,15 @@
                     android:inputType="textEmailAddress"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
+                    android:layout_marginBottom="20dp"
                     android:id="@+id/signupPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -80,11 +76,11 @@
                     android:inputType="textPassword"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
             </LinearLayout>
 
@@ -95,30 +91,29 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Datos Personales "
-            android:textColor="@color/white"
+            android:text="DATOS PERSONALES "
+            android:textColor="@color/colorAccent"
             android:textSize="20sp" />
 
-
         <android.support.v7.widget.CardView
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="25dp">
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="18dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginBottom="8dp"
                 android:orientation="vertical">
-
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/signupName"
@@ -130,15 +125,12 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
-                    app:met_singleLineEllipsis="false"
-
-                    />
-
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/signupLast"
@@ -150,14 +142,12 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
-                    app:met_singleLineEllipsis="false"
-
-                    />
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/signupNumPhone"
@@ -170,11 +160,11 @@
                     android:maxLength="9"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -187,11 +177,11 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -205,11 +195,11 @@
                     android:maxLength="6"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -222,50 +212,50 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
-
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/signupDNI"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
                     android:gravity="center"
                     android:hint="DNI"
                     android:inputType="none|numberSigned"
                     android:maxLength="8"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_primaryColor="@color/colorRed"
                     app:met_singleLineEllipsis="false" />
 
             </LinearLayout>
-
-
         </android.support.v7.widget.CardView>
-
 
         <Button
             android:id="@+id/btn_choose_image"
-            android:layout_width="match_parent"
+            android:layout_width="90dp"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
+            android:background="@drawable/custom_button_2"
+            android:textColor="@color/white"
             android:gravity="center"
-            android:background="@drawable/custom_button_1"
             android:text="subir foto" />
 
 
         <ImageView
             android:id="@+id/image_view"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/ic_photo_doctor"
             android:layout_above="@+id/btn_choose_image"
             android:layout_below="@+id/botones"
             android:layout_gravity="center"
@@ -288,28 +278,18 @@
                 android:paddingRight="16dp">
 
                 <Button
+                    android:elevation="5dp"
                     android:id="@+id/btnGuardar"
-                    android:background="@drawable/custom_button_5"
-                    android:textColor="@color/white"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:text="Guardar" />
+                    android:background="@drawable/custom_button_5"
+                    android:text="Guardar"
+                    android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/btnSalir"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/custom_button_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:text="Regresar"
 
-                    />
             </LinearLayout>
-
 
 
         </RelativeLayout>
