@@ -14,6 +14,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -31,6 +33,11 @@ import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_1;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_2;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_3;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_4;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_5;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -127,15 +134,9 @@ public class DoctorHome extends AppCompatActivity implements
         nameDoctor = (TextView)headerView.findViewById(R.id.nameDoctor);
         emailDoctor = (TextView)headerView.findViewById(R.id.emailDoctor);
 
-
-
-
-
-
-
         //<--
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+//        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment2);
+//        mapFragment.getMapAsync(this);
         //variables
         location_switch = findViewById(R.id.location_switch);
         //El doctor se pone online o offline ..
@@ -186,6 +187,7 @@ public class DoctorHome extends AppCompatActivity implements
         setUpLocation();
         mService = Common.getGoogleAPI();
         updateFirebaseToken();
+        setFragment(1);
 
 
     }
@@ -221,15 +223,15 @@ public class DoctorHome extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_a) {
-            // Handle the camera action
+            setFragment(1);
         } else if (id == R.id.nav_b) {
-
+            setFragment(2);
         } else if (id == R.id.nav_c) {
-
+            setFragment(3);
         } else if (id == R.id.nav_d) {
-
+            setFragment(4);
         } else if (id == R.id.nav_e) {
-
+            setFragment(5);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -477,6 +479,7 @@ public class DoctorHome extends AppCompatActivity implements
         Usuario usuario = Common.currentUser;
         if (usuario != null) {
            Log.e(TAG,"ok");
+           cargarDataDoctor();
         } else {
             goToLoginActivity();
         }
@@ -506,10 +509,10 @@ public class DoctorHome extends AppCompatActivity implements
         startActivity(intent);
         finish();
     }
-
-
+    //.
     private void cargarDataDoctor(){
         Usuario usuario = Common.currentUser;
+
         String name = usuario.getFirstname();
         String email = usuario.getCorreoG();
 
@@ -521,12 +524,57 @@ public class DoctorHome extends AppCompatActivity implements
             Picasso
                     .with(this)
                     .load(Common.currentUser.getImage())
+                    .resize(80,80)
                     .placeholder(R.drawable.ic_photo_doctor)
                     .error(R.drawable.ic_photo_doctor)
                     .into(imageViewDoctor);
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void setFragment(int pos) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        switch (pos) {
+            case 1:
+                //Inicio
+                Fragment_1 fragment1 = new Fragment_1();
+                transaction.replace(R.id.fragment, fragment1);
+                transaction.commit();
+                break;
+            case 2:
+                //Servicio
+                Fragment_2 fragment2 = new Fragment_2();
+                transaction.replace(R.id.fragment, fragment2);
+                transaction.commit();
+                break;
+            case 3:
+                //hitorial
+                Fragment_3 fragment3 = new Fragment_3();
+                transaction.replace(R.id.fragment, fragment3);
+                transaction.commit();
+                break;
+            case 4:
+                //configuracion
+                Fragment_4 fragment4 = new Fragment_4();
+                transaction.replace(R.id.fragment, fragment4);
+                transaction.commit();
+                break;
+            case 5:
+                //Salir
+                Fragment_5 fragment5 = new Fragment_5();
+                transaction.replace(R.id.fragment, fragment5);
+                transaction.commit();
+                break;
+
+
+        }
+
+
+
+
     }
 
 }

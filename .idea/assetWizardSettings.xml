@@ -205,8 +205,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_boy_svg" />
-                            <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva\Downloads\boy.svg" />
+                            <entry key="outputName" value="ic_inicio_doctor" />
+                            <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva\Downloads\ic_inicio_doctor.svg" />
                           </map>
                         </option>
                       </PersistentState>
