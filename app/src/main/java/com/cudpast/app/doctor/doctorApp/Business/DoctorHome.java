@@ -85,7 +85,7 @@ public class DoctorHome extends AppCompatActivity implements
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
 
-    private static final String TAG = "DoctorHome ";
+    private static final String TAG = DoctorHome.class.getSimpleName();
 
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -138,55 +138,55 @@ public class DoctorHome extends AppCompatActivity implements
 //        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment2);
 //        mapFragment.getMapAsync(this);
         //variables
-        location_switch = findViewById(R.id.location_switch);
-        //El doctor se pone online o offline ..
-        //al estar en Online , se crea la tabla Drivers
-        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        location_switch = findViewById(R.id.location_switch);
+//        //El doctor se pone online o offline ..
+//        //al estar en Online , se crea la tabla Drivers
+//        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//        FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
+//
+//
+//        FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+//
+//        FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                FirebaseDB_currentUserRef.onDisconnect().removeValue();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
 
-        FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
-
-
-        FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-
-        FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                FirebaseDB_currentUserRef.onDisconnect().removeValue();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-
-        //Online-Offline Doctor
-        location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(boolean isOnline) {
-                if (isOnline) {
-                    FirebaseDatabase.getInstance().goOnline();
-                    startLocationUpdate();
-                    displayLocation();// crear un marker : marketDoctorCurrent
-                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        FirebaseDatabase.getInstance().goOffline();
-                        stopLocationUpdate();
-                        marketDoctorCurrent.remove();
-                        mMap.clear();
-                        Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+//        //Online-Offline Doctor
+//        location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(boolean isOnline) {
+//                if (isOnline) {
+//                    FirebaseDatabase.getInstance().goOnline();
+//                    startLocationUpdate();
+//                    displayLocation();// crear un marker : marketDoctorCurrent
+//                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    try {
+//                        FirebaseDatabase.getInstance().goOffline();
+//                        stopLocationUpdate();
+//                        marketDoctorCurrent.remove();
+//                        mMap.clear();
+//                        Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
         //
-        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
-        geoFire = new GeoFire(FirebaseDB_drivers);
-        setUpLocation();
-        mService = Common.getGoogleAPI();
-        updateFirebaseToken();
+//        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
+//        geoFire = new GeoFire(FirebaseDB_drivers);
+//        setUpLocation();
+//        mService = Common.getGoogleAPI();
+//        updateFirebaseToken();
         setFragment(1);
 
 
@@ -396,7 +396,6 @@ public class DoctorHome extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     @Override
