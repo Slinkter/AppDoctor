@@ -194,7 +194,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/device/ic_access_time_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_place_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -204,8 +204,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_inicio_doctor" />
+                            <entry key="outputName" value="ic_service_location" />
                             <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva\Downloads\ic_inicio_doctor.svg" />
                           </map>
                         </option>
