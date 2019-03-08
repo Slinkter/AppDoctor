@@ -97,6 +97,28 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState !=null){
+
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+    }
+
+
+
+
+
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -147,6 +169,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                 }
             }
         });
+
 
 
         FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
@@ -413,6 +436,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         super.onResume();
         Log.e(TAG, "onResume");
     }
+
 
 
 }

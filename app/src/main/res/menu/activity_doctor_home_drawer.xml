@@ -6,27 +6,27 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_a"
-            android:icon="@drawable/ic_inicio_doctor"
+            android:icon="@drawable/ic_nav_home"
             android:state_checked="false"
             android:title="Inicio" />
         <item
             android:id="@+id/nav_b"
-            android:icon="@drawable/ic_inicio_doctor"
+            android:icon="@drawable/ic_nav_location"
             android:state_checked="false"
             android:title="Servicio" />
         <item
             android:id="@+id/nav_c"
-            android:icon="@drawable/ic_inicio_doctor"
+            android:icon="@drawable/ic_nav_historial"
             android:state_checked="false"
             android:title="Historial" />
         <item
             android:id="@+id/nav_d"
-            android:icon="@drawable/ic_inicio_doctor"
+            android:icon="@drawable/ic_nav_config"
             android:state_checked="false"
             android:title="Configuración" />
         <item
             android:id="@+id/nav_e"
-            android:icon="@drawable/ic_inicio_doctor"
+            android:icon="@drawable/ic_nav_close"
             android:state_checked="false"
             android:title="Salir" />
     </group>
