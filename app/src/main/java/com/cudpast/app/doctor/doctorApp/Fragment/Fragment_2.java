@@ -71,6 +71,8 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
 
+    private boolean aux_location_switch;
+
     private GoogleApiClient mGoogleApiCliente;
     private LocationRequest mLocationRequest;
     public IGoogleAPI mService;
@@ -93,28 +95,25 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            aux_location_switch = savedInstanceState.getBoolean("aux_location_switch");
+            Log.e(TAG, " onCreateView : savedInstanceState -->    " + aux_location_switch);
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_2, container, false);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState !=null){
-
-        }
-
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.getBoolean("aux_location_switch", aux_location_switch);
+        Log.e(TAG, " onSaveInstanceState :aux_location_switch -->   " + aux_location_switch);
 
     }
-
-
 
 
 
@@ -148,29 +147,61 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         });
 
 
-        //Online-Offline Doctor
-        location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(boolean isOnline) {
-                if (isOnline) {
-                    FirebaseDatabase.getInstance().goOnline();
-                    startLocationUpdate();
-                    displayLocation();
-                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            aux_location_switch = savedInstanceState.getBoolean("aux_location_switch");
+            Log.e(TAG, " onViewCreated : savedInstanceState -->    " + aux_location_switch);
+        }
 
-                } else {
-                    try {
-                        FirebaseDatabase.getInstance().goOffline();
-                        stopLocationUpdate();
-                        marketDoctorCurrent.remove();
-                        mMap.clear();
-                        Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+        if (aux_location_switch ){
+            try {
+                FirebaseDatabase.getInstance().goOnline();
+                startLocationUpdate();
+                displayLocation();
+                Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+//                aux_location_switch = location_switch.isChecked();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }else {
+            location_switch
+                    .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(boolean isOnline) {
+
+                            if (isOnline) {
+
+                                try {
+                                    FirebaseDatabase.getInstance().goOnline();
+                                    startLocationUpdate();
+                                    displayLocation();
+                                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+                                    aux_location_switch = location_switch.isChecked();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            } else {
+                                try {
+                                    FirebaseDatabase.getInstance().goOffline();
+                                    stopLocationUpdate();
+                                    marketDoctorCurrent.remove();
+                                    mMap.clear();
+                                    Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+
+                        }
+
+
+                    });
+        }
+
+
 
 
 
@@ -336,7 +367,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
                     }
                 });
+
             } else {
+
                 Log.e(TAG, "displayLocation()" + "ERROR: no es checkeado");
             }
         } else {
@@ -426,47 +459,34 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
-
+        aux_location_switch = true;
+        location_switch.isActivated();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.e(TAG, "onStop");
+        aux_location_switch = true;
+        location_switch.isActivated();
 
-        if (location_switch.isChecked()) {
-
-            location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(boolean b) {
-                    if (b) {
-                        FirebaseDatabase.getInstance().goOnline();
-                        startLocationUpdate();
-                        displayLocation();
-                        Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-            });
-
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause");
-        if (location_switch.isChecked()) {
-            displayLocation();
-        }
+        aux_location_switch = true;
+        location_switch.isActivated();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
+        aux_location_switch = true;
+        location_switch.isActivated();
     }
-
 
 
 }
