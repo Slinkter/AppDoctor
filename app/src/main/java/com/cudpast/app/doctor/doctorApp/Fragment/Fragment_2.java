@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -154,8 +155,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                 if (isOnline) {
                     FirebaseDatabase.getInstance().goOnline();
                     startLocationUpdate();
-                    displayLocation();// crear un marker : marketDoctorCurrent
+                    displayLocation();
                     Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+
                 } else {
                     try {
                         FirebaseDatabase.getInstance().goOffline();
@@ -179,6 +181,13 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         updateFirebaseToken();
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -319,7 +328,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                         }
                         MarkerOptions m1 = new MarkerOptions()
                                 .position(new LatLng(latitude, longitud))
-                                .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_doctorapp))
+                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
                                 .title("Usted");
                         //Dibujar al doctor en el mapa
                         marketDoctorCurrent = mMap.addMarker(m1);
@@ -417,18 +426,39 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.e(TAG, "onStop");
+
+        if (location_switch.isChecked()) {
+
+            location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(boolean b) {
+                    if (b) {
+                        FirebaseDatabase.getInstance().goOnline();
+                        startLocationUpdate();
+                        displayLocation();
+                        Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
+
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause");
+        if (location_switch.isChecked()) {
+            displayLocation();
+        }
     }
 
     @Override
