@@ -393,22 +393,25 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public void onStart() {
         super.onStart();
-
+        Log.e(TAG, "onStart");
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.e(TAG, "onStop");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.e(TAG, "onPause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.e(TAG, "onResume");
     }
 
 
