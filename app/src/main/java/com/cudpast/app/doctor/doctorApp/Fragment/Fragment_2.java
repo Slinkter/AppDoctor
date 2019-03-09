@@ -365,6 +365,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         mGoogleApiCliente.connect();
     }
 
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
