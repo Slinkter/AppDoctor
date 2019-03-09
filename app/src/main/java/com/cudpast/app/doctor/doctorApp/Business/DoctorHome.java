@@ -75,34 +75,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DoctorHome extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        NavigationView.OnNavigationItemSelectedListener {
 
-
-    private GoogleMap mMap;
-    private SupportMapFragment mapFragment;
 
     private static final String TAG = DoctorHome.class.getSimpleName();
-
-    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
-    private static final int PLAY_SERVICE_RES_REQUEST = 7001;
-
-    private GoogleApiClient mGoogleApiCliente;
-    private LocationRequest mLocationRequest;
-    public IGoogleAPI mService;
-
-    private static int UPDATE_INTERVAL = 5000;
-    private static int FATEST_INTERVAL = 3000;
-    private static int DISPLACEMENT = 10;
-
-    public DatabaseReference FirebaseDB_drivers, FirebaseDB_onlineRef, FirebaseDB_currentUserRef;
-    private GeoFire geoFire;
-    private Marker marketDoctorCurrent;
-
-    private MaterialAnimatedSwitch location_switch;// ON or OFF
 
 
     //Header Menu
@@ -131,62 +107,10 @@ public class DoctorHome extends AppCompatActivity implements
 
         //
         imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
-        nameDoctor = (TextView)headerView.findViewById(R.id.nameDoctor);
-        emailDoctor = (TextView)headerView.findViewById(R.id.emailDoctor);
+        nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
+        emailDoctor = (TextView) headerView.findViewById(R.id.emailDoctor);
 
-        //<--
-//        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment2);
-//        mapFragment.getMapAsync(this);
-        //variables
-//        location_switch = findViewById(R.id.location_switch);
-//        //El doctor se pone online o offline ..
-//        //al estar en Online , se crea la tabla Drivers
-//        String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//
-//        FirebaseDB_currentUserRef = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR).child(Userid);
-//
-//
-//        FirebaseDB_onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-//
-//        FirebaseDB_onlineRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                FirebaseDB_currentUserRef.onDisconnect().removeValue();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
 
-//        //Online-Offline Doctor
-//        location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(boolean isOnline) {
-//                if (isOnline) {
-//                    FirebaseDatabase.getInstance().goOnline();
-//                    startLocationUpdate();
-//                    displayLocation();// crear un marker : marketDoctorCurrent
-//                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    try {
-//                        FirebaseDatabase.getInstance().goOffline();
-//                        stopLocationUpdate();
-//                        marketDoctorCurrent.remove();
-//                        mMap.clear();
-//                        Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
-        //
-//        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
-//        geoFire = new GeoFire(FirebaseDB_drivers);
-//        setUpLocation();
-//        mService = Common.getGoogleAPI();
-//        updateFirebaseToken();
         setFragment(1);
 
 
@@ -239,246 +163,13 @@ public class DoctorHome extends AppCompatActivity implements
         return true;
     }
 
-    private void updateFirebaseToken() {
-
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
-        Token token = new Token(FirebaseInstanceId.getInstance().getToken());
-        tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
-
-        Log.e(TAG, " updateFirebaseToken() ");
-        Log.e(TAG, "FirebaseAuth.getInstance().getCurrentUser().getUid() -------->" + FirebaseAuth.getInstance().getCurrentUser().getUid());
-    }
-
-    private void setUpLocation() {
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
-        } else {
-            if (checkPlayService()) {
-                builGoogleApiClient();
-                createLocationRequest();
-                if (location_switch.isChecked()) {
-                    displayLocation();
-                }
-            }
-        }
-        Log.e(TAG, "*setUpLocation()");
-    }
-
-    private void builGoogleApiClient() {
-        mGoogleApiCliente = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiCliente.connect();
-        Log.e(TAG, " *builGoogleApiClient()" + mGoogleApiCliente);
-    }
-
-    private void createLocationRequest() {
-        Log.e(TAG, "*createLocationRequest()");
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
-
-    private boolean checkPlayService() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
-            } else {
-                Toast.makeText(this, "this device is support ", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-            return false;
-        }
-        Log.e(TAG, "*checkPlayService()");
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (checkPlayService()) {
-                        builGoogleApiClient();
-                        createLocationRequest();
-                        if (location_switch.isChecked()) {
-                            displayLocation();
-                            Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
-                        }
-                    }
-                }
-
-        }
-    }
-
-    private void stopLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiCliente, this);
-        Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
-    }
-
-    private void displayLocation() {
-        Log.e(TAG, "=================================================================");
-        Log.e(TAG, "                          displayLocation()                      ");
-        //.Permisos
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        //.Obtener GPS del movil
-        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
-        Log.e(TAG, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
-        //.Update to firebaseUserUID latitud y longitud de cada usuario
-
-        if (Common.mLastLocation != null) {
-            if (location_switch.isChecked()) {
-
-                final double latitude = Common.mLastLocation.getLatitude();
-                final double longitud = Common.mLastLocation.getLongitude();
-                String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
-
-                Log.e(TAG, " firebaseUserUID : --> " + firebaseUserUID);
-                Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
-                Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
-
-                geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                    @Override
-                    public void onComplete(String key, DatabaseError error) {
-
-                        if (marketDoctorCurrent != null) {
-                            marketDoctorCurrent.remove();
-                        }
-                        MarkerOptions m1 = new MarkerOptions()
-                                .position(new LatLng(latitude, longitud))
-                                .icon(BitmapDoctorApp(DoctorHome.this, R.drawable.ic_doctorapp))
-                                .title("Usted");
-                        //Dibujar al doctor en el mapa
-                        marketDoctorCurrent = mMap.addMarker(m1);
-                        LatLng doctorLL = new LatLng(latitude, longitud);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
-                    }
-                });
-            } else {
-                Log.e(TAG, "displayLocation()" + "ERROR: no es checkeado");
-            }
-        } else {
-            Log.e(TAG, "displayLocation()" + "ERROR: Cannot get your location");
-        }
-        Log.e(TAG, "=================================================================");
-    }
-
-    //todo:revisar
-    private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
-        Log.e(TAG, "startLocationUpdate() --> Permiso");
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        displayLocation();
-        startLocationUpdate();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiCliente.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Common.mLastLocation = location;
-        displayLocation();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setTrafficEnabled(false);
-        mMap.setIndoorEnabled(false);
-        mMap.setBuildingsEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-
-        try {
-            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json));
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
-        }
-
-
-    }
-
-    //.metodos auxiliar para imagenes .svg
-    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
-        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
-        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        background.draw(canvas);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
-    private List<LatLng> decodePoly(String encoded) {
-        Log.e(TAG, "Linea : 379");
-        List<LatLng> poly = new ArrayList<LatLng>();
-        int index = 0, len = encoded.length();
-        int lat = 0, lng = 0;
-
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
-
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
-
-            LatLng p = new LatLng((((double) lat / 1E5)),
-                    (((double) lng / 1E5)));
-            poly.add(p);
-        }
-
-        return poly;
-    }
-
-
     @Override
     protected void onStart() {
         super.onStart();
         Usuario usuario = Common.currentUser;
         if (usuario != null) {
-           Log.e(TAG,"ok");
-           cargarDataDoctor();
+            Log.e(TAG, "ok");
+            cargarDataDoctor();
         } else {
             goToLoginActivity();
         }
@@ -500,7 +191,6 @@ public class DoctorHome extends AppCompatActivity implements
     }
 
 
-
     //.LOGIN_ACTIVITY
     private void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -508,26 +198,27 @@ public class DoctorHome extends AppCompatActivity implements
         startActivity(intent);
         finish();
     }
+
     //.
-    private void cargarDataDoctor(){
+    private void cargarDataDoctor() {
         Usuario usuario = Common.currentUser;
 
         String name = usuario.getFirstname();
         String email = usuario.getCorreoG();
 
-        Log.e(TAG," name :" + name);
-        Log.e(TAG," email :" + email);
+        Log.e(TAG, " name :" + name);
+        Log.e(TAG, " email :" + email);
         try {
             nameDoctor.setText(name);
             emailDoctor.setText(email);
             Picasso
                     .with(this)
                     .load(Common.currentUser.getImage())
-                    .resize(80,80)
+                    .resize(80, 80)
                     .placeholder(R.drawable.ic_photo_doctor)
                     .error(R.drawable.ic_photo_doctor)
                     .into(imageViewDoctor);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -570,8 +261,6 @@ public class DoctorHome extends AppCompatActivity implements
 
 
         }
-
-
 
 
     }

@@ -96,36 +96,11 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
-            aux_location_switch = savedInstanceState.getBoolean("aux_location_switch");
-            Log.e(TAG, " onCreateView : savedInstanceState -->    " + aux_location_switch);
-        }
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_2, container, false);
-    }
-
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.getBoolean("aux_location_switch", aux_location_switch);
-        Log.e(TAG, " onSaveInstanceState :aux_location_switch -->   " + aux_location_switch);
-
-    }
-
-
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.fragment_2, container, false);
+        location_switch = rootView.findViewById(R.id.location_switch);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
-
-        location_switch = view.findViewById(R.id.location_switch);
 
         String Userid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -147,62 +122,35 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         });
 
 
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
-            aux_location_switch = savedInstanceState.getBoolean("aux_location_switch");
-            Log.e(TAG, " onViewCreated : savedInstanceState -->    " + aux_location_switch);
-        }
+        location_switch
+                .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(boolean isOnline) {
+                        if (isOnline) {
 
-        if (aux_location_switch ){
-            try {
-                FirebaseDatabase.getInstance().goOnline();
-                startLocationUpdate();
-                displayLocation();
-                Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-//                aux_location_switch = location_switch.isChecked();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
-            location_switch
-                    .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(boolean isOnline) {
+                                FirebaseDatabase.getInstance().goOnline();
+                                startLocationUpdate();
+                                displayLocation();
+                                Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
 
-                            if (isOnline) {
 
-                                try {
-                                    FirebaseDatabase.getInstance().goOnline();
-                                    startLocationUpdate();
-                                    displayLocation();
-                                    Toast.makeText(mapFragment.getContext(), "Estas Online", Toast.LENGTH_SHORT).show();
-                                    aux_location_switch = location_switch.isChecked();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
 
-                            } else {
-                                try {
-                                    FirebaseDatabase.getInstance().goOffline();
-                                    stopLocationUpdate();
-                                    marketDoctorCurrent.remove();
-                                    mMap.clear();
-                                    Toast.makeText(mapFragment.getContext(), "Estas Offline", Toast.LENGTH_SHORT).show();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                        } else {
 
-                            }
+                                FirebaseDatabase.getInstance().goOffline();
+                                stopLocationUpdate();
+                                marketDoctorCurrent.remove();
+                                mMap.clear();
+                                Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
 
 
                         }
 
 
-                    });
-        }
+                    }
 
 
-
+                });
 
 
         FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
@@ -210,6 +158,24 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         setUpLocation();
         mService = Common.getGoogleAPI();
         updateFirebaseToken();
+
+
+        return rootView;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
 
@@ -383,8 +349,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
-        Log.e(TAG, "startLocationUpdate() --> Permiso");
+        Log.e(TAG, "startLocationUpdate()");
     }
 
     @Override
@@ -421,54 +388,20 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private List<LatLng> decodePoly(String encoded) {
-        Log.e(TAG, "Linea : 379");
-        List<LatLng> poly = new ArrayList<LatLng>();
-        int index = 0, len = encoded.length();
-        int lat = 0, lng = 0;
-
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
-
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
-
-            LatLng p = new LatLng((((double) lat / 1E5)),
-                    (((double) lng / 1E5)));
-            poly.add(p);
-        }
-
-        return poly;
-    }
 
     @Override
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
-        aux_location_switch = true;
-        location_switch.isActivated();
+//        displayLocation();
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.e(TAG, "onStop");
-        aux_location_switch = true;
-        location_switch.isActivated();
+
 
     }
 
@@ -476,16 +409,14 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause");
-        aux_location_switch = true;
-        location_switch.isActivated();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
-        aux_location_switch = true;
-        location_switch.isActivated();
+
     }
 
 

@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-                                            Log.e("LoginActivity", "190 : tu usuario " + dataSnapshot.getValue(User.class));
+
                                         }
 
                                         @Override
@@ -144,9 +144,11 @@ public class LoginActivity extends AppCompatActivity {
                             updateUI(null);
                             waitingDialog.dismiss();
                         }
-
+                        Log.e(TAG, "                VerificacionFirebase");
+                        Log.e(TAG, " ===========================================================");
 
                     }
+
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -154,6 +156,8 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
                 updateUI(null);
                 waitingDialog.dismiss();
+                Log.e(TAG, "                VerificacionFirebase");
+                Log.e(TAG, " ===========================================================");
 
             }
         });
