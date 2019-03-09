@@ -8,8 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -17,17 +15,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 import com.firebase.geofire.GeoFire;
@@ -57,9 +52,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -73,7 +65,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     private boolean aux_location_switch;
 
-    private GoogleApiClient mGoogleApiCliente;
+    public GoogleApiClient googleApiClient;
+    private Location mLastLocation;
+
     private LocationRequest mLocationRequest;
     public IGoogleAPI mService;
 
@@ -97,6 +91,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_2, container, false);
+
         location_switch = rootView.findViewById(R.id.location_switch);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
@@ -121,29 +116,28 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
             }
         });
 
+        setUpLocation();
+        updateFirebaseToken();
+        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
+        geoFire = new GeoFire(FirebaseDB_drivers);
+        mService = Common.getGoogleAPI();
+
 
         location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(boolean isOnline) {
                         if (isOnline) {
-
-                                FirebaseDatabase.getInstance().goOnline();
-                                startLocationUpdate();
-                                displayLocation();
-                                Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
-
-
-
+                            FirebaseDatabase.getInstance().goOnline();
+                          //  startLocationUpdate();
+                            displayLocation();
+                            Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
                         } else {
-
-                                FirebaseDatabase.getInstance().goOffline();
-                                stopLocationUpdate();
-                                marketDoctorCurrent.remove();
-                                mMap.clear();
-                                Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
-
-
+                            FirebaseDatabase.getInstance().goOffline();
+                       //     stopLocationUpdate();
+                            marketDoctorCurrent.remove();
+                            mMap.clear();
+                            Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -151,13 +145,6 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
 
                 });
-
-
-        FirebaseDB_drivers = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
-        geoFire = new GeoFire(FirebaseDB_drivers);
-        setUpLocation();
-        mService = Common.getGoogleAPI();
-        updateFirebaseToken();
 
 
         return rootView;
@@ -218,28 +205,33 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     private void setUpLocation() {
 
+
+
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
         } else {
             if (checkPlayService()) {
                 builGoogleApiClient();
                 createLocationRequest();
-                if (location_switch.isChecked()) {
+                //solo ocurre si esta activado
+                if (!location_switch.isChecked()) {
+
+                }else{
                     displayLocation();
                 }
             }
         }
-        Log.e(TAG, "*setUpLocation()");
+        Log.e(TAG, "setUpLocation()");
     }
 
     private void builGoogleApiClient() {
-        mGoogleApiCliente = new GoogleApiClient.Builder(getContext())
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiCliente.connect();
-        Log.e(TAG, " *builGoogleApiClient()" + mGoogleApiCliente);
+        googleApiClient.connect();
+        Log.e(TAG, "builGoogleApiClient()" + googleApiClient);
     }
 
     private void createLocationRequest() {
@@ -285,14 +277,6 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     }
 
 
-    private void stopLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiCliente, this);
-        Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
-    }
-
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
@@ -301,7 +285,8 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
             return;
         }
         //.Obtener GPS del movil
-        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
+        //
+        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         Log.e(TAG, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
         //.Update to firebaseUserUID latitud y longitud de cada usuario
 
@@ -344,13 +329,23 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         Log.e(TAG, "=================================================================");
     }
 
-    //todo:revisar
+
+    private void stopLocationUpdate() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
+    }
+
+
+
     private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        LocationServices.FusedLocationApi.getLastLocation(mGoogleApiCliente);
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
         Log.e(TAG, "startLocationUpdate()");
     }
 
@@ -362,7 +357,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onConnectionSuspended(int i) {
-        mGoogleApiCliente.connect();
+        googleApiClient.connect();
     }
 
 
@@ -394,7 +389,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
-//        displayLocation();
+        setUpLocation();
 
     }
 
