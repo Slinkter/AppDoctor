@@ -1,6 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Fragment;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.cudpast.app.doctor.doctorApp.Business.DoctorRuta;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -303,6 +305,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
         //.Obtener GPS del movil
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
@@ -317,13 +320,16 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                     }
                 });
 
-        // Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        //.Update to firebaseUserUID latitud y longitud de cada usuario
+
         Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
         if (Common.mLastLocation != null) {
 
             if (location_switch.isChecked()) {
-
+                //
+                final ProgressDialog mDialog = new ProgressDialog(getActivity());
+                mDialog.setMessage("Actualizando a Ubicación...");
+                mDialog.show();
+                //
                 final double latitude = Common.mLastLocation.getLatitude();
                 final double longitud = Common.mLastLocation.getLongitude();
                 String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
@@ -347,6 +353,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                         marketDoctorCurrent = mMap.addMarker(m1);
                         LatLng doctorLL = new LatLng(latitude, longitud);
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                        mDialog.dismiss();
                     }
                 });
 
@@ -374,18 +381,13 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     private void startLocationUpdate() {
         Log.e(TAG, "startLocationUpdate()");
-
-        locationRequest = new LocationRequest();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-
         if (ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
+        }else {
+
         }
 
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -395,7 +397,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         displayLocation();
-        startLocationUpdate();
+      //  startLocationUpdate();
     }
 
     @Override
@@ -447,10 +449,10 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause");
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-            googleApiClient.disconnect();
-        }
+//        if (googleApiClient != null && googleApiClient.isConnected()) {
+//            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+//            googleApiClient.disconnect();
+//        }
 
     }
 
@@ -458,9 +460,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
-        if (!checkPlayService()) {
-            Log.e(TAG, "You need to install Google Play Services to use the App properly");
-        }
+//        if (!checkPlayService()) {
+//            Log.e(TAG, "You need to install Google Play Services to use the App properly");
+//        }
 
     }
 
