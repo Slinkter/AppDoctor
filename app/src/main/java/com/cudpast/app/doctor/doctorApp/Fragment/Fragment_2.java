@@ -99,6 +99,8 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
+        builGoogleApiClient();
+        createLocationRequest();
 
         //-->
         //Obtener el UID del usuario
@@ -144,11 +146,6 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         mService = Common.getGoogleAPI();
 
 
-        // we build google api client
-        googleApiClient = new GoogleApiClient.Builder(getActivity()).
-                addApi(LocationServices.API).
-                addConnectionCallbacks(this).
-                addOnConnectionFailedListener(this).build();
 
 
         location_switch
@@ -156,16 +153,24 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                     @Override
                     public void onCheckedChanged(boolean isOnline) {
                         if (isOnline) {
-                            FirebaseDatabase.getInstance().goOnline();
-                            startLocationUpdate();
-                            displayLocation();
-                            Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
+
+                                FirebaseDatabase.getInstance().goOnline();
+                                startLocationUpdate();
+                                displayLocation();
+                                Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
+
+
                         } else {
-                            FirebaseDatabase.getInstance().goOffline();
-                            stopLocationUpdate();
-                            marketDoctorCurrent.remove();
-                            mMap.clear();
-                            Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
+
+                            if (marketDoctorCurrent != null){
+                                FirebaseDatabase.getInstance().goOffline();
+                                stopLocationUpdate();
+                                marketDoctorCurrent.remove();
+                                mMap.clear();
+                                Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
+                            }
+
+
                         }
                     }
 
@@ -240,21 +245,26 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                     Log.e(TAG, " Off location ");
                     displayLocation();
                 }
+            }else {
+                Log.e(TAG, "ERROR: checkPlayService()");
             }
         }
         Log.e(TAG, "=================================================================");
     }
 
     private boolean checkPlayService() {
-        Log.e(TAG, " checkPlayService() ");
+        Log.e(TAG, "checkPlayService() ");
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int resultCode = googleAPI.isGooglePlayServicesAvailable(getActivity());
-
+        Log.e(TAG, "resultCode() " + resultCode);
         if (resultCode != ConnectionResult.SUCCESS) {
+            Log.e(TAG, "resultCode() :  NOT SUCCESS " );
             if (googleAPI.isUserResolvableError(resultCode)) {
                 googleAPI.getErrorDialog(getActivity(), resultCode, PLAY_SERVICE_RES_REQUEST).show();
             }
             return false;
+        }else {
+            Log.e(TAG, "resultCode() : SUCCESS " );
         }
         return true;
     }
@@ -434,9 +444,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
-        if (googleApiClient != null) {
-            googleApiClient.connect();
-        }
+//        if (googleApiClient != null) {
+//            googleApiClient.connect();
+//        }
     }
 
     @Override
