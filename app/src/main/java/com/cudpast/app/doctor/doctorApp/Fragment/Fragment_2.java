@@ -67,12 +67,13 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 9000;
+
     private static int UPDATE_INTERVAL = 5000;
-    private static int FATEST_INTERVAL = 3000;
+    private static int FASTEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
 
     public GoogleApiClient googleApiClient;
-    public LocationRequest mLocationRequest;
+    public LocationRequest locationRequest;
     public IGoogleAPI mService;
 
     public DatabaseReference db_available_doctor, db_online_user, db_currentUserRef;
@@ -141,6 +142,13 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         mService = Common.getGoogleAPI();
 
 
+        // we build google api client
+        googleApiClient = new GoogleApiClient.Builder(getActivity()).
+                addApi(LocationServices.API).
+                addConnectionCallbacks(this).
+                addOnConnectionFailedListener(this).build();
+
+
         location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
                     @Override
@@ -157,13 +165,10 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                             mMap.clear();
                             Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
                         }
-
-
                     }
 
 
                 });
-
 
         return rootView;
     }
@@ -263,12 +268,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     }
 
     private void createLocationRequest() {
-        Log.e(TAG, "*createLocationRequest()");
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+        Log.e(TAG, "createLocationRequest()");
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
 
@@ -368,12 +373,23 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
 
     private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e(TAG, "startLocationUpdate()");
+
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
-        Log.e(TAG, "startLocationUpdate()");
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+
     }
 
     @Override
@@ -416,6 +432,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
     }
 
     @Override
@@ -428,6 +447,10 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause");
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            googleApiClient.disconnect();
+        }
 
     }
 
@@ -435,6 +458,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
+        if (!checkPlayService()) {
+            Log.e(TAG, "You need to install Google Play Services to use the App properly");
+        }
 
     }
 
