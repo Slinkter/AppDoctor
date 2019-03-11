@@ -2,7 +2,6 @@ package com.cudpast.app.doctor.doctorApp.Common;
 
 import android.location.Location;
 
-import com.cudpast.app.doctor.doctorApp.Model.User;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.Remote.FCMClient;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
@@ -18,31 +17,31 @@ public class Common {
     public static final String token_tbl = "Tokens";
 
 
-    public static String token_doctor ;
+    public static String token_doctor;
     public static Usuario currentUser;
     public static Location mLastLocation;
 
-    public static final String baseURL = "https://maps.googleapis.com";
-    public static final String fcmURL = "https://fcm.googleapis.com/";
+
+    private static final String mapURL = "https://maps.googleapis.com";
+    private static final String fcmURL = "https://fcm.googleapis.com/";
+
+    public static IGoogleAPI getGoogleAPI() {
+        return RetrofitClient.getClient(mapURL).create(IGoogleAPI.class);
+    }
+
+    public static IFCMService getIFCMService() {
+        return FCMClient.getClient(fcmURL).create(IFCMService.class);
+    }
 
 
     public static double base_fare = 2.5;
     private static double time_rate = 0.35;
     private static double distance_rate = 1.75;
 
-    public  static double formulaPrecio(double km ,double min){
-        return base_fare + (distance_rate*km ) + (time_rate*min);
+    public static double formulaPrecio(double km, double min) {
+        return base_fare + (distance_rate * km) + (time_rate * min);
     }
 
 
 
-
-
-    public static IGoogleAPI getGoogleAPI() {
-        return RetrofitClient.getClient(baseURL).create(IGoogleAPI.class);
-    }
-
-    public static IFCMService getIFCMService() {
-        return FCMClient.getClient(fcmURL).create(IFCMService.class);
-    }
 }
