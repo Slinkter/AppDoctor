@@ -32,6 +32,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -45,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -80,6 +82,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     private MaterialAnimatedSwitch location_switch;
     public String current_user_UID;
 
+    //parte012b
+    private FusedLocationProviderClient fusedLocationClient;
+
 
     public Fragment_2() {
 
@@ -111,7 +116,8 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 db_currentUserRef.onDisconnect().removeValue();
-                Log.e(TAG, "onDataChange " + db_online_user);
+                Log.e(TAG, "onDataChange " + dataSnapshot.getValue());
+                Log.e(TAG, "onDataChange " + dataSnapshot.getChildren());
             }
 
             @Override
@@ -119,7 +125,10 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                 Log.e(TAG, "onCancelled " + databaseError);
             }
         });
-        //-->
+
+
+        //parte012b
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
 
         location_switch = rootView.findViewById(R.id.location_switch);
@@ -138,12 +147,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                     public void onCheckedChanged(boolean isOnline) {
                         if (isOnline) {
                             FirebaseDatabase.getInstance().goOnline();
-                            //  startLocationUpdate();
+                            startLocationUpdate();
                             displayLocation();
                             Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
                         } else {
                             FirebaseDatabase.getInstance().goOffline();
-                            //     stopLocationUpdate();
+                            stopLocationUpdate();
                             marketDoctorCurrent.remove();
                             mMap.clear();
                             Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
@@ -286,21 +295,33 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
             return;
         }
         //.Obtener GPS del movil
-        //
-        Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        Log.e(TAG, "displayLocation() : Common.mLastLocation --> " + Common.mLastLocation);
-        //.Update to firebaseUserUID latitud y longitud de cada usuario
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            Common.mLastLocation = location;
+                            Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLatitude() " + Common.mLastLocation.getLatitude());
+                            Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLongitude()" + Common.mLastLocation.getLongitude());
 
+                        }
+                    }
+                });
+
+        // Common.mLastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        //.Update to firebaseUserUID latitud y longitud de cada usuario
+        Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
         if (Common.mLastLocation != null) {
+
             if (location_switch.isChecked()) {
 
                 final double latitude = Common.mLastLocation.getLatitude();
                 final double longitud = Common.mLastLocation.getLongitude();
                 String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
 
-                Log.e(TAG, " firebaseUserUID : --> " + firebaseUserUID);
-                Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
-                Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
+                Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
+                Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
+                Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
 
                 geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                     @Override
@@ -322,10 +343,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
             } else {
 
-                Log.e(TAG, "displayLocation()" + "ERROR: no es checkeado");
+                Log.e(TAG, "ERROR: no es checkeado");
             }
+
+
         } else {
-            Log.e(TAG, "displayLocation()" + "ERROR: Cannot get your location");
+            Log.e(TAG, "ERROR: Cannot get your location");
         }
         Log.e(TAG, "=================================================================");
     }
@@ -389,16 +412,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
-        setUpLocation();
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Log.e(TAG, "onStop");
-
-
     }
 
     @Override
