@@ -219,7 +219,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     }
 
     private void setUpLocation() {
-        Log.e(TAG, "setUpLocation()");
+        Log.e(TAG, "=================================================================");
+        Log.e(TAG, "                          setUpLocation()()                      ");
+
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
         } else {
@@ -228,10 +230,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                 createLocationRequest();
                 //solo ocurre si esta activado
                 if (location_switch.isChecked()) {
+                    Log.e(TAG, " Off location ");
                     displayLocation();
                 }
             }
         }
+        Log.e(TAG, "=================================================================");
     }
 
     private boolean checkPlayService() {

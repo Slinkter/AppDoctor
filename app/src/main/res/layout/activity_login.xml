@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -75,25 +75,44 @@
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="145dp"
-                android:layout_marginRight="5dp"
                 android:layout_height="wrap_content"
-
-                android:background="@drawable/custom_button_2"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/custom_button_5"
+                android:elevation="5dp"
                 android:text="Ingresar"
                 android:textColor="@color/white" />
 
 
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="145dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/custom_button_1"
-                android:onClick="signup"
-                android:text="Registrarse"
-                android:textColor="@color/white" />
+
         </LinearLayout>
 
 
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="145dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/custom_button_5"
+            android:elevation="5dp"
+            android:visibility="gone"
+            android:text="Registrarse"
+            android:textColor="@color/white" />
+
+
+
     </LinearLayout>
-</LinearLayout>
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom|center"
+        android:id="@+id/txt_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="¿Nuevo usuario? Registrate"
+        android:onClick="signup"
+        android:textStyle="italic"
+        android:textColor="@color/bottomText"
+        android:textSize="16sp" />
+</RelativeLayout>

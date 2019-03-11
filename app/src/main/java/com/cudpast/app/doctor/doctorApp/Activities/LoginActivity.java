@@ -209,7 +209,7 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    // Funcional 100%
+    //. Registarse
     public void signup(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
@@ -238,48 +238,4 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    //1.VERIFICACION DE GODADDY
-//    private void VerificarLogin(String sUser) {
-//
-//        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
-//        waitingDialog.show();
-//        String URL = IP + sUser;
-//        JsonObjectRequest solicitudGoDaddy;
-//
-//        solicitudGoDaddy = new JsonObjectRequest(URL, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject datos) {
-//
-//                try {
-//                    String estado = datos.getString("resultado");
-//                    if (estado.equals("CC")) {
-//
-//                        JSONObject jsondatos = new JSONObject(datos.getString("datos"));
-//                        String usuario = jsondatos.getString("dniusuario");
-//                        String emailLogin = LoginActivity.this.emailLogin.getText().toString();
-//                        String passwordLogin = passwordlogin.getText().toString();
-//
-//                        if (usuario.equalsIgnoreCase(emailLogin)) {
-//                          //  VerificacionFirebase(emailLogin, passwordLogin);
-//                        }
-//                        waitingDialog.dismiss();
-//                    } else {
-//                        Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_SHORT).show();
-//                        waitingDialog.dismiss();
-//                    }
-//
-//                } catch (JSONException e) {
-//
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                waitingDialog.dismiss();
-//                Toast.makeText(LoginActivity.this, "Esto es un error de ejecución", Toast.LENGTH_LONG).show();
-//            }
-//        });
-//
-//        VolleyRP.addToQueue(solicitudGoDaddy, mRequest, this, volleyRP);
-//    }
 }
