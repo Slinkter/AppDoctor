@@ -1,0 +1,662 @@
+commit c5e1cbbf2ef6d85333e99162d2639cfa4829bfc4
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 15:03:02 2019 -0500
+
+    Borrar
+
+commit a5e4ecf8ceb3912fa3350e68010c00f01deb7ea8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 15:00:55 2019 -0500
+
+    Lunes : no funciona borrar
+
+commit 9d70b444dbb228fb2d1f79381b8925f96d75b38f
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 12:00:36 2019 -0500
+
+    Lunes : testeando .... parte2
+
+commit 96427195fce30f661bd418e5adaa999e442fbd24
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 11:43:48 2019 -0500
+
+    Lunes : prueba 2
+
+commit 5b3c594de472d87369e45c62aa256b1e84426a9a
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 11:23:24 2019 -0500
+
+    Lunes : fallo googleAPi
+
+commit 4724778933bfa5d180bd8b7d256653f2b6a71d4e
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 10:47:04 2019 -0500
+
+    Lunes : Fused Location provider --> prueba 1 : ok
+
+commit 7fe3e158ff4d886ab14669007bcda7e4a07a9f74
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 11 09:54:02 2019 -0500
+
+    Lunes : Inicio
+
+commit e69acb109afff2cc25070738790deaeeaa5c65d4
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Mar 9 12:58:24 2019 -0500
+
+    Sabado : cambiar de FusedLocationProviderApi a ----> FusedLocationProviderClient
+
+commit 74c3a2c16fe69ff747a4278ba68b2ec28844e80e
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Mar 9 12:11:09 2019 -0500
+
+    Sabado : se arreglo el switch_location pero da error la geolocazacion
+
+commit 4c1adab1b002bdc08f282d7e551142c93d9cb261
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Mar 9 12:10:34 2019 -0500
+
+    Sabado : ELimnado codigo
+
+commit 5b415cd06ec01efcda3ddad62be2be7ac7d540ce
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Mar 8 15:34:32 2019 -0500
+
+    Viernes
+
+commit 1edb9d90bb6e8b6819f4142e94a3f35600203869
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Mar 8 11:07:04 2019 -0500
+
+    Viernes : icon de google maps error Context -revisar
+
+commit 8510ed48298dda071902d907d93440bd4e95f445
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Mar 8 10:00:26 2019 -0500
+
+    Viernes : mejora de iconos en nav_
+
+commit 1aba50cdc49d62c24753b729b4db9e272a3aba56
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Mar 8 08:47:50 2019 -0500
+
+    Viernes : parte012a
+
+commit 12d6ae1c74f8d14333b98717b2e10726e067f9d3
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Mar 8 08:44:50 2019 -0500
+
+    Viernes : onresumen , onpause
+
+commit cfe3fd550ab2da7f9e622580869b2f7fc9af0162
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Mar 7 17:08:06 2019 -0500
+
+    Jueves : mejoras de drawle y ubicacion ... falta arreglar la geoubicacion del user
+
+commit 52f8e413d537c62bf465c75bfac1c8f8913aaaf7
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Mar 7 12:23:29 2019 -0500
+
+    Jueves : creacion de fragments
+
+commit e0c915b2e7c9770924992784946df2f9fee3ff1c
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 17:07:14 2019 -0500
+
+    dasdsa
+
+commit cefdbd4cc509f75c86352159b0af181e14c05b74
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 15:50:48 2019 -0500
+
+    Marte :  se modicio el xml del on and off location del Doctor
+
+commit f24b8a6c307128c3dde8682b62b66efd8c1292f3
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 12:27:05 2019 -0500
+
+    cambios
+
+commit 25c54618bf7f86618e979bf8234c14eda623c81f
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 12:18:59 2019 -0500
+
+    Jueves : RegisterActivit.xml se mejoro el diseño y botones , se agrego el UID en usuario para guardar en firebase
+
+commit 203efb74d41b83befd3130b862896a36775163b3
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 10:01:14 2019 -0500
+
+    Jueves :xml login icon ++ size
+
+commit 5bafdfe5733d7c897f4be6fe66539d4796e8d3f8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 09:54:37 2019 -0500
+
+    Jueves : xml login
+
+commit 837268d0d07fb25c2e91526f9ab3439ff468e333
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 09:28:47 2019 -0500
+
+    Sabado : Mejorando
+
+commit 162fb83ccf487eaf16a6a8811ad9a850e6990559
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Mar 6 08:28:07 2019 -0500
+
+    Jueves : Inicio parte012
+
+commit 77ca8efafd1e166f1407b5f8757c4b21f815b2b8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Mar 5 16:58:29 2019 -0500
+
+    Martes : fin parte 11
+
+commit 62d1c4c68fc1b455889d4766b6a2d1f90e257223
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Mar 5 15:59:15 2019 -0500
+
+    Marte : ver codigo de atras
+
+commit c289de261ee64b36420c2af5566550a5b16a7708
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Mar 5 15:47:21 2019 -0500
+
+    Martes : se va a testear Set up a special activity PendingIntent
+
+commit e67ad10eebc0ba5c25cac9a77baa0974c7802187
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Mar 5 14:42:43 2019 -0500
+
+    Martes : NotificationDevelopers
+
+commit d1773417cf3b43757b67f2c0c411bf1c540d4ab1
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Mar 5 08:31:58 2019 -0500
+
+    Martes
+
+commit daabdb13796ea2ff4019c8f113576d0790b7680b
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 4 17:04:51 2019 -0500
+
+    Lunes : revisar video de notificatinCompat
+
+commit c62cee3892e377df6e216c99828fd59db27116c1
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 4 12:50:28 2019 -0500
+
+    Lunes : cambios en notificacion
+
+commit 5982647f24eb0d89bfed2862a15e0f7d1dd167fd
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 4 10:34:43 2019 -0500
+
+    Lunes : Inicio de parte011
+
+commit bd4a4ba4c3f84bb6228c814f4bd00f606ec46443
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 4 08:46:19 2019 -0500
+
+    2019 03 04 : Lunes --> parte11 fin
+
+commit 91137b4384090bf9b08b6a993d27e84972a6121f
+Merge: 3aa39b5 9234db2
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Mar 4 08:43:58 2019 -0500
+
+    Merge branch 'parte011'
+
+commit 9234db2bb7af2b561cf4bd9d2e806d82a14a913d
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Mar 2 12:57:28 2019 -0500
+
+    Sabado
+
+commit e047be53a2c23cd74df8156382b6b197f860023e
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Mar 2 11:01:45 2019 -0500
+
+    Sabado : Modificando Notificaion
+
+commit 3aa39b5f21928a908bc291fb9cb5c542759c5c70
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Mar 1 08:52:48 2019 -0500
+
+    se borro
+
+commit 0d4bd12a6631d8254cbacc42868dd4737966fe40
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 28 17:06:40 2019 -0500
+
+    Jueves final
+
+commit d56cffd415ab1add5baca5765bcb43c6b67a93b5
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 28 12:12:31 2019 -0500
+
+    Jueves
+
+commit 8bc433c24c518a2abd9bb2f7e5c09d8d77ed2455
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 28 10:46:06 2019 -0500
+
+    Jueves solo funciona la actualizacion de la ruta o diraccion , el iccno del doctor se repite
+
+commit 4e156e8e21ca1a6be79a48df9e0075853d17221a
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 28 08:51:14 2019 -0500
+
+    Jueves : Buena
+
+commit 75f9c8a27d86997fc76b2253772a21b2d2362c7f
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 27 16:27:54 2019 -0500
+
+    erre
+
+commit c1ad620d9d256d82c3f13666154618de8a237570
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 27 16:18:52 2019 -0500
+
+    Borrar
+
+commit cc5fee30723d9f8b90741e736093da95e3910d23
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 27 10:29:13 2019 -0500
+
+    Miercoles : Reducciones codigo
+
+commit 1f3cee2570f0a1d293d932d058f479482058ad79
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Feb 23 08:31:31 2019 -0500
+
+    Sabado
+
+commit cbbf80b7684ce3c77f45c3edb0767e6a1a194c8a
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Feb 22 16:56:57 2019 -0500
+
+    Viernes : se puede enviar el tokendoctor para la appPaciente
+
+commit 5d06d1af89edabe0c78f722865caad4300fd8a53
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Fri Feb 22 10:42:05 2019 -0500
+
+    Viernes : se dibuja la ruta en el mapa desde el doctor y el paciente
+
+commit fb8dae41da6096846802cd12d78dcc57eb5f8cb0
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 16:40:53 2019 -0500
+
+    Jueves : Funciona el diseño de customer_call.xml
+
+commit 52ff909885b8c649ff88f2ddd8d3293ea1d62a69
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 12:40:48 2019 -0500
+
+    Jueves : El appdoctor recibe la cancelacion del usuario cuando le han solicitado un cita
+
+commit 88a5039e0f73918ffda941e031a3eefe939756b2
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 11:22:42 2019 -0500
+
+    parte003
+
+commit 03dc164c9b3e71e1453268171167f3feabf78388
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 11:09:53 2019 -0500
+
+    Jueves Regreso al master
+
+commit 2b9bc8d8f9ce02f3836fe3216e52edd487339be8
+Merge: 9f4c9d1 9de19b9
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 10:32:09 2019 -0500
+
+    Merge branch 'master' into HEAD
+    
+    # Conflicts:
+    #       app/release/29_01_2019_AppDoctor.apk
+    #       app/src/main/java/com/cudpast/app/doctor/doctorApp/Activities/RegisterActivity.java
+    #       app/src/main/java/com/cudpast/app/doctor/doctorApp/Model/Usuario.java
+    #       build.gradle
+
+commit 9f4c9d11d338d120e2a3a11835d2845405f58746
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 10:08:10 2019 -0500
+
+    Jueves : se tiene q arreglar
+
+commit 2493b49f10a22746d1b556b4eb06d1ccfc8a23bf
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 21 08:59:34 2019 -0500
+
+    Jueves : Funciona la cancelacion desde el doctor enviando la notificacion
+
+commit 4c240cf276f0ca727f14f8b4c7014039ed106093
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 20 15:56:07 2019 -0500
+
+    fcm icon default
+
+commit b23a367dc2b7564c73afd88e23fdac5b5942f7c6
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 20 12:19:01 2019 -0500
+
+    Miercoles : Funciona el getData
+
+commit 46ee10e37223c5101e6700b96af7c3ffa1763b32
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 20 10:43:05 2019 -0500
+
+    Miercoles : mejoras de Notificaciones
+
+commit 929c0659762dbc0b14f76561d0ddeddc21ecff8c
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Feb 19 15:28:01 2019 -0500
+
+    Martes 2019 02 19 : activity_main.xml , se implemento la liberia de cicleView y Picasso
+
+commit 97481a2f25de608fffefd10e16655eb3039bdf43
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Feb 19 15:23:26 2019 -0500
+
+    Martes se mejora xml de inicio del doctor main
+
+commit 02829cdf46b16083a3d03c1794e83efd1b5dcbd4
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Feb 19 10:01:27 2019 -0500
+
+    Martes : Mejora de xml_main
+
+commit 7a0eee84c92afb187bd13216c8454e64d5e06c7b
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Feb 18 15:37:01 2019 -0500
+
+    Lunes mejor los diseño
+
+commit 8696999e8f3eb561937644810519b29cb5399936
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 14 12:46:24 2019 -0500
+
+    Jueves : funciona el envio de cancelar del doctor hacia el paciente
+
+commit 116d8dfb1e95f885b7a89ab380501accd28677b5
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 13 16:51:08 2019 -0500
+
+    Miercoles : falta arreglar en el xml el timepo y la distancia
+
+commit 195b8b7c349c5c9fa9577334cf7affbc3e753849
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Feb 13 15:38:05 2019 -0500
+
+    Miercoles : mejorando el callCustomer.xml
+
+commit 6674f5af0781b8a06169d42b83bacae06e0dc803
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 7 12:26:20 2019 -0500
+
+    Jueves : estable
+
+commit 13f3930ee7f79669983ba2ed767671b90e288cec
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 7 11:45:37 2019 -0500
+
+    se va a elimar el valor 1 y valor 2
+
+commit a0fd3e5a29f33e2d6c47ab1a4a4a64b52e183641
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 7 11:22:45 2019 -0500
+
+    Jueves : 2019 02 07
+
+commit c4daafa4162750dd48ea400b6e3dc8d841e0a7ad
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Feb 7 10:29:48 2019 -0500
+
+    Jueves : 2019 02 07 :
+
+commit c19b43135b4512fcb63dfc9ae29dd06757072b04
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Feb 2 12:54:51 2019 -0500
+
+    Sabado : version estable
+
+commit eb12dc977216ad7275661e956409f111fbd4a952
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Jan 31 12:40:27 2019 -0500
+
+    Jueves : Version estable con session :
+
+commit de0ce2b7a85bc5121258bb0e8dcefddd47bbd50e
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Jan 31 12:18:52 2019 -0500
+
+    Jueves : Se va a utlizar FirebaseUser and DatbaseFirebase para extraer info
+
+commit f978341f56699c01bfd9d1f8759bea4743d94273
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Jan 31 11:33:47 2019 -0500
+
+    Jueves : se elimina google Sign
+
+commit d7cd2aa77f89415a718c76fe4c180db00aeaf8e2
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Jan 31 09:52:03 2019 -0500
+
+    con   requestIdToken
+
+commit 8a94273085d06e6a3aef51e3a55e3b0d3fa88a7b
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Jan 30 17:04:48 2019 -0500
+
+    Miercoles : Version estable - Beta - Se va a subir a Play Store beta
+
+commit 727473d22f856fd19394cd4422dcf1f6840dadf9
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Jan 30 16:03:00 2019 -0500
+
+    Miercoles : se modifico el registro y login  con correo y verificacion de correo
+
+commit fe0a43decef8719abf8f9d9a383c128fbb44eef8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Jan 30 12:14:13 2019 -0500
+
+    Miercoles : agregando sendVerication
+
+commit 1db6d0b7b49e5a0ddfa46aa52b39bd03f22d243c
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Jan 29 15:39:21 2019 -0500
+
+    Martes : Funciona en Login y Register
+
+commit a30f6493dd5a46b0ca0facb03260a79590e40dab
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Jan 29 11:37:26 2019 -0500
+
+    Martes :  se modifico el xml  y pruebas en campo con el apk
+
+commit 772159d25f4c6a0b9bcc94cac97a4f2a06b6553a
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Jan 29 10:41:43 2019 -0500
+
+    Martes : se arreglo el puntero de null
+
+commit 737f22d6d7e51188f85f2db4040300b0b57d518c
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Jan 29 10:12:01 2019 -0500
+
+    Martes : Se va a modificar el xml del DOCTORHOME
+
+commit ca2744a6f9eaa5b558d6205963685bf346e0611d
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Tue Jan 29 09:15:44 2019 -0500
+
+    Martes : Se arreglo ?
+
+commit 910fd30fa5ef5521e85bde9216bbdddfb6456551
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 28 17:49:35 2019 -0500
+
+    Lunes : Funcionado
+
+commit d3f12ea2923962d869e27517355975127cc2eb97
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 28 14:48:06 2019 -0500
+
+    Lunes : Modificando el Registro
+
+commit 9ec3fb9376e18aaa60c6e980bca2944c234adbf9
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 28 12:47:32 2019 -0500
+
+    Lunes : 28 01 2019 : DataShop data USER001 <--
+
+commit 11f3e62cdf150796c6dfda38883f4318e52e87b9
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 28 09:31:21 2019 -0500
+
+    Lunes :
+
+commit 9de19b90fdc66658e0c77266a74bf500ebf0d312
+Merge: f82cc33 f92bb4d
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Jan 26 12:45:11 2019 -0500
+
+    Sabado : merge
+
+commit f92bb4dbef24210c5d0f50c3bc5f2c5b3b8288a8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Jan 26 12:42:54 2019 -0500
+
+    Sabado :Git
+
+commit ed687166739e1fa6fea4d97aac8d0e1fdf587fb8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Jan 26 12:33:02 2019 -0500
+
+    Sabado : ok
+
+commit 3c25c3ce862c46e6011368d278f8d676ea7811da
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Jan 26 11:26:27 2019 -0500
+
+    Sabado : Storage no tenia permisos
+
+commit 8bfa39657d8a8535689704a51a0650d94ab79311
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Sat Jan 26 11:09:42 2019 -0500
+
+    error
+
+commit 3c801215ab4bdd6a3f208424ba461feb89db3788
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 15:53:14 2019 -0500
+
+    Lunes : Configurar tablas firebase
+
+commit a845e2fc8ee69ac4d001e69edf3d3157a99d1a19
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 12:41:50 2019 -0500
+
+    Lunes : Google maps configurado
+
+commit bd0fdb486e1d4e07ab77eebd35d3790f60c3f962
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 12:11:40 2019 -0500
+
+    Lunes : Inicio de Business
+
+commit 0b02df69b45445f6937c0dba19686b99429da135
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 11:39:20 2019 -0500
+
+    Lunes : se agregao Diaglo a login
+
+commit b6dd7aee73e2d7ea1b38daf57f586c582d6589e8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 11:00:46 2019 -0500
+
+    Lunes : se modifico el login y main activitiy con doble verificacion
+
+commit 1efb7df0c6b962a1124de90e649aee3dba3edff8
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 10:21:44 2019 -0500
+
+    todo configurado con ProjectoMedicalApp : nuevo
+
+commit f220170bfa770b42c316c7cc2bef05b436a61022
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Mon Jan 21 09:26:51 2019 -0500
+
+    cambiando nombre de package
+
+commit 4ea32396b0ca662e90068845ef6d4529623739d0
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Thu Jan 3 11:24:09 2019 -0500
+
+    pruebas
+
+commit f9af73ec7c20ebb889e958aa10b878a1dd907134
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Dec 26 09:53:45 2018 -0500
+
+    2018 12 26 : Miercoles
+
+commit f82cc33be0b15bdac9f877a726cf5407cd67845f
+Author: Slinkter <luis.j.cueva@gmail.com>
+Date:   Wed Nov 28 13:01:56 2018 -0500
+
+    error
+
+commit 70072c03132dd93eb1ab595633c7e28b714ef9d5
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Mon Nov 5 16:50:48 2018 -0500
+
+    2018 11 05 : Sin APK firmada
+
+commit d0fee59cdf7eb8d683910f83ac657bdd7af73d23
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Mon Nov 5 14:33:19 2018 -0500
+
+    2018 11 05 : Prueba
+
+commit a4235e508075444b2e788c1c92d87560432b5422
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Sat Oct 27 12:29:16 2018 -0500
+
+    2018 10 27 : Funcion la inserscion en la base de datos Godaddy y Firebase 100% funcional Register y Login
+
+commit 0f65d855db3992663bc7d2dac98f4f972d2dc54d
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Sat Oct 27 11:04:41 2018 -0500
+
+    modificacion en la base de datos , la creacion de 3 tablas y modificaion del php para la validación de las tres tablas
+
+commit 5d2a4003aa3c9ed5d12a3b4b4408767834d2161f
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Fri Oct 26 12:43:26 2018 -0500
+
+    Mejoras en el xml de login ,verificacion
+
+commit c19a193916868649738fafac9996776b05af7fde
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Fri Oct 26 11:26:39 2018 -0500
+
+    2018 10 26 : App Doctor --> funciona 100 %
+
+commit d7d52c18178693a9f238959e35e198ede91d3ed3
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Mon Oct 15 09:59:47 2018 -0500
+
+    2018 10 15 : Login Activity : Validaciones de campos parte 1
+
+commit 3209782f2ff5956bacd72adc3dbf6c5fd14996d3
+Author: Luis Jhonatan Cueva <luis.j.cueva@gmail.com>
+Date:   Fri Oct 12 16:32:39 2018 -0500
+
+    2018 10 12 : Registro : validación de campos de formulario
