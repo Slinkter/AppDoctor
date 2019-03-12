@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.cudpast.app.doctor.doctorApp.Business.DoctorRuta;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -32,7 +31,6 @@ import com.firebase.geofire.GeoLocation;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
@@ -76,9 +74,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
-    public IGoogleAPI mService;
 
-    public DatabaseReference db_available_doctor, db_online_user, db_currentUserRef;
+
+    public DatabaseReference db_available_doctor, db_online_offline_user, db_currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
 
@@ -93,6 +91,8 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     }
 
+    //Todo : Guardar en savedinstar la variable location_switch;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_2, container, false);
@@ -103,26 +103,22 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         createLocationRequest();
 
         //-->
-        //Obtener el UID del usuario
-
+        //Obtener el UID del doctor
+        //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor  : g y l : 0 y 1
+        //Obtener ubicación del doctor
+        //On or Off : escucha el switch
         current_user_UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         db_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
         db_currentUserRef = db_available_doctor.child(current_user_UID);
-
-        Log.e(TAG, "current_user_UID " + current_user_UID);
-        Log.e(TAG, "db_available_doctor " + db_available_doctor);
-        Log.e(TAG, "db_currentUserRef " + db_currentUserRef);
-
-        //-->
-        db_online_user = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-        Log.e(TAG, "db_online_user " + db_online_user);
-        db_online_user.addValueEventListener(new ValueEventListener() {
+        db_online_offline_user = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        db_online_offline_user.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 db_currentUserRef.onDisconnect().removeValue();
-                Log.e(TAG, "onDataChange " + dataSnapshot.getValue());
-                Log.e(TAG, "onDataChange " + dataSnapshot.getChildren());
+                Log.e(TAG, "current_user_UID " + current_user_UID);
+                Log.e(TAG, "db_available_doctor " + db_available_doctor);
+                Log.e(TAG, "db_currentUserRef " + db_currentUserRef);
+                Log.e(TAG, "db_online_offline_user " + db_online_offline_user);
             }
 
             @Override
@@ -130,22 +126,22 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                 Log.e(TAG, "onCancelled " + databaseError);
             }
         });
+        //-->
+//        Log.e(TAG, "current_user_UID " + current_user_UID);
+//        Log.e(TAG, "db_available_doctor " + db_available_doctor);
+//        Log.e(TAG, "db_currentUserRef " + db_currentUserRef);
+//        Log.e(TAG, "db_online_offline_user " + db_online_offline_user);
+        //-->
 
 
         //parte012b
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-
         location_switch = rootView.findViewById(R.id.location_switch);
-
 
         setUpLocation();
         updateFirebaseToken();
 
-        geoFire = new GeoFire(db_available_doctor);
-        mService = Common.getGoogleAPI();
-
-
+        geoFire = new GeoFire(db_available_doctor);// g y (l : 0 y 1)
 
 
         location_switch
@@ -153,30 +149,23 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                     @Override
                     public void onCheckedChanged(boolean isOnline) {
                         if (isOnline) {
-
-                                FirebaseDatabase.getInstance().goOnline();
-                                startLocationUpdate();
-                                displayLocation();
-                                Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
-
-
+                            FirebaseDatabase.getInstance().goOnline();
+                            startLocationUpdate();
+                            displayLocation();
+                            Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
                         } else {
-
-                            if (marketDoctorCurrent != null){
+                            if (marketDoctorCurrent != null) {
                                 FirebaseDatabase.getInstance().goOffline();
                                 stopLocationUpdate();
                                 marketDoctorCurrent.remove();
                                 mMap.clear();
                                 Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
                             }
-
-
                         }
                     }
 
 
                 });
-
         return rootView;
     }
 
@@ -188,13 +177,11 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -219,8 +206,6 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
-
-
     }
 
     private void updateFirebaseToken() {
@@ -234,8 +219,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          setUpLocation()()                      ");
 
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSION_REQUEST_CODE);
         } else {
             if (checkPlayService()) {
                 builGoogleApiClient();
@@ -245,7 +234,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                     Log.e(TAG, " Off location ");
                     displayLocation();
                 }
-            }else {
+            } else {
                 Log.e(TAG, "ERROR: checkPlayService()");
             }
         }
@@ -258,13 +247,13 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         int resultCode = googleAPI.isGooglePlayServicesAvailable(getActivity());
         Log.e(TAG, "resultCode() " + resultCode);
         if (resultCode != ConnectionResult.SUCCESS) {
-            Log.e(TAG, "resultCode() :  NOT SUCCESS " );
+            Log.e(TAG, "resultCode() :  NOT SUCCESS ");
             if (googleAPI.isUserResolvableError(resultCode)) {
                 googleAPI.getErrorDialog(getActivity(), resultCode, PLAY_SERVICE_RES_REQUEST).show();
             }
             return false;
-        }else {
-            Log.e(TAG, "resultCode() : SUCCESS " );
+        } else {
+            Log.e(TAG, "resultCode() : SUCCESS ");
         }
         return true;
     }
@@ -312,10 +301,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
         //.Permisos
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         //.Obtener GPS del movil
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
@@ -329,11 +317,8 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                         }
                     }
                 });
-
-
         Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
         if (Common.mLastLocation != null) {
-
             if (location_switch.isChecked()) {
                 //
                 final ProgressDialog mDialog = new ProgressDialog(getActivity());
@@ -371,17 +356,17 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
                 Log.e(TAG, "ERROR: no es checkeado");
             }
-
-
         } else {
             Log.e(TAG, "ERROR: Cannot get your location");
         }
         Log.e(TAG, "=================================================================");
     }
 
-
     private void stopLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -391,12 +376,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
     private void startLocationUpdate() {
         Log.e(TAG, "startLocationUpdate()");
-        if (ActivityCompat.checkSelfPermission(getActivity(),
+        if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(),
+                ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
-        }else {
+        } else {
 
         }
 
@@ -407,7 +392,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         displayLocation();
-      //  startLocationUpdate();
+        //  startLocationUpdate();
     }
 
     @Override
@@ -444,9 +429,6 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onStart() {
         super.onStart();
         Log.e(TAG, "onStart");
-//        if (googleApiClient != null) {
-//            googleApiClient.connect();
-//        }
     }
 
     @Override
@@ -459,21 +441,12 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause");
-//        if (googleApiClient != null && googleApiClient.isConnected()) {
-//            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-//            googleApiClient.disconnect();
-//        }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
-//        if (!checkPlayService()) {
-//            Log.e(TAG, "You need to install Google Play Services to use the App properly");
-//        }
-
     }
 
 
