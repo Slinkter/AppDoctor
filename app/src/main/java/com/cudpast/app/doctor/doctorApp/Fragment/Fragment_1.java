@@ -70,6 +70,7 @@ public class Fragment_1 extends Fragment {
                     .placeholder(R.drawable.ic_photo_doctor)
                     .error(R.drawable.ic_photo_doctor)
                     .into(photoImageView);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

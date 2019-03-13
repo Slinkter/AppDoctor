@@ -169,18 +169,19 @@
                     android:textColor="@color/white" />
 
 
-                <ImageView
-                    android:id="@+id/imageViewUpdateDoctor"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/updateDoctorPhoto"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_above="@+id/btn_choose_image"
                     android:layout_below="@+id/botones"
                     android:layout_gravity="center"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/ic_photo_doctor" />
 
 
                 <Button
+                    android:layout_marginTop="20dp"
                     android:id="@+id/btnUpdateDoctoAll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
