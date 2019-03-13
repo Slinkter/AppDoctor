@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
@@ -32,6 +33,8 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
+
+import dmax.dialog.SpotsDialog;
 
 public class UpdateProfileDoctorActivity extends AppCompatActivity {
 
@@ -57,7 +60,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     private StorageReference StorageReference;
     private UploadTask uploadTask;
 
-    //todo : update Photo
+    //todo : agregar Dialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,90 +110,99 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         });
 
 
+
         btnGuarda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String userdni = Common.currentUser.getDni();
+                try {
+                    final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
+                    waitingDialog.show();
 
-                final StorageReference fileReference = StorageReference.child(userdni + "." + getFileExtension(mUriImage));
-                uploadTask = fileReference.putFile(mUriImage);
+                    String userdni = Common.currentUser.getDni();
 
-                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw Objects.requireNonNull(task.getException());
-                        }
-                        return fileReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            try {
-                                Uri downloadUri = task.getResult();
-                                final String imageUrl = downloadUri.toString();
+                    final StorageReference fileReference = StorageReference.child(userdni + "." + getFileExtension(mUriImage));
+                    uploadTask = fileReference.putFile(mUriImage);
 
-
-                                final Usuario updateUser = new Usuario();
-
-                                //.Usuario a actualizar on Firebase
-                                updateUser.setDni(usuario.getDni());
-                                updateUser.setFirstname(updateDoctorName.getText().toString());
-                                updateUser.setLastname(updateDoctorLast.getText().toString());
-                                updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
-                                updateUser.setCodmedpe(updateDoctorCodMePe.getText().toString());
-                                updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
-                                updateUser.setDireccion(updateDoctorDir.getText().toString());
-
-                                updateUser.setPassword(usuario.getPassword());
-                                updateUser.setCorreoG(usuario.getCorreoG());
-                                updateUser.setFecha(usuario.getFecha());
-                                updateUser.setImage(imageUrl);//<-- set nueva imagen
-                                updateUser.setUid(usuario.getUid());
-
-                                //solo deberia altualizar algunos campos pero esta creadno nuevo
-                                tb_Info_Doctor
-                                        .child(userAuthId)
-                                        .setValue(updateUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.e(TAG, " onSuccess Update Profile Doctor");
-
-                                        Common.currentUser = updateUser;
-                                        Common.currentUser.setImage(imageUrl);
-                                        iniciarActivity();
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        e.printStackTrace();
-                                        Common.currentUser = null;
-                                        Log.e(TAG, " ERROR :" + e.getMessage());
-                                    }
-                                });
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Log.e("RegisterActivity", "Error : -->" + e);
+                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw Objects.requireNonNull(task.getException());
                             }
-
-                        } else {
-
+                            return fileReference.getDownloadUrl();
                         }
-                    }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                try {
+                                    Uri downloadUri = task.getResult();
+                                    final String imageUrl = downloadUri.toString();
+                                    final Usuario updateUser = new Usuario();
 
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                                    //.Usuario a actualizar on Firebase
+                                    updateUser.setDni(usuario.getDni());
+                                    updateUser.setFirstname(updateDoctorName.getText().toString());
+                                    updateUser.setLastname(updateDoctorLast.getText().toString());
+                                    updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
+                                    updateUser.setCodmedpe(updateDoctorCodMePe.getText().toString());
+                                    updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
+                                    updateUser.setDireccion(updateDoctorDir.getText().toString());
 
-                    }
-                });
+                                    updateUser.setPassword(usuario.getPassword());
+                                    updateUser.setCorreoG(usuario.getCorreoG());
+                                    updateUser.setFecha(usuario.getFecha());
+                                    updateUser.setImage(imageUrl);//<-- set nueva imagen
+                                    updateUser.setUid(usuario.getUid());
+
+                                    //solo deberia altualizar algunos campos pero esta creadno nuevo
+                                    tb_Info_Doctor
+                                            .child(userAuthId)
+                                            .setValue(updateUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            waitingDialog.dismiss();
+                                            Log.e(TAG, " onSuccess Update Profile Doctor");
+
+                                            Common.currentUser = updateUser;
+                                            Common.currentUser.setImage(imageUrl);
+                                            iniciarActivity();
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            waitingDialog.dismiss();
+                                            e.printStackTrace();
+                                            Common.currentUser = null;
+                                            Log.e(TAG, " ERROR :" + e.getMessage());
+                                        }
+                                    });
 
 
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Log.e("RegisterActivity", "Error : -->" + e);
+                                }
+
+                            } else {
+                                waitingDialog.dismiss();
+                            }
+                        }
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            waitingDialog.dismiss();
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+//
             }
         });
 
