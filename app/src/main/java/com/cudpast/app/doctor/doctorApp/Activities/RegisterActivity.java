@@ -454,14 +454,12 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
-
     //Paso 2
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriImage = data.getData();
-
             Picasso.with(this).load(mUriImage).fit().centerInside().into(signupImagePhoto);
         }
     }
