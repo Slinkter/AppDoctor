@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Log.e(TAG, " signInWithEmail : success");
+                        Log.e(TAG, " sign In With Email : success");
                         FirebaseUser firebaseUser = auth.getCurrentUser();
                         String userAuthId = firebaseUser.getUid();
 

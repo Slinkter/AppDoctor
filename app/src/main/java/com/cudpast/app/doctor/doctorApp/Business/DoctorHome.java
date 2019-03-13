@@ -214,7 +214,7 @@ public class DoctorHome extends AppCompatActivity implements
             Picasso
                     .with(this)
                     .load(Common.currentUser.getImage())
-                    .resize(80, 80)
+                    .resize(105, 105)
                     .placeholder(R.drawable.ic_photo_doctor)
                     .error(R.drawable.ic_photo_doctor)
                     .into(imageViewDoctor);

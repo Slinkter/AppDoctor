@@ -1,5 +1,10 @@
 package com.cudpast.app.doctor.doctorApp.Model;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Usuario {
 
     private String codmedpe;//codigo de medico de peru
@@ -33,6 +38,12 @@ public class Usuario {
         this.image = imagen;
         this.uid = uid;
     }
+
+
+
+
+
+
     //Firebase db_doctor_login
     public Usuario(String dni, String password) {
         this.dni = dni;

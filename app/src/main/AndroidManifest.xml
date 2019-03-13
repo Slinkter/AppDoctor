@@ -14,13 +14,14 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.Extra.UpdateProfileDoctorActivity"></activity>
 
-        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_hospital" />
-
-        <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/backgroundGray" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -31,50 +32,45 @@
         <activity
             android:name=".Business.DoctorRuta"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.DoctorBooking"
-            android:launchMode="singleTask"
-            android:taskAffinity=""
             android:excludeFromRecents="true"
-
-            android:screenOrientation="portrait" >
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name=".Business.DoctorBooking" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".Activities.RegisterActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.DoctorHome"
             android:label="@string/title_activity_doctor_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -83,11 +79,10 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-
-        <!-- SERVICIOS -->
+        </activity> <!-- SERVICIOS -->
         <service android:name=".Service.MyFirebaseIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

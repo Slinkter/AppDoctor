@@ -29,6 +29,7 @@ import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
+import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitchState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -83,9 +84,14 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     private MaterialAnimatedSwitch location_switch;
     public String current_user_UID;
 
+
+
+
     //parte012b
     private FusedLocationProviderClient fusedLocationClient;
 
+    boolean esta_online , switch_on;
+    int valor1;
 
     public Fragment_2() {
 
@@ -96,11 +102,22 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_2, container, false);
+        if (savedInstanceState == null) {
+            Log.e(TAG, "Hola null 1");
+        } else {
+            valor1 = savedInstanceState.getInt("prueba2", 0);
+            Boolean prueba1 = savedInstanceState.getBoolean("prueba1");
+            Log.e(TAG, "onCreateView : savedInstanceState : prueba 1 " + prueba1);
+            Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
+        }
+
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
         builGoogleApiClient();
         createLocationRequest();
+
+
 
         //-->
         //Obtener el UID del doctor
@@ -143,7 +160,6 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
         geoFire = new GeoFire(db_available_doctor);// g y (l : 0 y 1)
 
-
         location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
                     @Override
@@ -152,6 +168,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                             FirebaseDatabase.getInstance().goOnline();
                             startLocationUpdate();
                             displayLocation();
+                            esta_online = true;
                             Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
                         } else {
                             if (marketDoctorCurrent != null) {
@@ -166,6 +183,35 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
 
 
                 });
+
+        if (switch_on){
+            Log.e("holaaaaaaaaaaaaa"  , " " + switch_on);
+            Log.e("holaaaaaaaaaaaaa"  , " " + location_switch.isActivated());
+            Log.e("holaaaaaaaaaaaaa"  , " " + location_switch.isChecked());
+//            location_switch.isActivated();
+//            location_switch.toggle();
+//            location_switch.isChecked();
+//
+//            location_switch
+//                    .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+//                        @Override
+//                        public void onCheckedChanged(boolean isOnline) {
+//                            if (isOnline) {
+//                                FirebaseDatabase.getInstance().goOnline();
+//                                startLocationUpdate();
+//                                displayLocation();
+//                                esta_online = true;
+//                                Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+
+        }else {
+            Log.e("chauuuuuuuuuuuu"  , " " + switch_on);
+        }
+
+
+
         return rootView;
     }
 
@@ -173,6 +219,9 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean("prueba1", esta_online);
+        outState.putInt("prueba2", valor1);
+        Log.e(TAG, "onSaveInstanceState" + esta_online);
 
 
     }
@@ -180,6 +229,14 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState == null) {
+            Log.e(TAG, "Hola null 2 ");
+        } else {
+            valor1 = savedInstanceState.getInt("prueba2", 0);
+            esta_online = savedInstanceState.getBoolean("prueba1", false);
+            Log.e(TAG, "onCreateView : savedInstanceState : prueba 1 " + esta_online);
+            Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
+        }
 
     }
 
@@ -187,6 +244,15 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        if (savedInstanceState == null) {
+            Log.e(TAG, "Hola null 3");
+        } else {
+            valor1 = savedInstanceState.getInt("prueba2", 0);
+            Boolean prueba1 = savedInstanceState.getBoolean("prueba1");
+            Log.e(TAG, "onCreateView : savedInstanceState : prueba 1 " + prueba1);
+            Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
+        }
 
     }
 
@@ -224,7 +290,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                 ContextCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION},MY_PERMISSION_REQUEST_CODE);
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
         } else {
             if (checkPlayService()) {
                 builGoogleApiClient();
@@ -428,25 +494,32 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
     @Override
     public void onStart() {
         super.onStart();
-        Log.e(TAG, "onStart");
+        Log.e(TAG, "onStart " + valor1 + " : " +  esta_online);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.e(TAG, "onStop");
+        Log.e(TAG, "onStop " + valor1+ " : " +  esta_online);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.e(TAG, "onPause");
+        Log.e(TAG, "onPause " + valor1+ " : " +  esta_online);
+        if (location_switch.isActivated() == true){
+            switch_on = true;
+        }else {
+            switch_on = false;
+        }
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume");
+        Log.e(TAG, "onResume " + valor1+ " : " +  esta_online);
     }
 
 

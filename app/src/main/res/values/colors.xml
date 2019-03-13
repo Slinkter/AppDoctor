@@ -8,12 +8,9 @@
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
 
-
-
-
     <color name="bottomText">#FF4081</color>
 
-    <color name="rippleEffectColor">#f816a463 </color>
+    <color name="rippleEffectColor">#f816a463</color>
     <color name="btnSignIN">#1fbad6</color>
     <color name="btnRegister">#83838c</color>
 
@@ -32,9 +29,7 @@
     <color name="backgroundGray">#E4F5EFEF</color>
 
     <color name="colorVerdeAzul">#2AC9C9</color>
-    <color name="colorRed">#D30808</color>
-
-
+    <color name="colorRed">#C4D30808</color>
     <color name="backgroundRegistro">#9A1FBAD6</color>
 
 
