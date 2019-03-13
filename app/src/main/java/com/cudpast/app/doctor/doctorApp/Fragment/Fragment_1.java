@@ -68,6 +68,7 @@ public class Fragment_1 extends Fragment {
                     .with(getActivity())
                     .load(usuario.getImage())
                     .placeholder(R.drawable.ic_photo_doctor)
+                    .resize(150,150)
                     .error(R.drawable.ic_photo_doctor)
                     .into(photoImageView);
 
