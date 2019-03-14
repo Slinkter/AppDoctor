@@ -2,7 +2,9 @@ package com.cudpast.app.doctor.doctorApp.Activities.Extra;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
@@ -215,6 +218,14 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         String userdni = Common.currentUser.getDni();
 
         final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
+        //Todo : reducir el tamaño de la imagen o foto
+//        Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), mUriPhoto);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+//        byte[] data = baos.toByteArray();
+
+
+
         uploadTask = photoRefe.putFile(mUriPhoto);//mUriPhoto --> es un URL
         uploadTask
                 .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -290,7 +301,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     }
 
 
-    //Soporte 1 :ES PARA LA EXTESNION DEL JPG O IMAGEN
+    //Soporte 1 :ES PARA LA EXTESNION DE LA IMAGEN
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
