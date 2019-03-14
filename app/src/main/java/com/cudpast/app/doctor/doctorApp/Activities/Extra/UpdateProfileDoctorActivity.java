@@ -3,6 +3,7 @@ package com.cudpast.app.doctor.doctorApp.Activities.Extra;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -215,7 +216,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
 
     private void updatePhotoToStorage() {
 
-
+        Log.e(TAG, "updatePhotoToStorage ");
         final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
         waitingDialog.show();
 
@@ -224,12 +225,13 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
         //Todo : reducir el tamaño de la imagen o foto
         try {
-            Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), mUriPhoto);
+
+            Bitmap bmp = getResizedBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), mUriPhoto),60);
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 30, baos);
+
             byte[] data = baos.toByteArray();
-
-
 
             uploadTask = photoRefe.putBytes(data);//mUriPhoto --> es un URL
             uploadTask
@@ -325,5 +327,23 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
 
 }
