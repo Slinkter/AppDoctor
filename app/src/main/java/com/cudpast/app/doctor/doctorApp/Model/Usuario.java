@@ -10,7 +10,7 @@ public class Usuario {
     private String codmedpe;//codigo de medico de peru
     private String correoG;
     private String direccion;
-    private String dni ;
+    private String dni;
     private String especialidad;
     private String fecha;
     private String firstname;
@@ -23,8 +23,9 @@ public class Usuario {
     public Usuario() {
 
     }
+
     //Firebase db_doctor_register
-    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha , String imagen,String uid) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha, String imagen, String uid) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -40,17 +41,14 @@ public class Usuario {
     }
 
 
-
-
-
-
     //Firebase db_doctor_login
     public Usuario(String dni, String password) {
         this.dni = dni;
         this.password = password;
     }
+
     //Firebase db_doctor_consulta
-    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad,String image) {
+    public Usuario(String dni, String firstname, String lastname, String numphone, String especialidad, String image) {
         this.dni = dni;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -155,4 +153,27 @@ public class Usuario {
     public void setUid(String uid) {
         this.uid = uid;
     }
+
+
+    public String getCadena() {
+        String cadena = "";
+
+        cadena = "codmedpe " + codmedpe + "\n" +
+                "correoG; " + correoG + "\n" +
+                "direccion; " + direccion + "\n" +
+                "dni  " + dni + "\n" +
+                "especialidad; " + especialidad + "\n" +
+                "fecha  " + fecha + "\n" +
+                "firstname  " + firstname + "\n" +
+                "image  " + image + "\n" +
+                "lastname  " + lastname + "\n" +
+                "numphone  " + numphone + "\n" +
+                "password  " + password + "\n" +
+                "uid   " + uid + "\n";
+
+
+        return cadena;
+    }
+
+
 }

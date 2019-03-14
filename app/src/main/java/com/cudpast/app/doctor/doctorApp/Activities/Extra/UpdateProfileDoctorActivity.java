@@ -49,7 +49,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
 
     private ImageView updateDoctorPhotoView;
 
-    private Button btnGuarda, btn_updateDoctorPhoto;
+    private Button btn_UploadInfoDoctor, btn_chooseDoctorPhoto, btn_UploadPhotoDoctor;
 
     private DatabaseReference tb_Info_Doctor;
 
@@ -57,6 +57,10 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
 
     private StorageReference StorageReference;
     private UploadTask uploadTask;
+
+    boolean choosed ;
+    Usuario usuario;
+    String userAuthId;
 
     //todo : agregar Dialog
 
@@ -77,11 +81,13 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         updateDoctorEsp = findViewById(R.id.updateDoctorEsp);
         updateDoctorPhotoView = findViewById(R.id.updateDoctorPhoto);
 
-        btnGuarda = findViewById(R.id.btnUpdateDoctoAll);
-        btn_updateDoctorPhoto = findViewById(R.id.btn_updateDoctorPhoto);
+        btn_UploadInfoDoctor = findViewById(R.id.btnUpdateDoctoAll);
+        btn_UploadPhotoDoctor = findViewById(R.id.btn_updateDoctorPhoto);
+        btn_chooseDoctorPhoto = findViewById(R.id.btn_chooseDoctorPhoto);
+
 
         //.Obtener usuario actualizr
-        final Usuario usuario = Common.currentUser;
+        usuario = Common.currentUser;
         //.Display on XML
         updateDoctorName.setText(usuario.getFirstname());
         updateDoctorLast.setText(usuario.getLastname());
@@ -98,117 +104,74 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                 .error(R.drawable.ic_photo_doctor)
                 .into(updateDoctorPhotoView);
 
-        final String userAuthId = usuario.getUid();
+        userAuthId = usuario.getUid();
 
-        btn_updateDoctorPhoto.setOnClickListener(new View.OnClickListener() {
+        btn_chooseDoctorPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openFileChooser();
+
                 //todo: que lo haga de manera independiten su propio boton
             }
         });
 
-
-        btnGuarda.setOnClickListener(new View.OnClickListener() {
+        btn_UploadPhotoDoctor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                try {
-                    final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
-                    waitingDialog.show();
-
-                    String userdni = Common.currentUser.getDni();
-
-                    final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
-                    uploadTask = photoRefe.putFile(mUriPhoto);//mUriPhoto --> es un URL
+                updatePhotoToStorage();
+            }
+        });
 
 
+        btn_UploadInfoDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+                final Usuario updateUser = new Usuario();
+                final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
+                waitingDialog.show();
+                String imgPath = Common.currentUser.getImage();
 
-                    uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw Objects.requireNonNull(task.getException());
+                //.Usuario a actualizar on Firebase
+                updateUser.setDni(usuario.getDni());
+                updateUser.setFirstname(updateDoctorName.getText().toString());
+                updateUser.setLastname(updateDoctorLast.getText().toString());
+                updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
+                updateUser.setCodmedpe(updateDoctorCodMePe.getText().toString());
+                updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
+                updateUser.setImage(imgPath);
+                updateUser.setDireccion(updateDoctorDir.getText().toString());
+                updateUser.setPassword(usuario.getPassword());
+                updateUser.setCorreoG(usuario.getCorreoG());
+                updateUser.setFecha(usuario.getFecha());
+                updateUser.setUid(usuario.getUid());
+                Log.e(TAG, "updatePhotoToStorage" + updateUser.getCadena());
+                Common.currentUser = updateUser;
+
+
+                //.Actualizar campos
+                tb_Info_Doctor
+                        .child(userAuthId)
+                        .setValue(updateUser)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                waitingDialog.dismiss();
+                                Log.e(TAG, " onSuccess Update Profile Doctor");
+
+                                iniciarActivity();
                             }
-                            return photoRefe.getDownloadUrl();
 
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                try {
-
-
-                                    Uri downloadUri = task.getResult();
-                                    final String imageUrl = downloadUri.toString();
-                                    final Usuario updateUser = new Usuario();
-
-                                    //.Usuario a actualizar on Firebase
-                                    updateUser.setDni(usuario.getDni());
-                                    updateUser.setFirstname(updateDoctorName.getText().toString());
-                                    updateUser.setLastname(updateDoctorLast.getText().toString());
-                                    updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
-                                    updateUser.setCodmedpe(updateDoctorCodMePe.getText().toString());
-                                    updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
-                                    updateUser.setDireccion(updateDoctorDir.getText().toString());
-
-                                    updateUser.setPassword(usuario.getPassword());
-                                    updateUser.setCorreoG(usuario.getCorreoG());
-                                    updateUser.setFecha(usuario.getFecha());
-                                    updateUser.setImage(imageUrl);//<-- set nueva imagen
-                                    updateUser.setUid(usuario.getUid());
-
-                                    //solo deberia altualizar algunos campos pero esta creadno nuevo
-                                    tb_Info_Doctor
-                                            .child(userAuthId)
-                                            .setValue(updateUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            waitingDialog.dismiss();
-                                            Log.e(TAG, " onSuccess Update Profile Doctor");
-
-                                            Common.currentUser = updateUser;
-                                            Common.currentUser.setImage(imageUrl);
-                                            iniciarActivity();
-
-                                        }
-
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-
-
-                                        }
-                                    });
-
-
-
-
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    Log.e("RegisterActivity", "Error : -->" + e);
-                                }
-
-                            } else {
-
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                waitingDialog.dismiss();
+                                e.printStackTrace();
                             }
-                        }
+                        });
 
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
 
-                        }
-                    });
-
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-                }
-
-//
             }
         });
 
@@ -227,11 +190,13 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriPhoto = data.getData();
+            choosed = true;
+            btn_UploadPhotoDoctor.setEnabled(true);
+          //  btn_UploadPhotoDoctor.setVisibility(View.VISIBLE);
             Picasso
                     .with(this)
                     .load(mUriPhoto)
                     .placeholder(R.drawable.ic_photo_doctor)
-                    .resize(200, 200)
                     .fit()
                     .error(R.drawable.ic_photo_doctor)
                     .centerInside()
@@ -241,9 +206,88 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     }
     //Paso 3
 
-    private
+    private void updatePhotoToStorage() {
 
 
+        final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
+        waitingDialog.show();
+
+        String userdni = Common.currentUser.getDni();
+
+        final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
+        uploadTask = photoRefe.putFile(mUriPhoto);//mUriPhoto --> es un URL
+        uploadTask
+                .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+
+                        if (!task.isSuccessful()) {
+                            throw Objects.requireNonNull(task.getException());
+                        }
+                        return photoRefe.getDownloadUrl();
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            final String imageUrl = downloadUri.toString();
+                            final Usuario updateUser = new Usuario();
+                            //.Usuario a actualizar on Firebase
+                            updateUser.setDni(usuario.getDni());
+                            updateUser.setFirstname(updateDoctorName.getText().toString());
+                            updateUser.setLastname(updateDoctorLast.getText().toString());
+                            updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
+                            updateUser.setCodmedpe(updateDoctorCodMePe.getText().toString());
+                            updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
+                            updateUser.setDireccion(updateDoctorDir.getText().toString());
+
+                            updateUser.setPassword(usuario.getPassword());
+                            updateUser.setCorreoG(usuario.getCorreoG());
+                            updateUser.setFecha(usuario.getFecha());
+                            updateUser.setImage(imageUrl);//<-- set nueva imagen
+                            updateUser.setUid(usuario.getUid());
+
+                            Common.currentUser.setImage(imageUrl);
+                            Common.currentUser = updateUser;
+
+                            Log.e(TAG, "updatePhotoToStorage : " + updateUser.getCadena());
+
+                            //solo deberia altualizar algunos campos pero esta creadno nuevo
+                            tb_Info_Doctor
+                                    .child(userAuthId)
+                                    .setValue(updateUser)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            waitingDialog.dismiss();
+                                            Log.e(TAG, " onSuccess Update Profile Doctor");
+
+                                            iniciarActivity();
+
+                                        }
+
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            waitingDialog.dismiss();
+                                        }
+                                    });
+
+                        }
+                    }
+
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        waitingDialog.dismiss();
+                    }
+                });
+    }
 
 
     //Soporte 1 :ES PARA LA EXTESNION DEL JPG O IMAGEN

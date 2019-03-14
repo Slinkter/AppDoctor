@@ -154,19 +154,42 @@
                     app:met_singleLineEllipsis="false" />
 
 
-
                 <Button
-                    android:layout_marginTop="50dp"
-                    android:id="@+id/btn_updateDoctorPhoto"
-                    android:layout_width="wrap_content"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp"
+                    android:id="@+id/btnUpdateDoctoAll"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="@drawable/custom_button_2"
-                    android:text="Actualizar foto"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/custom_button_5"
+                    android:elevation="5dp"
+                    android:text="Guardar"
                     android:textColor="@color/white" />
 
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/updateDoctorPhoto"
@@ -178,25 +201,42 @@
                     android:layout_marginTop="20dp"
                     android:background="@drawable/ic_photo_doctor" />
 
-
                 <Button
-                    android:layout_marginTop="20dp"
-                    android:id="@+id/btnUpdateDoctoAll"
+                    android:id="@+id/btn_chooseDoctorPhoto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="50dp"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginRight="30dp"
+
+                    android:background="@drawable/custom_button_2"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Elegir foto"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:enabled="false"
+                    android:id="@+id/btn_updateDoctorPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="50dp"
                     android:background="@drawable/custom_button_5"
-                    android:elevation="5dp"
-                    android:text="Guardar"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Actualizar foto"
                     android:textColor="@color/white" />
 
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
 
+
+        </android.support.v7.widget.CardView>
 
 
     </LinearLayout>
