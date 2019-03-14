@@ -104,6 +104,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openFileChooser();
+                //todo: que lo haga de manera independiten su propio boton
             }
         });
 
@@ -119,7 +120,6 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                     String userdni = Common.currentUser.getDni();
 
                     final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
-
                     uploadTask = photoRefe.putFile(mUriPhoto);//mUriPhoto --> es un URL
 
 
@@ -138,6 +138,8 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
                                 try {
+
+
                                     Uri downloadUri = task.getResult();
                                     final String imageUrl = downloadUri.toString();
                                     final Usuario updateUser = new Usuario();
@@ -171,15 +173,17 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                                             iniciarActivity();
 
                                         }
+
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
 
-                                            e.printStackTrace();
-                                            Common.currentUser = null;
-                                            Log.e(TAG, " ERROR :" + e.getMessage());
+
                                         }
                                     });
+
+
+
 
 
                                 } catch (Exception e) {
@@ -233,7 +237,14 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                     .centerInside()
                     .into(updateDoctorPhotoView);
         }
+
     }
+    //Paso 3
+
+    private
+
+
+
 
     //Soporte 1 :ES PARA LA EXTESNION DEL JPG O IMAGEN
     private String getFileExtension(Uri uri) {
