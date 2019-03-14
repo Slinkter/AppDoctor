@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_1;
@@ -211,13 +212,15 @@ public class DoctorHome extends AppCompatActivity implements
         try {
             nameDoctor.setText(name);
             emailDoctor.setText(email);
-            Picasso
-                    .with(this)
-                    .load(Common.currentUser.getImage())
-                    .resize(105, 105)
-                    .placeholder(R.drawable.ic_photo_doctor)
-                    .error(R.drawable.ic_photo_doctor)
-                    .into(imageViewDoctor);
+
+            Glide.with(this).load(Common.currentUser.getImage()).into(imageViewDoctor);
+//            Picasso
+//                    .with(this)
+//                    .load(Common.currentUser.getImage())
+//                    .resize(105, 105)
+//                    .placeholder(R.drawable.ic_photo_doctor)
+//                    .error(R.drawable.ic_photo_doctor)
+//                    .into(imageViewDoctor);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -27,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
@@ -460,7 +461,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriImage = data.getData();
-            Picasso.with(this).load(mUriImage).fit().centerInside().into(signupImagePhoto);
+            Glide.with(this).load(mUriImage).into(signupImagePhoto);
+           // Picasso.with(this).load(mUriImage).fit().centerInside().into(signupImagePhoto);
         }
     }
 

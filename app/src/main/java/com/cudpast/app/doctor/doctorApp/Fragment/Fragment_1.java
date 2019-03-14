@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Activities.Extra.UpdateProfileDoctorActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
@@ -64,13 +65,15 @@ public class Fragment_1 extends Fragment {
             espTextView.setText(usuario.getEspecialidad());
             telTextView.setText(usuario.getNumphone());
 
-            Picasso
-                    .with(getActivity())
-                    .load(usuario.getImage())
-                    .placeholder(R.drawable.ic_photo_doctor)
-                    .resize(150,150)
-                    .error(R.drawable.ic_photo_doctor)
-                    .into(photoImageView);
+            Glide.with(getActivity()).load(usuario.getImage()).into(photoImageView);
+//
+//            Picasso
+//                    .with(getActivity())
+//                    .load(usuario.getImage())
+//                    .placeholder(R.drawable.ic_photo_doctor)
+//                    .resize(150,150)
+//                    .error(R.drawable.ic_photo_doctor)
+//                    .into(photoImageView);
 
         } catch (Exception e) {
             e.printStackTrace();
