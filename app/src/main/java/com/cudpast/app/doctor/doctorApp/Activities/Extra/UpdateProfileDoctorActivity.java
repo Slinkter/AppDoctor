@@ -14,12 +14,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.google.android.gms.maps.internal.IMapFragmentDelegate;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,13 +47,13 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
             updateDoctorCodMePe,
             updateDoctorEsp;
 
-    private ImageView updateDoctorPhoto;
+    private ImageView updateDoctorPhotoView;
 
     private Button btnGuarda, btn_updateDoctorPhoto;
 
     private DatabaseReference tb_Info_Doctor;
 
-    private Uri mUriImage;
+    private Uri mUriPhoto;
 
     private StorageReference StorageReference;
     private UploadTask uploadTask;
@@ -77,7 +75,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         updateDoctorDir = findViewById(R.id.updateDoctorDir);
         updateDoctorCodMePe = findViewById(R.id.updateDoctorCodMePe);
         updateDoctorEsp = findViewById(R.id.updateDoctorEsp);
-        updateDoctorPhoto = findViewById(R.id.updateDoctorPhoto);
+        updateDoctorPhotoView = findViewById(R.id.updateDoctorPhoto);
 
         btnGuarda = findViewById(R.id.btnUpdateDoctoAll);
         btn_updateDoctorPhoto = findViewById(R.id.btn_updateDoctorPhoto);
@@ -91,14 +89,14 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         updateDoctorDir.setText(usuario.getDireccion());
         updateDoctorCodMePe.setText(usuario.getCodmedpe());
         updateDoctorEsp.setText(usuario.getEspecialidad());
-
+        // update XML
         Picasso
                 .with(this)
                 .load(usuario.getImage())
                 .placeholder(R.drawable.ic_photo_doctor)
                 .resize(200, 200)
                 .error(R.drawable.ic_photo_doctor)
-                .into(updateDoctorPhoto);
+                .into(updateDoctorPhotoView);
 
         final String userAuthId = usuario.getUid();
 
@@ -108,7 +106,6 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                 openFileChooser();
             }
         });
-
 
 
         btnGuarda.setOnClickListener(new View.OnClickListener() {
@@ -121,8 +118,11 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
 
                     String userdni = Common.currentUser.getDni();
 
-                    final StorageReference fileReference = StorageReference.child(userdni + "." + getFileExtension(mUriImage));
-                    uploadTask = fileReference.putFile(mUriImage);
+                    final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
+
+                    uploadTask = photoRefe.putFile(mUriPhoto);//mUriPhoto --> es un URL
+
+
 
                     uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
@@ -130,7 +130,8 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                             if (!task.isSuccessful()) {
                                 throw Objects.requireNonNull(task.getException());
                             }
-                            return fileReference.getDownloadUrl();
+                            return photoRefe.getDownloadUrl();
+
                         }
                     }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
@@ -173,7 +174,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            waitingDialog.dismiss();
+
                                             e.printStackTrace();
                                             Common.currentUser = null;
                                             Log.e(TAG, " ERROR :" + e.getMessage());
@@ -187,18 +188,19 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                                 }
 
                             } else {
-                                waitingDialog.dismiss();
+
                             }
                         }
 
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            waitingDialog.dismiss();
+
                         }
                     });
 
                 } catch (Exception e) {
+
                     e.printStackTrace();
                 }
 
@@ -220,9 +222,16 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            mUriImage = data.getData();
-
-            Picasso.with(this).load(mUriImage).fit().centerInside().into(updateDoctorPhoto);
+            mUriPhoto = data.getData();
+            Picasso
+                    .with(this)
+                    .load(mUriPhoto)
+                    .placeholder(R.drawable.ic_photo_doctor)
+                    .resize(200, 200)
+                    .fit()
+                    .error(R.drawable.ic_photo_doctor)
+                    .centerInside()
+                    .into(updateDoctorPhotoView);
         }
     }
 
