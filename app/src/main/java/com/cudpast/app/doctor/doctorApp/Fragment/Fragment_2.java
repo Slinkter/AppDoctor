@@ -336,17 +336,18 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
         Log.e(TAG, "                          displayLocation()                      ");
         //.Permisos
 
-        //.Obtener GPS del movil
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
         }
+
+
+        //.Obtener GPS del movil
+
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
@@ -359,6 +360,7 @@ public class Fragment_2 extends Fragment implements OnMapReadyCallback,
                         }
                     }
                 });
+
         Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
         if (Common.mLastLocation != null) {
             if (location_switch.isChecked()) {
