@@ -155,25 +155,25 @@ public class Usuario {
     }
 
 
-    public String getCadena() {
-        String cadena = "";
-
-        cadena = "codmedpe " + codmedpe + "\n" +
-                "correoG; " + correoG + "\n" +
-                "direccion; " + direccion + "\n" +
-                "dni  " + dni + "\n" +
-                "especialidad; " + especialidad + "\n" +
-                "fecha  " + fecha + "\n" +
-                "firstname  " + firstname + "\n" +
-                "image  " + image + "\n" +
-                "lastname  " + lastname + "\n" +
-                "numphone  " + numphone + "\n" +
-                "password  " + password + "\n" +
-                "uid   " + uid + "\n";
-
-
-        return cadena;
-    }
+//    public String getCadena() {
+//        String cadena = "";
+//
+//        cadena = "codmedpe " + codmedpe + "\n" +
+//                "correoG; " + correoG + "\n" +
+//                "direccion; " + direccion + "\n" +
+//                "dni  " + dni + "\n" +
+//                "especialidad; " + especialidad + "\n" +
+//                "fecha  " + fecha + "\n" +
+//                "firstname  " + firstname + "\n" +
+//                "image  " + image + "\n" +
+//                "lastname  " + lastname + "\n" +
+//                "numphone  " + numphone + "\n" +
+//                "password  " + password + "\n" +
+//                "uid   " + uid + "\n";
+//
+//
+//        return cadena;
+//    }
 
 
 }

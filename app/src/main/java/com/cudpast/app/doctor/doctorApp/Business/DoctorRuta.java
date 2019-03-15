@@ -3,6 +3,7 @@ package com.cudpast.app.doctor.doctorApp.Business;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -40,8 +41,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -99,7 +102,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
     public Circle pacienteMarker;
     public Marker driverMarker;
-    Polyline direction;
+
 
 
     IGoogleAPI mService;
@@ -110,6 +113,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     Button btnSendNotiArrived;
 
     private DatabaseReference referenceService, doctorService, onlineRef;
+
+    LocationCallback mLocationCallback;
 
 
     @Override
@@ -155,6 +160,18 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         geoFire = new GeoFire(referenceService);
         setUpLocation();
 
+
+         mLocationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    Log.i("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+
+                }
+            };
+
+        };
+
     }
 
     //.
@@ -189,6 +206,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                 btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         sendArriveNotification(idTokenPaciente);
                     }
                 });
@@ -367,11 +385,11 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     private class getDireccionParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         ProgressDialog mDialog = new ProgressDialog(DoctorRuta.this);
-
+        Polyline direction;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mDialog.setMessage("Actualizando a Ubicación...");
+            mDialog.setMessage("Actualizando su Ubicación...");
             mDialog.show();
         }
 
@@ -470,7 +488,9 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     private void sendArriveNotification(String customerId) {
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
-
+        //parte 014
+        Intent intent = new Intent(DoctorRuta.this, FinActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
         String titile = "Arrived";
@@ -480,19 +500,28 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         Sender sender = new Sender(tokenpaciente, notification);
 
+        ubicacion.removeLocationUpdates(mLocationCallback);
+
         mFCMService.sendMessage(sender).enqueue(new Callback<FCMResponse>() {
             @Override
             public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                 if (response.body().success != 1) {
                     Toast.makeText(DoctorRuta.this, "Failed", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(DoctorRuta.this, "success", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FCMResponse> call, Throwable t) {
-
+                Toast.makeText(DoctorRuta.this, "onFailure", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //APP Doctor
+        startActivity(intent);
+        finish();
+        //parte014
     }
 
 }

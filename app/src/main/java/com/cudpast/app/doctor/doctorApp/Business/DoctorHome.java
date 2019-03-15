@@ -1,22 +1,9 @@
 package com.cudpast.app.doctor.doctorApp.Business;
 
-import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
@@ -39,41 +25,8 @@ import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_2;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_3;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_4;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_5;
-import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
-
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
-import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DoctorHome extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -85,7 +38,7 @@ public class DoctorHome extends AppCompatActivity implements
     //Header Menu
     ImageView imageViewDoctor;
     TextView nameDoctor;
-    TextView emailDoctor;
+    TextView especialidadDoctor;
 
 
     @Override
@@ -109,7 +62,7 @@ public class DoctorHome extends AppCompatActivity implements
         //
         imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
         nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
-        emailDoctor = (TextView) headerView.findViewById(R.id.emailDoctor);
+        especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
 
 
         setFragment(1);
@@ -205,13 +158,13 @@ public class DoctorHome extends AppCompatActivity implements
         Usuario usuario = Common.currentUser;
 
         String name = usuario.getFirstname();
-        String email = usuario.getCorreoG();
+        String especialidad = usuario.getEspecialidad();
 
         Log.e(TAG, " name :" + name);
-        Log.e(TAG, " email :" + email);
+        Log.e(TAG, " especialidad :" + especialidad);
         try {
             nameDoctor.setText(name);
-            emailDoctor.setText(email);
+            especialidadDoctor.setText(especialidad);
 
             Glide.with(this).load(Common.currentUser.getImage()).into(imageViewDoctor);
 //            Picasso

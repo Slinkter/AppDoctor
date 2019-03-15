@@ -128,22 +128,13 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     private void aceptBooking(String sIdTokenPaciente) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                aceptBooking              ");
-        Intent intent = new Intent(DoctorBooking.this, DoctorRuta.class);
-        doclat = Common.mLastLocation.getLatitude();
-        doclng = Common.mLastLocation.getLongitude();
-        //APP Doctor
-        intent.putExtra("doclat", doclat);
-        intent.putExtra("doclng", doclng);
-        //APP Paciente
-        intent.putExtra("pacienteLat", lat);
-        intent.putExtra("pacienteLng", lng);
-        intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
-        startActivity(intent);
 
+
+        //-->
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        Notification notification = new Notification("Acepta", "Su medico ha llegado");
+        Notification notification = new Notification("Acepta", "Su medico esta en camino");
         Data data = new Data(doctorUID);
         Sender sender = new Sender(sIdTokenPaciente, notification, data);
 
@@ -165,8 +156,24 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Log.e(TAG, "onFailure : " + t.getMessage());
                     }
                 });
+        //<--
 
+        Intent intent = new Intent(DoctorBooking.this, DoctorRuta.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        doclat = Common.mLastLocation.getLatitude();
+        doclng = Common.mLastLocation.getLongitude();
+        //APP Doctor
+        intent.putExtra("doclat", doclat);
+        intent.putExtra("doclng", doclng);
+        //APP Paciente
+        intent.putExtra("pacienteLat", lat);
+        intent.putExtra("pacienteLng", lng);
+        intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
+        startActivity(intent);
         finish();
+
+
+
     }
     //.
     private void cancelBooking(String IdToken) {
@@ -206,8 +213,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 });
         finish();
     }
-
-
     //Cargar duración distancia y direccion final
     private void getDirection(double lat, double lng) {
 
@@ -248,7 +253,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                                 e.printStackTrace();
                             }
                         }
-
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
                             Toast.makeText(DoctorBooking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -262,7 +266,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         }
 
     }
-
     //.
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -285,7 +288,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
 
     }
-
     //.
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);

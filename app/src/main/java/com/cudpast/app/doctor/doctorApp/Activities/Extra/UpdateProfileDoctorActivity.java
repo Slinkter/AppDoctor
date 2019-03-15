@@ -150,7 +150,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                 updateUser.setCorreoG(usuario.getCorreoG());
                 updateUser.setFecha(usuario.getFecha());
                 updateUser.setUid(usuario.getUid());
-                Log.e(TAG, "updatePhotoToStorage" + updateUser.getCadena());
+//                Log.e(TAG, "updatePhotoToStorage" + updateUser.getCadena());
                 Common.currentUser = updateUser;
 
 
@@ -271,7 +271,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                                 Common.currentUser.setImage(imageUrl);
                                 Common.currentUser = updateUser;
 
-                                Log.e(TAG, "updatePhotoToStorage : " + updateUser.getCadena());
+//                                Log.e(TAG, "updatePhotoToStorage : " + updateUser.getCadena());
 
                                 //solo deberia altualizar algunos campos pero esta creadno nuevo
                                 tb_Info_Doctor
