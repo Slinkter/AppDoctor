@@ -232,12 +232,9 @@
                     android:text="Actualizar foto"
                     android:textColor="@color/white" />
 
-
             </LinearLayout>
 
-
         </android.support.v7.widget.CardView>
-
 
     </LinearLayout>
 
