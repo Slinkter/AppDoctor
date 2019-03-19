@@ -204,8 +204,10 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_close_nav" />
-                            <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva\Downloads\ic_inicio_doctor.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="opacityPercent" value="95" />
+                            <entry key="outputName" value="ic_notificacion_cliente" />
+                            <entry key="sourceFile" value="C:\Users\Luis Jhonatan Cueva\Downloads\mail.svg" />
                           </map>
                         </option>
                       </PersistentState>

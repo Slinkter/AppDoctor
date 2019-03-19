@@ -208,6 +208,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                     public void onClick(View view) {
 
                         sendArriveNotification(idTokenPaciente);
+                        Toast.makeText(DoctorRuta.this,"Click para Notificar al Cliente",Toast.LENGTH_SHORT).show();
                     }
                 });
 

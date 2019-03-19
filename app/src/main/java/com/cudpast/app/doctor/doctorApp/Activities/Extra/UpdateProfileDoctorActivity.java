@@ -63,7 +63,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     private StorageReference StorageReference;
     private UploadTask uploadTask;
 
-    boolean choosed ;
+    boolean choosed;
     Usuario usuario;
     String userAuthId;
 
@@ -110,13 +110,13 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                 .into(updateDoctorPhotoView);
 
         userAuthId = usuario.getUid();
-
+        //todo: que lo haga de manera independiten su propio boton
         btn_chooseDoctorPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openFileChooser();
 
-                //todo: que lo haga de manera independiten su propio boton
+
             }
         });
 
@@ -163,7 +163,6 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                             public void onSuccess(Void aVoid) {
                                 waitingDialog.dismiss();
                                 Log.e(TAG, " onSuccess Update Profile Doctor");
-
                                 iniciarActivity();
                             }
 
@@ -197,7 +196,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
             mUriPhoto = data.getData();
             choosed = true;
             btn_UploadPhotoDoctor.setEnabled(true);
-          //  btn_UploadPhotoDoctor.setVisibility(View.VISIBLE);
+            //  btn_UploadPhotoDoctor.setVisibility(View.VISIBLE);
 //            Picasso
 //                    .with(this)
 //                    .load(mUriPhoto)
@@ -226,7 +225,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         //Todo : reducir el tamaño de la imagen o foto
         try {
 
-            Bitmap bmp = getResizedBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), mUriPhoto),60);
+            Bitmap bmp = getResizedBitmap(MediaStore.Images.Media.getBitmap(getContentResolver(), mUriPhoto), 60);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 30, baos);
@@ -306,10 +305,9 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
                         }
                     });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
     }

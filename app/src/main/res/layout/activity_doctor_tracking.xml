@@ -16,14 +16,15 @@
 
     <Button
         android:id="@+id/btnSendNotiArrived"
-        android:layout_width="150dp"
-        android:layout_height="64dp"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
         android:layout_alignBottom="@id/mapDoctorTracking"
         android:layout_centerHorizontal="true"
         android:layout_margin="6dp"
-        android:background="@drawable/custom_button_5"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ic_notificacion_cliente"
         android:enabled="false"
-        android:text="Notificar"
+
         android:textColor="@color/white"
         android:visibility="invisible" />
 

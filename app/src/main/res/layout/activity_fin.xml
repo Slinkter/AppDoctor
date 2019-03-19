@@ -9,10 +9,10 @@
     tools:context=".Business.FinActivity">
 
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
         android:text="Atención Medica"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
@@ -20,49 +20,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="25dp"
+        app:cardCornerRadius="10dp"
         app:cardElevation="5dp"
+
         app:cardUseCompatPadding="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/bs_doctorImage"
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-                    android:layout_margin="6dp"
+                    android:id="@+id/fin_doctorImage"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:layout_margin="5dp"
                     app:civ_border_color="@color/colorVerdeAzul"
                     app:civ_border_width="3dp" />
 
                 <TextView
-                    android:id="@+id/bs_doctorFirstNameFin"
+                    android:id="@+id/fin_doctorFirstNameFin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Doctor "
-
                     android:textColor="@color/colorVerdeAzul"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/bs_doctorLastNameFin"
+                    android:id="@+id/fin_doctorLastNameFin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="40dp"
+                    android:layout_marginBottom="10dp"
                     android:text="lastname"
                     android:textColor="@color/colorVerdeAzul"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
 
                 <TextView
@@ -78,41 +79,41 @@
             </LinearLayout>
 
             <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/bs_doctorImagefin"
+                    android:id="@+id/fin_pacienteImagefin"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:layout_margin="5dp"
                     android:background="@drawable/ic_boypng"
-                    android:layout_width="105dp"
-                    android:layout_height="105dp"
-                    android:layout_margin="6dp"
                     app:civ_border_color="@color/colorVerdeAzul"
                     app:civ_border_width="3dp" />
 
                 <TextView
-                    android:id="@+id/bs_pacienteFirstName"
+                    android:id="@+id/fin_pacienteFirstName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Paciente "
 
                     android:textColor="@color/colorVerdeAzul"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/bs_pacienteLastName"
+                    android:id="@+id/fin_pacienteLastName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="40dp"
+                    android:layout_marginBottom="10dp"
                     android:text="lastname"
                     android:textColor="@color/colorVerdeAzul"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
 
             </LinearLayout>
@@ -124,7 +125,8 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -138,19 +140,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
-                android:text="especialidad"
+                android:text="Especialidad"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/firstname"
+                android:id="@+id/c_especialidad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@+id/especialidad"
-                android:text="name"
+                android:text="c_especialidad"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/especialidad2"
+                android:id="@+id/fin_tiempo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/especialidad"
@@ -160,38 +162,38 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/firstname2"
+                android:id="@+id/c_tiempo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/especialidad2"
                 android:layout_below="@id/especialidad"
-                android:text="name"
+                android:layout_alignRight="@+id/fin_tiempo"
+                android:text="ctiempo"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/especialidad3"
+                android:id="@+id/fin_servicio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/especialidad2"
+                android:layout_below="@+id/fin_tiempo"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
-                android:text="Distancia"
+                android:text="Servicio"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/firstname3"
+                android:id="@+id/c_servicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/especialidad2"
-                android:layout_alignRight="@+id/especialidad3"
-                android:text="name"
+                android:layout_below="@+id/fin_tiempo"
+                android:layout_alignRight="@+id/fin_servicio"
+                android:text="c_servicio"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/especialidad4"
+                android:id="@+id/fin_consulta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/especialidad3"
+                android:layout_below="@+id/fin_servicio"
                 android:layout_marginLeft="40sp"
                 android:layout_marginRight="40sp"
                 android:text="Consulta"
@@ -201,14 +203,15 @@
                 android:id="@+id/firstname4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/especialidad3"
-                android:layout_alignRight="@+id/especialidad4"
+                android:layout_below="@+id/fin_servicio"
+                android:layout_alignRight="@+id/fin_consulta"
                 android:text="S/40.00"
                 android:textStyle="bold" />
 
 
         </RelativeLayout>
     </LinearLayout>
+
 
 
 

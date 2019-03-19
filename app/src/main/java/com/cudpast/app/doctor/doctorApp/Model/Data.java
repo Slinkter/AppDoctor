@@ -19,6 +19,10 @@ public class Data {
         this.extra = extra;
     }
 
+
+
+
+
     public String getExtra() {
         return extra;
     }

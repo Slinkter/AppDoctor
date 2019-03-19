@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.cudpast.app.doctor.doctorApp.Model.FCMResponse;
 import com.cudpast.app.doctor.doctorApp.Model.Notification;
 import com.cudpast.app.doctor.doctorApp.Model.Sender;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
+import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
@@ -36,6 +38,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,6 +64,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     String IdTokenPaciente;
     String IdTokenDoctor;
 
+    private String   pacienteUID;
+
     double lat, lng;
     private FirebaseAuth auth;
 
@@ -64,16 +73,21 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
     private GoogleMap mMap;
 
+    private DatabaseReference tb_Info_Paciente;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_booking);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
-
         getSupportActionBar().hide();
 
+        btnCancel = (Button) findViewById(R.id.btn_decline_booking);
+        btnAccept = (Button) findViewById(R.id.btn_accept_booking);
+
         auth = FirebaseAuth.getInstance();
+        tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
 
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
@@ -82,14 +96,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         textTime = findViewById(R.id.txtTime);
         textDistance = findViewById(R.id.txtDistance);
 
-        btnCancel = findViewById(R.id.btnDecline);
-        btnAccept = findViewById(R.id.btnAccept);
+
 
         //Recibir token y la coordernadas de MyfirebaseMessaging
 
         if (getIntent() != null) {
             lat = getIntent().getDoubleExtra("lat", -1.0);
             lng = getIntent().getDoubleExtra("lng", -1.0);
+            pacienteUID =  getIntent().getStringExtra("pacienteUID");
             IdTokenPaciente = getIntent().getStringExtra("tokenPaciente");
             IdTokenDoctor = getIntent().getStringExtra("tokenDoctor");
             getDirection(lat, lng);
@@ -99,7 +113,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e(TAG,"----------------> aceptBooking");
                 aceptBooking(IdTokenPaciente);
+
             }
         });
         //.
@@ -111,25 +127,31 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
+        tb_Info_Paciente
+                .child(pacienteUID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
+                        Common.currentPaciente = userPaciente;
+                        Log.e(TAG," currentPaciente :" +  Common.currentPaciente.getNombre());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e(TAG,"ERROR");
+                    }
+                });
+
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
     //.
     private void aceptBooking(String sIdTokenPaciente) {
         Log.e(TAG, "==========================================");
-        Log.e(TAG, "                aceptBooking              ");
-
-
+        Log.e(TAG, "                AceptBooking              ");
         //-->
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();

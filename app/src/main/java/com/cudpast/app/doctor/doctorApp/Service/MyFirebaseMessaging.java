@@ -54,12 +54,14 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             String pToken            = remoteMessage.getData().get("title").toString();
             String json_lat_log      = remoteMessage.getData().get("descripcion").toString();
             String dToken            = remoteMessage.getData().get("extradata").toString();
+            String pacienteUID        = remoteMessage.getData().get("uidPaciente").toString();
             LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
 
             Log.e(TAG, " title : " + title);
             Log.e(TAG, " body : " + body);
             Log.e(TAG, " pToken : " + pToken);
             Log.e(TAG, " dToken : " + dToken);
+            Log.e(TAG, " pacienteUID : " + pacienteUID);
             Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
 
             Intent resultIntent = new Intent(this, DoctorBooking.class);
@@ -68,7 +70,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             resultIntent.putExtra("lng", customer_location.longitude);
             resultIntent.putExtra("tokenPaciente", pToken);
             resultIntent.putExtra("tokenDoctor", pToken);
+            resultIntent.putExtra("pacienteUID", pacienteUID);
             startActivity(resultIntent);
+            Log.e(TAG, "============================FIN============================");
 
 
 //------------------------->
