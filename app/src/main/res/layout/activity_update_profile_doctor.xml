@@ -57,7 +57,7 @@
                     android:gravity="center"
                     android:hint="Nombres"
                     android:inputType="textPersonName"
-                    android:text=""
+
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
@@ -74,7 +74,7 @@
                     android:gravity="center"
                     android:hint="Apellidos"
                     android:inputType="textPersonName"
-                    android:text=""
+
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
@@ -92,7 +92,7 @@
                     android:hint="Telefono"
                     android:inputType="phone"
                     android:maxLength="9"
-                    android:text=""
+
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
@@ -109,7 +109,7 @@
                     android:gravity="center"
                     android:hint="Dirección"
                     android:inputType="textPersonName"
-                    android:text=""
+
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
@@ -127,7 +127,7 @@
                     android:hint="Codigo Medico Perú"
                     android:inputType="phone"
                     android:maxLength="6"
-                    android:text=""
+
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
@@ -144,7 +144,7 @@
                     android:gravity="center"
                     android:hint="Especilidad"
                     android:inputType="textPersonName"
-                    android:text=""
+
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorRed"
                     android:textSize="@dimen/txt_register_size"
