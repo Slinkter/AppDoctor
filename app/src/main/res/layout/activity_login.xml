@@ -35,7 +35,7 @@
             android:gravity="center"
             android:hint="EMAIL"
             android:inputType="textEmailAddress"
-            android:text="consultingarsiapp@gmail.com"
+
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
             android:textSize="20dp"
@@ -55,7 +55,7 @@
             android:gravity="center"
             android:hint="CONTRASEÑA"
             android:inputType="textPassword"
-            android:text="MUNDOarsi20"
+
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
             android:textSize="20dp"

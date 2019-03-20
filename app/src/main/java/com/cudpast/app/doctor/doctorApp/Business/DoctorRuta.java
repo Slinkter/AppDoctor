@@ -490,7 +490,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
         //parte 014
-        Intent intent = new Intent(DoctorRuta.this, FinActivity.class);
+        Intent intent = new Intent(DoctorRuta.this, DoctorFin.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();

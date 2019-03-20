@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         //XML
         emailLogin = findViewById(R.id.loginUsernameEmail);
         passwordlogin = findViewById(R.id.loginPassword);
+
         btnIngresar = findViewById(R.id.btnLogin);
         //FIREBASE INIT
         auth = FirebaseAuth.getInstance();
@@ -74,11 +75,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (submitForm()) {
-                    //Login con Godaddy
-                    // VerificarLogin(emailLogin.getText().toString());
+
                     String email = emailLogin.getText().toString();
                     String pwd = passwordlogin.getText().toString();
-//                    VerificacionFirebase(emailLogin.getText().toString(), passwordlogin.getText().toString());
+
                     VerificacionFirebase(email, pwd);
                 }
             }
@@ -86,32 +86,29 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    //2.AUTENTICACION CON FIREBASE
+    //.AUTENTICACION CON FIREBASE
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
         Log.e(TAG, " ===========================================================");
         Log.e(TAG, "                VerificacionFirebase");
-
-        String emailLogin = usernamelogin;
-        String passwordLogin = passwordlogin;
 
         final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         waitingDialog.show();
 
         auth
-                .signInWithEmailAndPassword(emailLogin, passwordLogin)
+                .signInWithEmailAndPassword(usernamelogin, passwordlogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Log.e(TAG, " sign In With Email : success");
+                        Log.e(TAG, " Sign In With Email : success");
                         FirebaseUser firebaseUser = auth.getCurrentUser();
                         String userAuthId = firebaseUser.getUid();
 
                         if (firebaseUser.isEmailVerified()) {
                             updateUI(firebaseUser);
                             FirebaseDatabase
-                                    .getInstance()//Conexion a base de datos --> projectmedical001
-                                    .getReference(Common.TB_INFO_DOCTOR)//tabla-->
-                                    .child(userAuthId)//recuperar el Uid
+                                    .getInstance()
+                                    .getReference(Common.TB_INFO_DOCTOR)
+                                    .child(userAuthId)
                                     .addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -128,7 +125,6 @@ public class LoginActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-
                                         }
 
                                         @Override
@@ -141,26 +137,28 @@ public class LoginActivity extends AppCompatActivity {
 
 
                         } else {
+
                             updateUI(null);
                             waitingDialog.dismiss();
                         }
-                        Log.e(TAG, "                VerificacionFirebase");
+                        Log.e(TAG, "                END-VerificacionFirebase                       ");
                         Log.e(TAG, " ===========================================================");
 
                     }
 
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "signInWithEmail:failure  " + e.getMessage());
-                Toast.makeText(LoginActivity.this, "Usuario o contraseña incorrecto", Toast.LENGTH_SHORT).show();
-                updateUI(null);
-                waitingDialog.dismiss();
-                Log.e(TAG, "                VerificacionFirebase");
-                Log.e(TAG, " ===========================================================");
 
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "sign In With Email: Failure  " + e.getMessage());
+                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        updateUI(null);
+                        waitingDialog.dismiss();
+                        Log.e(TAG, "                END-VerificacionFirebase                       ");
+                        Log.e(TAG, " ===========================================================");
+                    }
+                });
 
     }
 
@@ -228,7 +226,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -6,8 +6,8 @@ android {
         applicationId "com.cudpast.app.doctor.doctorApp"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.3"
+        versionCode 4
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -64,6 +64,9 @@ dependencies {
     //Caligrafia
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+
+    // Imagen de GIF de lotti
+    implementation "com.airbnb.android:lottie:2.1.0"
 
 }
 

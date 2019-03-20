@@ -51,10 +51,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         } else if (title.equalsIgnoreCase("CUDPAST")) {
             Log.e(TAG, "============================CUDPAST============================");
-            String pToken            = remoteMessage.getData().get("title").toString();
-            String json_lat_log      = remoteMessage.getData().get("descripcion").toString();
-            String dToken            = remoteMessage.getData().get("extradata").toString();
-            String pacienteUID        = remoteMessage.getData().get("uidPaciente").toString();
+            String pToken = remoteMessage.getData().get("title").toString();
+            String json_lat_log = remoteMessage.getData().get("descripcion").toString();
+            String dToken = remoteMessage.getData().get("extradata").toString();
+            String pacienteUID = remoteMessage.getData().get("uidPaciente").toString();
             LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
 
             Log.e(TAG, " title : " + title);
@@ -130,6 +130,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 //            notificationManager.notify(NOTIFICATION_ID, notification.build());
 
 //<-------------------------
+
+        } else if (title.equalsIgnoreCase("DoctorFin")) {
+            Log.e(TAG, "========================================================");
+            Log.e(TAG, "                        DoctorFin                     ");
+            Intent intent = new Intent(this, DoctorHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
         }
 
