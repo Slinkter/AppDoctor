@@ -43,14 +43,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         final String body = remoteMessage.getNotification().getBody();
 
         if (title.equalsIgnoreCase("el usuario ha cancelado")) {
-            Log.e(TAG, "==========================el usuario ha cancelado==============================");
+            Log.e(TAG, "        El usuario ha cancelado             ");
             Intent intent = new Intent(this, DoctorHome.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-
-
         } else if (title.equalsIgnoreCase("CUDPAST")) {
-            Log.e(TAG, "============================CUDPAST============================");
+            Log.e(TAG, "            DoctorBooking              ");
             String pToken = remoteMessage.getData().get("title").toString();
             String json_lat_log = remoteMessage.getData().get("descripcion").toString();
             String dToken = remoteMessage.getData().get("extradata").toString();
@@ -65,6 +63,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
 
             Intent resultIntent = new Intent(this, DoctorBooking.class);
+
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             resultIntent.putExtra("lat", customer_location.latitude);
             resultIntent.putExtra("lng", customer_location.longitude);
@@ -73,9 +72,20 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             resultIntent.putExtra("pacienteUID", pacienteUID);
             startActivity(resultIntent);
             Log.e(TAG, "============================FIN============================");
+        } else if (title.equalsIgnoreCase("DoctorFin")) {
+            Log.e(TAG, "========================================================");
+            Log.e(TAG, "                        DoctorFin                     ");
+            Intent intent = new Intent(this, DoctorHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            Log.e(TAG, "============================FIN============================");
+        }
 
 
-//------------------------->
+    }
+
+
+    //------------------------->
 //            Intent notifyIntent = new Intent(this, DoctorBooking.class);
 //            notifyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 //            notifyIntent.putExtra("lat", customer_location.latitude);
@@ -130,18 +140,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 //            notificationManager.notify(NOTIFICATION_ID, notification.build());
 
 //<-------------------------
-
-        } else if (title.equalsIgnoreCase("DoctorFin")) {
-            Log.e(TAG, "========================================================");
-            Log.e(TAG, "                        DoctorFin                     ");
-            Intent intent = new Intent(this, DoctorHome.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-
-        }
-
-
-    }
 
 
 }

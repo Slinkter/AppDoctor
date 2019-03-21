@@ -16,7 +16,7 @@ public class DoctorFin extends AppCompatActivity {
 
     private ImageView image_doctor;
     private TextView tv_doctor_firstname;
-    private TextView tv_doctor_lastName,c_especialidad,c_tiempo,c_servicio;
+    private TextView tv_doctor_lastName, c_especialidad, c_tiempo, c_servicio;
 
     private TextView tv_paciente_firstname;
     private TextView tv_paciente_lastName;
@@ -35,8 +35,6 @@ public class DoctorFin extends AppCompatActivity {
         c_tiempo = findViewById(R.id.c_tiempo);
         c_servicio = findViewById(R.id.c_servicio);
 
-
-
         tv_paciente_firstname = findViewById(R.id.fin_pacienteFirstName);
         tv_paciente_lastName = findViewById(R.id.fin_pacienteLastName);
 
@@ -44,15 +42,16 @@ public class DoctorFin extends AppCompatActivity {
 
     }
 
-
     private void metodoSignInResult() {
         try {
+
             Usuario currentDoctor = Common.currentUser;
             UserPaciente currentPaciente = Common.currentPaciente;
 
             tv_doctor_firstname.setText(currentDoctor.getFirstname());
             tv_doctor_lastName.setText(currentDoctor.getLastname());
             c_especialidad.setText(currentDoctor.getEspecialidad());
+
             c_tiempo.setText("30 min");
             c_servicio.setText("Consulta medica");
 
@@ -73,9 +72,6 @@ public class DoctorFin extends AppCompatActivity {
 //                    .placeholder(R.drawable.ic_boy_svg)
 //                    .error(R.drawable.ic_boy_svg)
 //                    .into(image_doctor);
-
-
-
 
 
         } catch (Exception e) {

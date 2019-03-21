@@ -498,7 +498,6 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
 
         Notification notification = new Notification(titile, body);
-
         Sender sender = new Sender(tokenpaciente, notification);
 
         ubicacion.removeLocationUpdates(mLocationCallback);
