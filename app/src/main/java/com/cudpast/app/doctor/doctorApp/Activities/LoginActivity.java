@@ -75,10 +75,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (submitForm()) {
-
                     String email = emailLogin.getText().toString();
                     String pwd = passwordlogin.getText().toString();
-
                     VerificacionFirebase(email, pwd);
                 }
             }
@@ -166,10 +164,7 @@ public class LoginActivity extends AppCompatActivity {
     //Validación de formulario parte 2
     private boolean checkDNI() {
 
-        if (emailLogin.length() < 8) {
-            emailLogin.setError("Error : ingresar  8 digitos");
-            return false;
-        }
+
         if (emailLogin.getText().toString().trim().isEmpty()) {
             emailLogin.setError("vacio");
             return false;

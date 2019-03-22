@@ -160,6 +160,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         Data data = new Data(doctorUID);
         Sender sender = new Sender(sIdTokenPaciente, notification, data);
 
+
         Log.e(TAG, "notification : " + notification);
         Log.e(TAG, "data        : " + data);
         Log.e(TAG, "sender       : " + sender);

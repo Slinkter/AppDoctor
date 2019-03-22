@@ -13,11 +13,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
+import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
+import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -85,61 +89,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     }
 
 
-    //------------------------->
-//            Intent notifyIntent = new Intent(this, DoctorBooking.class);
-//            notifyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            notifyIntent.putExtra("lat", customer_location.latitude);
-//            notifyIntent.putExtra("lng", customer_location.longitude);
-//            notifyIntent.putExtra("tokenPaciente", pToken);
-//            notifyIntent.putExtra("tokenDoctor", pToken);
-//            // Set the Activity to start in a new, empty task
-//            notifyIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            // Create the PendingIntent
-//            PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//
-//            int color = getResources().getColor(R.color.colorRed);
-//            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID);
-//
-//            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//
-//            notification
-//                    .setContentTitle(title)
-//                    .setSmallIcon(R.drawable.ic_hospital)
-//                    .setContentIntent(notifyPendingIntent)
-//                    .setContentText(body);
-//
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, " ", NotificationManager.IMPORTANCE_HIGH);
-//                notificationChannel.setDescription("SLINKTER CHANNEL");
-//                notification.setLargeIcon(BitmapFactory.decodeResource(
-//                        getResources(),
-//                        R.drawable.ic_doctor));
-//                notificationChannel.enableLights(true);
-//
-//                notificationChannel.setLightColor(Color.RED);
-//                notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-//                notificationChannel.enableLights(true);
-//                mNotificationManager.createNotificationChannel(notificationChannel);
-//            } else {
-//                notification
-//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-//                        .setColor(color)
-//                        .setLargeIcon(BitmapFactory.decodeResource(
-//                                getResources(),
-//                                R.drawable.ic_doctor))
-//                        .setVibrate(new long[]{100, 250})
-//                        .setLights(Color.YELLOW, 500, 5000)
-//                        .setAutoCancel(true);
-//            }
-//
-//
-//            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-//            notificationManager.notify(NOTIFICATION_ID, notification.build());
 
-//<-------------------------
 
 
 }

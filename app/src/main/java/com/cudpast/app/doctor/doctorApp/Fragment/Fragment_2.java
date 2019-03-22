@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -82,7 +83,7 @@ public class Fragment_2 extends Fragment implements
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
 
-    private MaterialAnimatedSwitch location_switch;
+
     public String current_user_UID;
 
 
@@ -94,6 +95,9 @@ public class Fragment_2 extends Fragment implements
     //
     private boolean mLocationPermissionGranted;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+
+
+    private Button id_toggle;
 
     public Fragment_2() {
 
@@ -122,6 +126,15 @@ public class Fragment_2 extends Fragment implements
         mapFragment.getMapAsync(this);
         builGoogleApiClient();
         createLocationRequest();
+
+        id_toggle = rootView.findViewById(R.id.id_toggle);
+
+//        id_toggle.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Common.location_switch.toggle();
+//            }
+//        });
 
 
         //-->
@@ -152,14 +165,14 @@ public class Fragment_2 extends Fragment implements
 
         //parte012b
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        location_switch = rootView.findViewById(R.id.location_switch);
+        Common.location_switch = rootView.findViewById(R.id.location_switch);
 
         setUpLocation();
         updateFirebaseToken();
 
         geoFire = new GeoFire(db_available_doctor);// g y (l : 0 y 1)
 
-        location_switch
+        Common.location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(boolean isOnline) {
@@ -179,54 +192,25 @@ public class Fragment_2 extends Fragment implements
                             }
                         }
                     }
-
-
                 });
+
+//        location_switch = null;
 
 
         return rootView;
     }
 
-
+    //.Save
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("prueba1", esta_online);
-        outState.putInt("prueba2", valor1);
         Log.e(TAG, "onSaveInstanceState" + esta_online);
 
 
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState == null) {
-            Log.e(TAG, "Hola null 2 ");
-        } else {
-            valor1 = savedInstanceState.getInt("prueba2", 0);
-            esta_online = savedInstanceState.getBoolean("prueba1", false);
-            Log.e(TAG, "onCreateView : savedInstanceState : prueba 1 " + esta_online);
-            Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
-        }
 
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-
-        if (savedInstanceState == null) {
-            Log.e(TAG, "Hola null 3");
-        } else {
-            valor1 = savedInstanceState.getInt("prueba2", 0);
-            Boolean prueba1 = savedInstanceState.getBoolean("prueba1");
-            Log.e(TAG, "onCreateView : savedInstanceState : prueba 1 " + prueba1);
-            Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
-        }
-
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -268,7 +252,7 @@ public class Fragment_2 extends Fragment implements
                 builGoogleApiClient();
                 createLocationRequest();
                 //solo ocurre si esta activado
-                if (location_switch.isChecked()) {
+                if (Common.location_switch .isChecked()) {
                     Log.e(TAG, " Off location ");
                     displayLocation();
                 }
@@ -318,23 +302,7 @@ public class Fragment_2 extends Fragment implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        switch (requestCode) {
-//            case MY_PERMISSION_REQUEST_CODE:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    if (checkPlayService()) {
-//                        builGoogleApiClient();
-//                        createLocationRequest();
-//                        if (location_switch.isChecked()) {
-//                            displayLocation();
-//                            Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
-//                        }
-//                    }
-//                }
-//
-//        }
 
-
-        //
         mLocationPermissionGranted = false;
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
@@ -344,7 +312,7 @@ public class Fragment_2 extends Fragment implements
                     if (checkPlayService()) {
                         builGoogleApiClient();
                         createLocationRequest();
-                        if (location_switch.isChecked()) {
+                        if (Common.location_switch .isChecked()) {
                             displayLocation();
                             Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
                         }
@@ -390,7 +358,7 @@ public class Fragment_2 extends Fragment implements
 
         Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
         if (Common.mLastLocation != null) {
-            if (location_switch.isChecked()) {
+            if (Common.location_switch .isChecked()) {
                 //
                 final ProgressDialog mDialog = new ProgressDialog(getActivity());
                 mDialog.setMessage("Actualizando su Ubicación...");
@@ -514,7 +482,7 @@ public class Fragment_2 extends Fragment implements
     public void onPause() {
         super.onPause();
         Log.e(TAG, "onPause " + valor1 + " : " + esta_online);
-        if (location_switch.isActivated() == true) {
+        if (Common.location_switch .isActivated() == true) {
             switch_on = true;
         } else {
             switch_on = false;

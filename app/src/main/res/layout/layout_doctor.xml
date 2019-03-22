@@ -7,11 +7,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-
-
-       >
+        android:layout_height="match_parent">
 
         <fragment
             android:id="@+id/mapfragment2"
@@ -19,10 +15,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <Button
+                android:id="@+id/id_toggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button_1"
+                android:gravity="center|top"
+                android:text="Toggle"
+                android:textColor="@color/white" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center|bottom">
+
 
                 <com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch
                     android:id="@+id/location_switch"

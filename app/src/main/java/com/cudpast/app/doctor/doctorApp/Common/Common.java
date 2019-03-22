@@ -8,6 +8,7 @@ import com.cudpast.app.doctor.doctorApp.Remote.FCMClient;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 import com.cudpast.app.doctor.doctorApp.Remote.RetrofitClient;
+import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 
 public class Common {
 
@@ -22,6 +23,8 @@ public class Common {
     public static Usuario currentUser;
     public static UserPaciente currentPaciente;
     public static Location mLastLocation;
+
+    public static MaterialAnimatedSwitch location_switch;
 
 
     private static final String mapURL = "https://maps.googleapis.com";
