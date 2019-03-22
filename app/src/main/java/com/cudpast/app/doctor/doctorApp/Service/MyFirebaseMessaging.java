@@ -1,5 +1,6 @@
 package com.cudpast.app.doctor.doctorApp.Service;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -39,6 +40,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "MyMessagin";
     private static final int NOTIFICATION_ID = 9;
 
+    @SuppressLint("WrongThread")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "========================================================");
@@ -65,6 +67,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             Log.e(TAG, " dToken : " + dToken);
             Log.e(TAG, " pacienteUID : " + pacienteUID);
             Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
+
 
             Intent resultIntent = new Intent(this, DoctorBooking.class);
 
