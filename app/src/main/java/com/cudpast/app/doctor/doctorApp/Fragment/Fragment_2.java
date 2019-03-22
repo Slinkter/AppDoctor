@@ -97,7 +97,7 @@ public class Fragment_2 extends Fragment implements
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
 
-    private Button id_toggle;
+
 
     public Fragment_2() {
 
@@ -121,21 +121,10 @@ public class Fragment_2 extends Fragment implements
             Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
         }
 
-
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
         builGoogleApiClient();
         createLocationRequest();
-
-        id_toggle = rootView.findViewById(R.id.id_toggle);
-
-//        id_toggle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Common.location_switch.toggle();
-//            }
-//        });
-
 
         //-->
         //Obtener el UID del doctor

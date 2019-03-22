@@ -143,11 +143,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     }
                 });
 
-
     }
-
-
-
     //.
     private void aceptBooking(String sIdTokenPaciente) {
         Log.e(TAG, "==========================================");
@@ -159,7 +155,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         Notification notification = new Notification("Acepta", "Su medico esta en camino");
         Data data = new Data(doctorUID);
         Sender sender = new Sender(sIdTokenPaciente, notification, data);
-
 
         Log.e(TAG, "notification : " + notification);
         Log.e(TAG, "data        : " + data);

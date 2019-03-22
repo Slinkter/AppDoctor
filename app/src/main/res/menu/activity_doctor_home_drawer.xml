@@ -21,9 +21,9 @@
             android:title="Historial" />
         <item
             android:id="@+id/nav_d"
-            android:icon="@drawable/ic_nav_config"
+            android:icon="@drawable/ic_person_doctor"
             android:state_checked="false"
-            android:title="Configuración" />
+            android:title="Datos Personales" />
         <item
             android:id="@+id/nav_e"
             android:icon="@drawable/ic_nav_close"
