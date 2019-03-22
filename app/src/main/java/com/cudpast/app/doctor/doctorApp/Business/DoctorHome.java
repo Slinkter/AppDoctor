@@ -167,13 +167,7 @@ public class DoctorHome extends AppCompatActivity implements
             especialidadDoctor.setText(especialidad);
 
             Glide.with(this).load(Common.currentUser.getImage()).into(imageViewDoctor);
-//            Picasso
-//                    .with(this)
-//                    .load(Common.currentUser.getImage())
-//                    .resize(105, 105)
-//                    .placeholder(R.drawable.ic_photo_doctor)
-//                    .error(R.drawable.ic_photo_doctor)
-//                    .into(imageViewDoctor);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,8 +208,6 @@ public class DoctorHome extends AppCompatActivity implements
                 transaction.replace(R.id.fragment, fragment5);
                 transaction.commit();
                 break;
-
-
         }
 
 

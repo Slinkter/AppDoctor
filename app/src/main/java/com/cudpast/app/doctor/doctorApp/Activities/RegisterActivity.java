@@ -167,7 +167,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         if (registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha)) {
                                             //Base de datos : Firebase
 
-                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl , "uid");
+                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl, "uid");
                                             Usuario user2 = new Usuario(dni, password);
                                             Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
 
@@ -176,7 +176,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                             databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
 
                                             //Guardar en firebase
-                                            auth.createUserWithEmailAndPassword(mail, password)
+                                            auth
+                                                    .createUserWithEmailAndPassword(mail, password)
                                                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                                         @Override
                                                         public void onSuccess(AuthResult authResult) {
@@ -184,9 +185,10 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                                             Log.e(TAG, " mAuth.getCurrentUser() " + auth.getCurrentUser().toString());
                                                             Log.e(TAG, " Correo y password : " + mail + password);
                                                             String uid = authResult.getUser().getUid();
-                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl,uid);
+                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl, uid);
+
                                                             tb_Info_Doctor.
-                                                                    child(authResult.getUser().getUid())
+                                                                    child(uid)
                                                                     .setValue(FirebaseUser)
                                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
@@ -210,7 +212,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
                                                     waitingDialog.dismiss();
-                                                    Toast.makeText(RegisterActivity.this, "Fallo de Internet", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RegisterActivity.this, "Fallo de Internet  " +e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                         } else {
@@ -242,8 +244,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 }
             }
         });
-
-
 
 
     }
@@ -455,6 +455,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
+
     //Paso 2
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -462,7 +463,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mUriImage = data.getData();
             Glide.with(this).load(mUriImage).into(signupImagePhoto);
-           // Picasso.with(this).load(mUriImage).fit().centerInside().into(signupImagePhoto);
+            // Picasso.with(this).load(mUriImage).fit().centerInside().into(signupImagePhoto);
         }
     }
 

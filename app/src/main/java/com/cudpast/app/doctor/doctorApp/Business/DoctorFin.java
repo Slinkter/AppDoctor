@@ -55,7 +55,6 @@ public class DoctorFin extends AppCompatActivity {
             c_tiempo.setText("30 min");
             c_servicio.setText("Consulta medica");
 
-
             tv_paciente_firstname.setText(currentPaciente.getNombre());
             tv_paciente_lastName.setText(currentPaciente.getApellido());
 
@@ -72,7 +71,6 @@ public class DoctorFin extends AppCompatActivity {
 //                    .placeholder(R.drawable.ic_boy_svg)
 //                    .error(R.drawable.ic_boy_svg)
 //                    .into(image_doctor);
-
 
         } catch (Exception e) {
             e.printStackTrace();
