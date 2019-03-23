@@ -86,8 +86,6 @@ public class UpdateProfileDoctor extends AppCompatActivity {
         updateDoctorPhotoView = findViewById(R.id.updateDoctorPhoto);
 
         btn_UploadInfoDoctor = findViewById(R.id.btnUpdateDoctoAll);
-//        btn_UploadPhotoDoctor = findViewById(R.id.btn_updateDoctorPhoto);
-//        btn_chooseDoctorPhoto = findViewById(R.id.btn_chooseDoctorPhoto);
 
 
         //.Obtener usuario actualizr
@@ -110,21 +108,6 @@ public class UpdateProfileDoctor extends AppCompatActivity {
 
         userAuthId = usuario.getUid();
         //todo: que lo haga de manera independiten su propio boton
-//        btn_chooseDoctorPhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                openFileChooser();
-//
-//
-//            }
-//        });
-//
-//        btn_UploadPhotoDoctor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                updatePhotoToStorage();
-//            }
-//        });
 
 
         btn_UploadInfoDoctor.setOnClickListener(new View.OnClickListener() {
@@ -195,23 +178,12 @@ public class UpdateProfileDoctor extends AppCompatActivity {
             mUriPhoto = data.getData();
             choosed = true;
             btn_UploadPhotoDoctor.setEnabled(true);
-            //  btn_UploadPhotoDoctor.setVisibility(View.VISIBLE);
-//            Picasso
-//                    .with(this)
-//                    .load(mUriPhoto)
-//                    .transform()
-//                    .placeholder(R.drawable.ic_photo_doctor)
-//                    .fit()
-//                    .error(R.drawable.ic_photo_doctor)
-//                    .centerInside()
-//                    .into(updateDoctorPhotoView);
-
             Glide.with(this).load(mUriPhoto).into(updateDoctorPhotoView);
         }
 
     }
-    //Paso 3
 
+    //.
     private void updatePhotoToStorage() {
 
         Log.e(TAG, "updatePhotoToStorage ");
@@ -311,21 +283,14 @@ public class UpdateProfileDoctor extends AppCompatActivity {
 
     }
 
-
-    //Soporte 1 :ES PARA LA EXTESNION DE LA IMAGEN
+    //.ES PARA LA EXTESNION DE LA IMAGEN
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    public void iniciarActivity() {
-        Intent intent = new Intent(UpdateProfileDoctor.this, DoctorHome.class);
-        startActivity(intent);
-        finish();
-    }
-
-
+    //.
     public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -342,5 +307,11 @@ public class UpdateProfileDoctor extends AppCompatActivity {
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
+    //.
+    public void iniciarActivity() {
+        Intent intent = new Intent(UpdateProfileDoctor.this, DoctorHome.class);
+        startActivity(intent);
+        finish();
+    }
 
 }

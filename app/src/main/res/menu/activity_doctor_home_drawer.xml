@@ -23,7 +23,7 @@
             android:id="@+id/nav_d"
             android:icon="@drawable/ic_person_doctor"
             android:state_checked="false"
-            android:title="Datos Personales" />
+            android:title="Perfil" />
         <item
             android:id="@+id/nav_e"
             android:icon="@drawable/ic_nav_close"

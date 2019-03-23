@@ -30,6 +30,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
             android:text="ACTUALIZAR PERFIL "
+            android:textStyle="bold"
             android:textColor="@color/colorAccent"
             android:textSize="20sp" />
 

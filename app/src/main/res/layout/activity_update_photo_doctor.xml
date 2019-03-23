@@ -10,6 +10,26 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:contentDescription="nada"
+            android:src="@drawable/ic_hospital" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="ACTUALIZAR FOTO "
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
