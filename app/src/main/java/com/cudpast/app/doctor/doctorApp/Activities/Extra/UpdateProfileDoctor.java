@@ -3,7 +3,6 @@ package com.cudpast.app.doctor.doctorApp.Activities.Extra;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -39,10 +38,10 @@ import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
 
-public class UpdateProfileDoctorActivity extends AppCompatActivity {
+public class UpdateProfileDoctor extends AppCompatActivity {
 
 
-    public static final String TAG = UpdateProfileDoctorActivity.class.getSimpleName();
+    public static final String TAG = UpdateProfileDoctor.class.getSimpleName();
     public static final int PICK_IMAGE_REQUEST = 1;
 
     private TextView updateDoctorName,
@@ -87,13 +86,13 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         updateDoctorPhotoView = findViewById(R.id.updateDoctorPhoto);
 
         btn_UploadInfoDoctor = findViewById(R.id.btnUpdateDoctoAll);
-        btn_UploadPhotoDoctor = findViewById(R.id.btn_updateDoctorPhoto);
-        btn_chooseDoctorPhoto = findViewById(R.id.btn_chooseDoctorPhoto);
+//        btn_UploadPhotoDoctor = findViewById(R.id.btn_updateDoctorPhoto);
+//        btn_chooseDoctorPhoto = findViewById(R.id.btn_chooseDoctorPhoto);
 
 
         //.Obtener usuario actualizr
         usuario = Common.currentUser;
-        //.Display on XML
+        //.Display on XMLc
         updateDoctorName.setText(usuario.getFirstname());
         updateDoctorLast.setText(usuario.getLastname());
         updateDoctorNumPhone.setText(usuario.getNumphone());
@@ -101,31 +100,31 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
         updateDoctorCodMePe.setText(usuario.getCodmedpe());
         updateDoctorEsp.setText(usuario.getEspecialidad());
         // update XML
-        Picasso
-                .with(this)
-                .load(usuario.getImage())
-                .placeholder(R.drawable.ic_photo_doctor)
-                .resize(200, 200)
-                .error(R.drawable.ic_photo_doctor)
-                .into(updateDoctorPhotoView);
+//        Picasso
+//                .with(this)
+//                .load(usuario.getImage())
+//                .placeholder(R.drawable.ic_photo_doctor)
+//                .resize(200, 200)
+//                .error(R.drawable.ic_photo_doctor)
+//                .into(updateDoctorPhotoView);
 
         userAuthId = usuario.getUid();
         //todo: que lo haga de manera independiten su propio boton
-        btn_chooseDoctorPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openFileChooser();
-
-
-            }
-        });
-
-        btn_UploadPhotoDoctor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updatePhotoToStorage();
-            }
-        });
+//        btn_chooseDoctorPhoto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openFileChooser();
+//
+//
+//            }
+//        });
+//
+//        btn_UploadPhotoDoctor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                updatePhotoToStorage();
+//            }
+//        });
 
 
         btn_UploadInfoDoctor.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +132,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //
                 final Usuario updateUser = new Usuario();
-                final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
+                final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctor.this, R.style.DialogUpdateDoctorProfile);
                 waitingDialog.show();
                 String imgPath = Common.currentUser.getImage();
 
@@ -216,7 +215,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     private void updatePhotoToStorage() {
 
         Log.e(TAG, "updatePhotoToStorage ");
-        final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctorActivity.this, R.style.DialogUpdateDoctorProfile);
+        final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctor.this, R.style.DialogUpdateDoctorProfile);
         waitingDialog.show();
 
         String userdni = Common.currentUser.getDni();
@@ -321,7 +320,7 @@ public class UpdateProfileDoctorActivity extends AppCompatActivity {
     }
 
     public void iniciarActivity() {
-        Intent intent = new Intent(UpdateProfileDoctorActivity.this, DoctorHome.class);
+        Intent intent = new Intent(UpdateProfileDoctor.this, DoctorHome.class);
         startActivity(intent);
         finish();
     }

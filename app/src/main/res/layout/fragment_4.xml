@@ -11,14 +11,12 @@
 
 
     <ImageView
-
         android:id="@+id/icon"
         android:layout_width="95dp"
         android:layout_height="95dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="50dp"
-
         android:src="@drawable/ic_hospital" />
 
     <Button
@@ -29,9 +27,36 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/custom_button_5"
         android:text="Actualizar Datos"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_update_photo_doctor"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/custom_button_2"
+        android:text="Actualizar Foto"
+        android:textColor="@color/white" />
+
+
+    <Button
+        android:id="@+id/btn_update_pwd_doctor"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/custom_button_1"
+        android:text="Cambiar Contraseña"
         android:textColor="@color/white" />
 
 

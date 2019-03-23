@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_hospital"
@@ -15,19 +14,18 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.Extra.UpdatePwdDoctor"></activity>
+        <activity android:name=".Activities.Extra.UpdatePhotoDoctor" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_hospital" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/backgroundGray" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
@@ -35,19 +33,15 @@
         <activity
             android:name=".Business.DoctorFin"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name=".Activities.Extra.UpdateProfileDoctorActivity"
+            android:name=".Activities.Extra.UpdateProfileDoctor"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.TripDetail"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.DoctorRuta"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.DoctorBooking"
             android:excludeFromRecents="true"
@@ -60,47 +54,43 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.RegisterActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.MapsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.DoctorHome"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <!-- Notification -->
+        </activity> <!-- Notification -->
         <service android:name=".Service.MyFirebaseIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
