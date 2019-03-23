@@ -1,11 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="false"
     tools:context=".Activities.Extra.UpdateProfileDoctorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
+            android:contentDescription="nada"
+            android:src="@drawable/ic_hospital" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="ACTUALIZAR PERFIL "
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/updateDoctorName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Nombres"
+                    android:inputType="textPersonName"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/updateDoctorLast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Apellidos"
+                    android:inputType="textPersonName"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/updateDoctorNumPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Telefono"
+                    android:inputType="phone"
+                    android:maxLength="9"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/updateDoctorDir"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:gravity="center"
+                    android:hint="Dirección"
+                    android:inputType="textPersonName"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/updateDoctorCodMePe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:freezesText="false"
+                    android:gravity="center"
+                    android:hint="Codigo Medico Perú"
+                    android:inputType="phone"
+                    android:maxLength="6"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/updateDoctorEsp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:gravity="center"
+                    android:hint="Especilidad"
+                    android:inputType="textPersonName"
+
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorRed"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorRed"
+                    app:met_singleLineEllipsis="false" />
+
+
+                <Button
+                    android:id="@+id/btnUpdateDoctoAll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/custom_button_5"
+                    android:elevation="5dp"
+                    android:text="Guardar"
+                    android:textColor="@color/white" />
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/updateDoctorPhoto"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_above="@+id/btn_choose_image"
+                    android:layout_below="@+id/botones"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/ic_photo_doctor" />
+
+                <Button
+                    android:id="@+id/btn_chooseDoctorPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+
+                    android:background="@drawable/custom_button_2"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Elegir foto"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btn_updateDoctorPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginBottom="50dp"
+                    android:background="@drawable/custom_button_5"
+                    android:enabled="false"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Actualizar foto"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
 
 
 

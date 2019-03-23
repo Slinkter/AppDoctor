@@ -1,8 +1,5 @@
 package com.cudpast.app.doctor.doctorApp.Fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cudpast.app.doctor.doctorApp.Activities.Extra.UpdateProfileDoctorActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.squareup.picasso.Picasso;
 
 
 public class Fragment_1 extends Fragment {
@@ -27,10 +22,8 @@ public class Fragment_1 extends Fragment {
     private TextView nameTextView;
     private TextView emailTextView;
     private TextView espTextView;
-    private TextView telTextView;
+    private TextView lastTextView;
     private Button btn_update_doctor;
-
-
 
     private static final String TAG = Fragment_1.class.getSimpleName();
 
@@ -40,17 +33,16 @@ public class Fragment_1 extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View f1 = inflater.inflate(R.layout.fragment_1, container, false);
-        btn_update_doctor = f1.findViewById(R.id.btn_update_doctor);
+
 
         photoImageView = f1.findViewById(R.id.idFotoUsuario);
         nameTextView = f1.findViewById(R.id.nameTextView);
         emailTextView = f1.findViewById(R.id.emailTextView);
         espTextView = f1.findViewById(R.id.espTextView);
-        telTextView = f1.findViewById(R.id.telTextView);
+        lastTextView = f1.findViewById(R.id.lastTextView);
 
 
         try {
@@ -60,36 +52,21 @@ public class Fragment_1 extends Fragment {
 
             Log.e(TAG, " name :" + name);
             Log.e(TAG, " email :" + email);
+
             nameTextView.setText(usuario.getFirstname());
             emailTextView.setText(usuario.getCorreoG());
             espTextView.setText(usuario.getEspecialidad());
-            telTextView.setText(usuario.getNumphone());
+            lastTextView.setText(usuario.getLastname());
 
-            Glide.with(getActivity()).load(usuario.getImage()).into(photoImageView);
-//
-//            Picasso
-//                    .with(getActivity())
-//                    .load(usuario.getImage())
-//                    .placeholder(R.drawable.ic_photo_doctor)
-//                    .resize(150,150)
-//                    .error(R.drawable.ic_photo_doctor)
-//                    .into(photoImageView);
+            Glide
+                    .with(getActivity())
+                    .load(usuario.getImage())
+                    .into(photoImageView);
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        btn_update_doctor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity() , UpdateProfileDoctorActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-
 
         return f1;
     }
