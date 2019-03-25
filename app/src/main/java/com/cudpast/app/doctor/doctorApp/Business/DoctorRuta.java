@@ -1,6 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -112,7 +114,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     GeoFire geoFire;
     String doctorUid;
 
-    Button btnSendNotiArrived;
+    Button btnSendNotiArrived ,btn_ruta_cancelar;
+    Dialog myDialog;
 
     private DatabaseReference referenceService, doctorService, onlineRef;
 
@@ -130,6 +133,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         ubicacion = LocationServices.getFusedLocationProviderClient(this);
 
         btnSendNotiArrived = findViewById(R.id.btnSendNotiArrived);
+        btn_ruta_cancelar = findViewById(R.id.btn_ruta_cancelar);
+        myDialog = new Dialog(this);
 
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
@@ -162,6 +167,13 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         geoFire = new GeoFire(referenceService);
         setUpLocation();
 
+
+        btn_ruta_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowPopupCancelar();
+            }
+        });
 
          mLocationCallback = new LocationCallback(){
             @Override
@@ -524,6 +536,24 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         startActivity(intent);
         finish();
         //parte014
+    }
+
+    //.
+    public void ShowPopupCancelar() {
+        TextView txtclose;
+
+        myDialog.setContentView(R.layout.pop_up_cancelar);
+//        txtclose = myDialog.findViewById(R.id.txtclose);
+//        txtclose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                myDialog.dismiss();
+//            }
+//        });
+        // myDialog.getWindow().
+        myDialog.show();
+
+
     }
 
 }

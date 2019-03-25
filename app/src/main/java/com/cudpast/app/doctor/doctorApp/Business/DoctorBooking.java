@@ -202,6 +202,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         String title = "Cancel";
         String body = "el doctor ha cancelado la solicitud";
 
+        //todo : mover la toggle (palanca) para que se active online
+
         Notification notification = new Notification(title, body);
         Sender sender = new Sender(token.getToken(), notification);
 

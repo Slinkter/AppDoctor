@@ -1,50 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Business.DoctorRuta">
 
 
-    <android.support.v7.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-
-    </android.support.v7.widget.CardView>
-
-    <fragment
-        android:id="@+id/mapDoctorTracking"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DoctorTracking" />
-    <Button
-        android:id="@+id/btnSendNotiArrived"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:layout_alignBottom="@id/mapDoctorTracking"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="6dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/ic_notificacion_cliente"
-        android:enabled="false"
+        android:orientation="vertical"
+        android:weightSum="9">
 
-        android:textColor="@color/white"
-        android:visibility="invisible" />
+        <android.support.v7.widget.CardView
 
-    <Button
+            android:id="@+id/cv_map_ruta"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8"
+            android:elevation="3dp"
+            app:cardCornerRadius="25dp"
+            app:cardUseCompatPadding="true">
 
-        android:layout_centerHorizontal="true"
+            <fragment
+                android:id="@+id/mapDoctorTracking"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".DoctorTracking">
 
-        android:id="@+id/id_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/custom_button_1"
-        android:text="cancelar"
-        android:textColor="@color/white" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|bottom">
+
+                    <Button
+                        android:id="@+id/btnSendNotiArrived"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="6dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/ic_notificacion_cliente"
+                        android:enabled="false"
+                        android:textColor="@color/white"
+                        android:visibility="invisible" />
+                </RelativeLayout>
 
 
-</RelativeLayout>
+            </fragment>
+
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:elevation="3dp">
+
+            <Button
+                android:id="@+id/btn_ruta_cancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_1"
+                android:elevation="5dp"
+                android:text="cancelar"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
