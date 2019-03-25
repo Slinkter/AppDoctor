@@ -103,6 +103,8 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     public Circle pacienteMarker;
     public Marker driverMarker;
 
+    //todo :boton de cancelar para enviar notificacion al appPaciente.
+    //todo: cambiar el diseño xml
 
 
     IGoogleAPI mService;
