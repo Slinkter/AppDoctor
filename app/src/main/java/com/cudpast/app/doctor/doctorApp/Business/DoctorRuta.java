@@ -114,7 +114,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
     GeoFire geoFire;
     String doctorUid;
 
-    Button btnSendNotiArrived ,btn_ruta_cancelar;
+    Button btnSendNotiArrived, btn_ruta_cancelar;
     Dialog myDialog;
 
     private DatabaseReference referenceService, doctorService, onlineRef;
@@ -175,14 +175,16 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
             }
         });
 
-         mLocationCallback = new LocationCallback(){
+        mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
                     Log.i("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
 
                 }
-            };
+            }
+
+            ;
 
         };
 
@@ -222,7 +224,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                     public void onClick(View view) {
 
                         sendArriveNotification(idTokenPaciente);
-                        Toast.makeText(DoctorRuta.this,"Click para Notificar al Cliente",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DoctorRuta.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -401,6 +403,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
         ProgressDialog mDialog = new ProgressDialog(DoctorRuta.this);
         Polyline direction;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -505,7 +508,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         Log.e(TAG, "             sendArriveNotification                  ");
         //parte 014
         Intent intent = new Intent(DoctorRuta.this, DoctorFin.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
         String titile = "Arrived";
@@ -521,7 +524,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
             public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                 if (response.body().success != 1) {
                     Toast.makeText(DoctorRuta.this, "Failed", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(DoctorRuta.this, "success", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -540,20 +543,88 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
     //.
     public void ShowPopupCancelar() {
-        TextView txtclose;
+       Button btn_accept_cancelar ,btn_decline_cancelar;
 
         myDialog.setContentView(R.layout.pop_up_cancelar);
-//        txtclose = myDialog.findViewById(R.id.txtclose);
-//        txtclose.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                myDialog.dismiss();
-//            }
-//        });
-        // myDialog.getWindow().
+        btn_accept_cancelar = myDialog.findViewById(R.id.btn_accept_cancelar);
+        btn_decline_cancelar = myDialog.findViewById(R.id.btn_decline_cancelar);
+
+        btn_accept_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Confirma cancelar",Toast.LENGTH_SHORT).show();
+                cancelBooking(idTokenPaciente);
+                myDialog.dismiss();
+                finish();
+            }
+        });
+
+        btn_decline_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myDialog.dismiss();
+            }
+        });
+
         myDialog.show();
-
-
     }
+
+
+    private void cancelBooking(String IdToken) {
+        Log.e(TAG, "==========================================");
+        Log.e(TAG, "                cancelBooking             ");
+
+        Token token = new Token(IdToken);
+        String title = "Cancel";
+        String body = "el doctor ha cancelado la solicitud";
+
+        //todo : mover la toggle (palanca) para que se active online
+
+        Notification notification = new Notification(title, body);
+        Sender sender = new Sender(token.getToken(), notification);
+
+        Log.e(TAG, "token        : " + token);
+        Log.e(TAG, "notification : " + notification);
+        Log.e(TAG, "sender       : " + sender);
+
+        mFCMService
+                .sendMessage(sender)
+                .enqueue(new Callback<FCMResponse>() {
+                    @Override
+                    public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                        if (response.body().success == 1) {
+                            Log.e(TAG, "response.body().success : " + response.body().success);
+                            Toast.makeText(getApplicationContext(), "Cita ha sido cancelado", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed ! ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FCMResponse> call, Throwable t) {
+                        Log.e(TAG, "error : "+t.getMessage());
+                    }
+
+                });
+        finish();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
