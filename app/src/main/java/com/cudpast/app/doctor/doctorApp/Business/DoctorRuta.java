@@ -81,7 +81,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
+public class DoctorRuta extends FragmentActivity implements
+        OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
@@ -543,7 +544,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
     //.
     public void ShowPopupCancelar() {
-       Button btn_accept_cancelar ,btn_decline_cancelar;
+        Button btn_accept_cancelar, btn_decline_cancelar;
 
         myDialog.setContentView(R.layout.pop_up_cancelar);
         btn_accept_cancelar = myDialog.findViewById(R.id.btn_accept_cancelar);
@@ -552,7 +553,9 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
         btn_accept_cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Confirma cancelar",Toast.LENGTH_SHORT).show();
+
+                doctorService.onDisconnect().removeValue();
+                FirebaseDatabase.getInstance().goOffline();
                 cancelBooking(idTokenPaciente);
                 myDialog.dismiss();
                 finish();
@@ -594,6 +597,7 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
                             Log.e(TAG, "response.body().success : " + response.body().success);
+
                             Toast.makeText(getApplicationContext(), "Cita ha sido cancelado", Toast.LENGTH_SHORT).show();
 
                         } else {
@@ -603,28 +607,12 @@ public class DoctorRuta extends FragmentActivity implements OnMapReadyCallback,
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        Log.e(TAG, "error : "+t.getMessage());
+                        Log.e(TAG, "error : " + t.getMessage());
                     }
 
                 });
         finish();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
