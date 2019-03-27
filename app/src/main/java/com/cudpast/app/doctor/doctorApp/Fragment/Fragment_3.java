@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,16 +21,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 
-
-
 public class Fragment_3 extends Fragment {
+
+    public static final String TAG = Fragment_3.class.getSimpleName();
+
 
 
     private View viewFragment;
-    private  String userUID;
+    private String userUID;
     private RecyclerView mBlogList;
     private DatabaseReference AppDoctor_history;
     private FirebaseAuth auth;
+
+    private FirebaseRecyclerAdapter<UserPaciente, pacienteViewHolder> adapter;
 
     public Fragment_3() {
 
@@ -53,6 +57,11 @@ public class Fragment_3 extends Fragment {
         mBlogList.setHasFixedSize(true);
         mBlogList.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        Log.e(TAG,"userUID : " +userUID);
+        Log.e(TAG,"AppDoctor_history : " +AppDoctor_history);
+        Log.e(TAG,"mBlogList : " +mBlogList);
+        Log.e(TAG,"AppDoctor_history : " +AppDoctor_history);
+
         return viewFragment;
     }
 
@@ -60,18 +69,24 @@ public class Fragment_3 extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        //Options
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<UserPaciente>()
                 .setQuery(AppDoctor_history, UserPaciente.class)
                 .build();
 
 
-        FirebaseRecyclerAdapter<UserPaciente, pacienteViewHolder> adapter;
+
+
+        //Adapter
+
         adapter = new FirebaseRecyclerAdapter<UserPaciente, pacienteViewHolder>(options) {
 
             @Override
             protected void onBindViewHolder(@NonNull pacienteViewHolder holder, int position, @NonNull UserPaciente model) {
 
+                Log.e(TAG,"holder : " +holder);
+                Log.e(TAG,"getNombre : " +model.getNombre());
+                Log.e(TAG,"getApellido : " +model.getApellido());
                 holder.setFirstName(model.getNombre());
                 holder.setLastName(model.getApellido());
                 holder.setPhone(model.getDirecion());
@@ -87,12 +102,20 @@ public class Fragment_3 extends Fragment {
             }
         };
 
+        Log.e(TAG,"options : " +options);
+        Log.e(TAG,"adapter : " +adapter);
+        Log.e(TAG,"mBlogList : " +mBlogList);
+
+
         mBlogList.setAdapter(adapter);
         adapter.startListening();
     }
 
 
     public static class pacienteViewHolder extends RecyclerView.ViewHolder {
+
+
+        TextView post_firstName, post_lastName, post_phone;
         View mView;
 
         public pacienteViewHolder(@NonNull final View itemView) {
@@ -101,17 +124,17 @@ public class Fragment_3 extends Fragment {
         }
 
         public void setFirstName(String firstName) {
-            TextView post_firstName = mView.findViewById(R.id.firstname);
+            post_firstName = mView.findViewById(R.id.firstname);
             post_firstName.setText(firstName);
         }
 
         public void setLastName(String lastName) {
-            TextView post_lastName = mView.findViewById(R.id.lastname);
+            post_lastName = mView.findViewById(R.id.lastname);
             post_lastName.setText(lastName);
         }
 
         public void setPhone(String phone) {
-            TextView post_phone = mView.findViewById(R.id.phone);
+            post_phone = mView.findViewById(R.id.phone);
             post_phone.setText(phone);
 
         }

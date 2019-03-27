@@ -14,27 +14,12 @@
         android:orientation="horizontal"
         android:padding="15dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:padding="1dp"
-            android:src="@mipmap/ic_launcher"
-            app:civ_border_color="@color/white"
-            app:civ_border_width="3dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:padding="5dp">
-
-            <TextView
-                android:id="@+id/especialidad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="especialidad"
-                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/firstname"
@@ -62,8 +47,6 @@
                 android:gravity="right"
                 android:text="00000000"
                 android:textStyle="bold" />
-
-
 
         </RelativeLayout>
     </LinearLayout>
