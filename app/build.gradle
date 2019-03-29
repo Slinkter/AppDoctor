@@ -6,8 +6,8 @@ android {
         applicationId "com.cudpast.app.doctor.doctorApp"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 5
-        versionName "1.5"
+        versionCode 6
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -70,6 +70,8 @@ dependencies {
 
     //Firebase Recicleview
     implementation 'com.firebaseui:firebase-ui-database:3.2.2'
+    //material design
+
 
 }
 

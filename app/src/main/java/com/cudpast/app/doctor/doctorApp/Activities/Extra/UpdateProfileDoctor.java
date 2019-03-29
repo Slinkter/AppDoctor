@@ -72,7 +72,8 @@ public class UpdateProfileDoctor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile_doctor);
-        getSupportActionBar().hide();
+        getSupportActionBar().setTitle("Actualizar datos");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");

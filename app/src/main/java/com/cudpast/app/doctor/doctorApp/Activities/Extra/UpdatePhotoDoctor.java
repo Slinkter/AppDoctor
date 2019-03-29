@@ -57,6 +57,9 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_photo_doctor);
 
+        getSupportActionBar().setTitle("Actualizar Foto");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
         usuario = Common.currentUser;
