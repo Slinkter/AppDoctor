@@ -47,16 +47,15 @@
 
 
         <EditText
+            android:id="@+id/updateEmailDoctor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nueva Contraseña" />
+            android:hint="Escriba su correo" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Confirmar Contraseña" />
+
 
         <Button
+            android:id="@+id/updatePWDDoctor"
             android:background="@drawable/custom_button_2"
             android:textColor="@color/white"
             android:layout_width="match_parent"
