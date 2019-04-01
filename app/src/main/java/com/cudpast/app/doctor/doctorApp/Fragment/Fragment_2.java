@@ -78,32 +78,23 @@ public class Fragment_2 extends Fragment implements
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
 
-
     public DatabaseReference db_available_doctor, db_online_offline_user, db_currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
 
-
     public String current_user_UID;
 
-
-    //parte012b
     private FusedLocationProviderClient fusedLocationClient;
-
-    boolean esta_online, switch_on;
+    boolean esta_online;
     int valor1;
-    //
+
     private boolean mLocationPermissionGranted;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
-
-
 
     public Fragment_2() {
 
     }
 
-    //Todo : Guardar en savedinstar la variable location_switch;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,8 +142,6 @@ public class Fragment_2 extends Fragment implements
             }
         });
 
-
-        //parte012b
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         Common.location_switch = rootView.findViewById(R.id.location_switch);
 
@@ -177,29 +166,19 @@ public class Fragment_2 extends Fragment implements
                                 stopLocationUpdate();
                                 marketDoctorCurrent.remove();
                                 mMap.clear();
-                                Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
                 });
-
-//        location_switch = null;
-
-
         return rootView;
     }
 
-    //.Save
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("prueba1", esta_online);
-        Log.e(TAG, "onSaveInstanceState" + esta_online);
-
-
     }
-
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -241,7 +220,7 @@ public class Fragment_2 extends Fragment implements
                 builGoogleApiClient();
                 createLocationRequest();
                 //solo ocurre si esta activado
-                if (Common.location_switch .isChecked()) {
+                if (Common.location_switch.isChecked()) {
                     Log.e(TAG, " Off location ");
                     displayLocation();
                 }
@@ -301,7 +280,7 @@ public class Fragment_2 extends Fragment implements
                     if (checkPlayService()) {
                         builGoogleApiClient();
                         createLocationRequest();
-                        if (Common.location_switch .isChecked()) {
+                        if (Common.location_switch.isChecked()) {
                             displayLocation();
                             Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
                         }
@@ -327,10 +306,7 @@ public class Fragment_2 extends Fragment implements
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
-
-
         //.Obtener GPS del movil
-
         fusedLocationClient
                 .getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
@@ -340,14 +316,13 @@ public class Fragment_2 extends Fragment implements
                             Common.mLastLocation = location;
                             Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLatitude() " + Common.mLastLocation.getLatitude());
                             Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLongitude()" + Common.mLastLocation.getLongitude());
-
                         }
                     }
                 });
 
         Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
         if (Common.mLastLocation != null) {
-            if (Common.location_switch .isChecked()) {
+            if (Common.location_switch.isChecked()) {
                 //
                 final ProgressDialog mDialog = new ProgressDialog(getActivity());
                 mDialog.setMessage("Actualizando su Ubicación...");
@@ -401,7 +376,6 @@ public class Fragment_2 extends Fragment implements
         Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
     }
 
-
     private void startLocationUpdate() {
         Log.e(TAG, "startLocationUpdate()");
         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -412,7 +386,6 @@ public class Fragment_2 extends Fragment implements
         }
 
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-
     }
 
     @Override
@@ -420,8 +393,6 @@ public class Fragment_2 extends Fragment implements
 
         displayLocation();
         //   startLocationUpdate();
-
-
     }
 
     @Override
@@ -440,7 +411,6 @@ public class Fragment_2 extends Fragment implements
         displayLocation();
     }
 
-
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
@@ -451,38 +421,6 @@ public class Fragment_2 extends Fragment implements
         background.draw(canvas);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.e(TAG, "onStart " + valor1 + " : " + esta_online);
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.e(TAG, "onStop " + valor1 + " : " + esta_online);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e(TAG, "onPause " + valor1 + " : " + esta_online);
-        if (Common.location_switch .isActivated() == true) {
-            switch_on = true;
-        } else {
-            switch_on = false;
-        }
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e(TAG, "onResume " + valor1 + " : " + esta_online);
     }
 
     private void getLocationPermission() {
@@ -501,8 +439,6 @@ public class Fragment_2 extends Fragment implements
                     MY_PERMISSION_REQUEST_CODE);
         }
     }
-
-
 
 
 }
