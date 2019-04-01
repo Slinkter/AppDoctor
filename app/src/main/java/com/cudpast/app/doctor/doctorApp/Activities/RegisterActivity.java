@@ -54,7 +54,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import dmax.dialog.SpotsDialog;
 
@@ -64,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupDir, signupPassword;
+    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupAnddress, signupPassword;
     private Button btn_save, btn_uploadPhoto;
     private Animation animation;
     private Vibrator vib;
@@ -88,7 +87,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         getSupportActionBar().hide();
 
         btn_save = findViewById(R.id.btnGuardar);
-
         btn_uploadPhoto = findViewById(R.id.btn_choose_image);
 
         volleyRP = VolleyRP.getInstance(this);
@@ -106,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         signupName = findViewById(R.id.signupName);
         signupLast = findViewById(R.id.signupLast);
         signupNumPhone = findViewById(R.id.signupNumPhone);
-        signupDir = findViewById(R.id.signupDir); //<--- dirección
+        signupAnddress = findViewById(R.id.signupDir); //<--- dirección
         signupCodMePe = findViewById(R.id.signupCodMePe);
         signupEsp = findViewById(R.id.signupEsp);
         signupMail = findViewById(R.id.signupMail);
@@ -129,12 +127,14 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String firstname = signupName.getText().toString();
                 final String lastname = signupLast.getText().toString();
                 final String numphone = signupNumPhone.getText().toString();
-                final String direccion = signupDir.getText().toString(); // <--- dirección
+                final String direccion = signupAnddress.getText().toString();
                 final String codmedpe = signupCodMePe.getText().toString();
                 final String especialidad = signupEsp.getText().toString();
-                final String dni = signupDNI.getText().toString();// <-- 123456789@doctor.com
-                final String password = signupPassword.getText().toString();
-                final String mail = signupMail.getText().toString();
+                final String dni = signupDNI.getText().toString();
+
+                final String mail = signupMail.getText().toString().trim();
+                final String password = signupPassword.getText().toString().trim();
+
                 final String fecha = getCurrentTimeStamp();
 
 
@@ -163,62 +163,49 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                     try {
                                         Uri downloadUri = task.getResult();
                                         final String imageUrl = downloadUri.toString();
-                                        //Guardar en GoDaddy
-                                        if (registrarWebGoDaddy(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha)) {
-                                            //Base de datos : Firebase
+                                        //Guardar en firebase
+                                        auth
+                                                .createUserWithEmailAndPassword(mail, password)
+                                                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                                    @Override
+                                                    public void onSuccess(AuthResult authResult) {
 
-                                            Usuario user1 = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl, "uid");
-                                            Usuario user2 = new Usuario(dni, password);
-                                            Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
+                                                        String uid = authResult.getUser().getUid();
+                                                        final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, "", mail, fecha, imageUrl, uid);
 
-                                            databaseReference.child("db_doctor_register").child(dni).setValue(user1);
-                                            databaseReference.child("db_doctor_login").child(dni).setValue(user2);
-                                            databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
+                                                        tb_Info_Doctor.
+                                                                child(uid)
+                                                                .setValue(FirebaseUser)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {//
+                                                                        Log.e(TAG, " onSuccess ");
+                                                                        Log.e(TAG, " user1 " + FirebaseUser);
+                                                                        sendEmailVerification();
+                                                                        waitingDialog.dismiss();
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        waitingDialog.dismiss();
+                                                                        Log.e("RegisterActivity ", "onFailure ");
+                                                                    }
+                                                                });
 
-                                            //Guardar en firebase
-                                            auth
-                                                    .createUserWithEmailAndPassword(mail, password)
-                                                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                                        @Override
-                                                        public void onSuccess(AuthResult authResult) {
-                                                            Log.e(TAG, " authResult.getUser().getUid()" + authResult.getUser().getUid());
-                                                            Log.e(TAG, " mAuth.getCurrentUser() " + auth.getCurrentUser().toString());
-                                                            Log.e(TAG, " Correo y password : " + mail + password);
-                                                            String uid = authResult.getUser().getUid();
-                                                            final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, mail, fecha, imageUrl, uid);
-
-                                                            tb_Info_Doctor.
-                                                                    child(uid)
-                                                                    .setValue(FirebaseUser)
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {//
-                                                                            Log.e(TAG, " onSuccess ");
-                                                                            Log.e(TAG, " user1 " + FirebaseUser);
-                                                                            sendEmailVerification();
-                                                                            waitingDialog.dismiss();
-                                                                        }
-                                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    waitingDialog.dismiss();
-                                                                    Log.e("RegisterActivity ", "onFailure ");
-                                                                }
-                                                            });
+                                                        Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
+                                                        databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
 
 
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    waitingDialog.dismiss();
-                                                    Toast.makeText(RegisterActivity.this, "Fallo de Internet  " +e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        } else {
-
-                                        }
-
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        waitingDialog.dismiss();
+                                                        Toast.makeText(RegisterActivity.this, "Fallo de Internet  " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -272,69 +259,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
 
-    //Insertar en la base de datos de Godaddy
-    public Boolean registrarWebGoDaddy(String dni, String firstname, String lastname, String numphone, String codmedpe, String especialidad, String direccion, String password, String correoG, String fecha) {
-
-        boolean registro = false;
-
-        HashMap<String, String> hashMapRegistro = new HashMap<>();
-        hashMapRegistro.put("idDNI", dni);
-        hashMapRegistro.put("nombre", firstname);
-        hashMapRegistro.put("apellido", lastname);
-        hashMapRegistro.put("telefono", numphone);
-        hashMapRegistro.put("codMedico", codmedpe);
-        hashMapRegistro.put("especialidad", especialidad);
-        hashMapRegistro.put("direccion", direccion);
-        hashMapRegistro.put("password", password);
-        hashMapRegistro.put("correo", correoG);
-        hashMapRegistro.put("fecha", fecha);
-
-        JsonObjectRequest solicitar = new JsonObjectRequest(
-                Request.Method.POST,
-                IP_REGISTRAR,
-                new JSONObject(hashMapRegistro),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject datos) {
-
-                        try {
-                            String estado = datos.getString("resultado");
-
-                            if (estado.equalsIgnoreCase("Datos registrados  :) ")) {
-//                                Toast.makeText(RegisterActivity.this, "", Toast.LENGTH_SHORT).show();
-                                Log.e("registrarWebGoDaddy", "ok");
-                            } else {
-//                                Toast.makeText(RegisterActivity.this, estado, Toast.LENGTH_SHORT).show();
-                                Log.e("registrarWebGoDaddy", "error");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(RegisterActivity.this, "no se pudo registrar", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        try {
-            VolleyRP.addToQueue(solicitar, mRequest, this, volleyRP);
-            registro = true;
-            Log.e("registrarWebGoDaddy", "try ok");
-        } catch (Exception e) {
-            Log.e("registrarWebGoDaddy", "cathc " + e.getMessage());
-            e.printStackTrace();
-            registro = false;
-        }
-
-
-        return registro;
-
-    }
-
     //Validación de formulario parte 1
     private boolean submitForm() {
 
@@ -374,8 +298,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         }
         // direccion
         if (!checkUser()) {
-            signupDir.setAnimation(animation);
-            signupDir.startAnimation(animation);
+            signupAnddress.setAnimation(animation);
+            signupAnddress.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
@@ -424,8 +348,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
     // direccion
     private boolean checkUser() {
-        if (signupDir.getText().toString().trim().isEmpty()) {
-            signupDir.setError("Error ingresar direccion");
+        if (signupAnddress.getText().toString().trim().isEmpty()) {
+            signupAnddress.setError("Error ingresar direccion");
             return false;
         }
         return true;
@@ -478,7 +402,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private void sendEmailVerification() {
 
         final FirebaseUser user = auth.getCurrentUser();
-        user.sendEmailVerification()
+        user
+                .sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
