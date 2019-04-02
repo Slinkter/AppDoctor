@@ -69,6 +69,10 @@ public class Fragment_2 extends Fragment implements
     SupportMapFragment mapFragment;
 
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean mLocationPermissionGranted;
+
+
     private static final int PLAY_SERVICE_RES_REQUEST = 9000;
 
     private static int UPDATE_INTERVAL = 5000;
@@ -88,8 +92,6 @@ public class Fragment_2 extends Fragment implements
     boolean esta_online;
     int valor1;
 
-    private boolean mLocationPermissionGranted;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     public Fragment_2() {
 
@@ -208,14 +210,24 @@ public class Fragment_2 extends Fragment implements
     private void setUpLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          setUpLocation()()                      ");
+        //Si no tiene permisos de  ACCESS_COARSE_LOCATION && ACCESS_FINE_LOCATION
+        // Requerir permisos  de ACCESS_COARSE_LOCATION && ACCESS_FINE_LOCATION
+        // con el codigo MY_PERMISSION_REQUEST_CODE --> onRequestPermissionsResult
+        if (ContextCompat
+                .checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat
+                        .checkSelfPermission(getActivity(),
+                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_CODE);
         } else {
+            // Si tiene los permisos
+            // verficiar el  checkPlayService
             if (checkPlayService()) {
                 builGoogleApiClient();
                 createLocationRequest();

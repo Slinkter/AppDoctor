@@ -132,8 +132,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                 final String especialidad = signupEsp.getText().toString();
                 final String dni = signupDNI.getText().toString();
 
-                final String mail = signupMail.getText().toString().trim();
-                final String password = signupPassword.getText().toString().trim();
 
                 final String fecha = getCurrentTimeStamp();
 
@@ -164,24 +162,30 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                         Uri downloadUri = task.getResult();
                                         final String imageUrl = downloadUri.toString();
                                         //Guardar en firebase
+                                        String email = signupMail.getText().toString().trim();
+                                        String password = signupPassword.getText().toString().trim();
+
+
                                         auth
-                                                .createUserWithEmailAndPassword(mail, password)
+                                                .createUserWithEmailAndPassword(email, password)
                                                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                                                     @Override
                                                     public void onSuccess(AuthResult authResult) {
 
                                                         String uid = authResult.getUser().getUid();
-                                                        final Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, "", mail, fecha, imageUrl, uid);
+                                                        Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, "", signupMail.getText().toString().trim(), fecha, imageUrl, uid);
 
                                                         tb_Info_Doctor.
                                                                 child(uid)
                                                                 .setValue(FirebaseUser)
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
-                                                                    public void onSuccess(Void aVoid) {//
-                                                                        Log.e(TAG, " onSuccess ");
-                                                                        Log.e(TAG, " user1 " + FirebaseUser);
+                                                                    public void onSuccess(Void aVoid) {
                                                                         sendEmailVerification();
+                                                                        Log.e(TAG, " onSuccess ");
+                                                                        Toast.makeText(RegisterActivity.this, "Usuario Registrado , espere correo de verificación", Toast.LENGTH_SHORT).show();
+                                                                        Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
+                                                                        databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
                                                                         waitingDialog.dismiss();
                                                                     }
                                                                 })
@@ -189,13 +193,10 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                                                     @Override
                                                                     public void onFailure(@NonNull Exception e) {
                                                                         waitingDialog.dismiss();
+                                                                        Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
                                                                         Log.e("RegisterActivity ", "onFailure ");
                                                                     }
                                                                 });
-
-                                                        Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
-                                                        databaseReference.child("db_doctor_consulta").child(dni).setValue(user3);
-
 
                                                     }
                                                 })
@@ -223,16 +224,12 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                                 Toast.makeText(RegisterActivity.this, "Error : -->" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-
                     }
-
                     waitingDialog.dismiss();
                     iniciarActivity();
                 }
             }
         });
-
-
     }
 
     @Override
@@ -251,13 +248,11 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         }
     }
 
-
     public void iniciarActivity() {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
-
 
     //Validación de formulario parte 1
     private boolean submitForm() {
@@ -410,7 +405,6 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Revise su correo " + user.getEmail(), Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.e(TAG, "sendEmailVerification", task.getException());
                             Toast.makeText(RegisterActivity.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
                         }
 
