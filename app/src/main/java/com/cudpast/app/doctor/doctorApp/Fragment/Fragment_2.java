@@ -285,7 +285,7 @@ public class Fragment_2 extends Fragment implements
 
         mLocationPermissionGranted = false;
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+            case MY_PERMISSION_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
@@ -309,79 +309,91 @@ public class Fragment_2 extends Fragment implements
         Log.e(TAG, "                          displayLocation()                      ");
         //.Permisos
 
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat
+                .checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat
+                        .checkSelfPermission(getActivity(),
+                                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
+
+            //.Obtener GPS del movil -- crear metodo
+            fusedLocationClient
+                    .getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                Common.mLastLocation = location;
+                                Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLatitude() " + Common.mLastLocation.getLatitude());
+                                Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLongitude()" + Common.mLastLocation.getLongitude());
+                            }
+                        }
+                    });
+
+            Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
+            if (Common.mLastLocation != null) {
+                if (Common.location_switch.isChecked()) {
+                    //
+                    final ProgressDialog mDialog = new ProgressDialog(getActivity());
+                    mDialog.setMessage("Actualizando su Ubicación...");
+                    mDialog.show();
+                    //
+                    final double latitude = Common.mLastLocation.getLatitude();
+                    final double longitud = Common.mLastLocation.getLongitude();
+                    String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
+
+                    Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
+                    Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
+                    Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
+
+                    geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                            if (marketDoctorCurrent != null) {
+                                marketDoctorCurrent.remove();
+                            }
+                            MarkerOptions m1 = new MarkerOptions()
+                                    .position(new LatLng(latitude, longitud))
+                                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
+                                    .title("Usted");
+                            //Dibujar al doctor en el mapa
+                            marketDoctorCurrent = mMap.addMarker(m1);
+                            LatLng doctorLL = new LatLng(latitude, longitud);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                            mDialog.dismiss();
+                        }
+                    });
+
+                } else {
+
+                    Log.e(TAG, "ERROR: no es checkeado");
+                }
+            } else {
+                Log.e(TAG, "ERROR: Cannot get your location");
+            }
+            Log.e(TAG, "=================================================================");
+
+
         } else {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_CODE);
+            //mLocationPermissionGranted = false; --> no lo tenia
         }
-        //.Obtener GPS del movil
-        fusedLocationClient
-                .getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            Common.mLastLocation = location;
-                            Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLatitude() " + Common.mLastLocation.getLatitude());
-                            Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLongitude()" + Common.mLastLocation.getLongitude());
-                        }
-                    }
-                });
 
-        Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
-        if (Common.mLastLocation != null) {
-            if (Common.location_switch.isChecked()) {
-                //
-                final ProgressDialog mDialog = new ProgressDialog(getActivity());
-                mDialog.setMessage("Actualizando su Ubicación...");
-                mDialog.show();
-                //
-                final double latitude = Common.mLastLocation.getLatitude();
-                final double longitud = Common.mLastLocation.getLongitude();
-                String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
-
-                Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
-                Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
-                Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
-
-                geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                    @Override
-                    public void onComplete(String key, DatabaseError error) {
-
-                        if (marketDoctorCurrent != null) {
-                            marketDoctorCurrent.remove();
-                        }
-                        MarkerOptions m1 = new MarkerOptions()
-                                .position(new LatLng(latitude, longitud))
-                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
-                                .title("Usted");
-                        //Dibujar al doctor en el mapa
-                        marketDoctorCurrent = mMap.addMarker(m1);
-                        LatLng doctorLL = new LatLng(latitude, longitud);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
-                        mDialog.dismiss();
-                    }
-                });
-
-            } else {
-
-                Log.e(TAG, "ERROR: no es checkeado");
-            }
-        } else {
-            Log.e(TAG, "ERROR: Cannot get your location");
-        }
-        Log.e(TAG, "=================================================================");
     }
 
     private void stopLocationUpdate() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat
+                .checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat
+                        .checkSelfPermission(getActivity(),
+                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -433,23 +445,6 @@ public class Fragment_2 extends Fragment implements
         background.draw(canvas);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
-    private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSION_REQUEST_CODE);
-        }
     }
 
 
