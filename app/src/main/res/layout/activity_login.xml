@@ -20,12 +20,12 @@
             android:layout_width="145dp"
             android:layout_height="145dp"
             android:layout_marginTop="60dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="40dp"
             android:contentDescription="nada"
             android:src="@drawable/ic_hospital" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/loginUsernameEmail"
+            android:id="@+id/ed_login_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -45,7 +45,7 @@
             app:met_singleLineEllipsis="false" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/loginPassword"
+            android:id="@+id/ed_login_pwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -55,7 +55,6 @@
             android:gravity="center"
             android:hint="CONTRASEÑA"
             android:inputType="textPassword"
-
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
             android:textSize="20dp"
@@ -64,23 +63,34 @@
             app:met_primaryColor="@color/colorRed"
             app:met_singleLineEllipsis="false" />
 
+        <CheckBox
+            android:id="@+id/rem_userpass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20dp"
+            android:text="Recordarme " />
+
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="28dp"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnLogin"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
-                android:background="@drawable/custom_button_5"
+                android:background="@drawable/background_login"
+                android:clickable="true"
                 android:elevation="5dp"
-                android:text="Ingresar"
+                android:text="Login"
                 android:textColor="@color/white" />
 
 

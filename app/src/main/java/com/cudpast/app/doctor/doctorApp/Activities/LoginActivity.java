@@ -2,22 +2,26 @@ package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.User;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
@@ -34,13 +38,10 @@ import com.google.firebase.database.ValueEventListener;
 import dmax.dialog.SpotsDialog;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements TextWatcher, CompoundButton.OnCheckedChangeListener {
 
     private static final String TAG = "LoginActivity";
-    private static String IP = "http://www.cudpast.com/AppDoctor/Login_GETID.php?id=";
 
-    private EditText emailLogin;
-    private EditText passwordlogin;
 
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
@@ -51,6 +52,16 @@ public class LoginActivity extends AppCompatActivity {
     private Vibrator vib;
 
     private FirebaseAuth auth;
+
+    //
+    private EditText ed_login_email, ed_login_pwd;
+    private CheckBox rem_userpass;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    public static final String PREF_NAME = "prefs";
+    public static final String KEY_REMEMBER = "remeber";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_PASS = "password";
 
 
     @Override
@@ -63,20 +74,39 @@ public class LoginActivity extends AppCompatActivity {
         mRequest = volleyRP.getRequestQueue();
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        //XML
-        emailLogin = findViewById(R.id.loginUsernameEmail);
-        passwordlogin = findViewById(R.id.loginPassword);
 
         btnIngresar = findViewById(R.id.btnLogin);
         //FIREBASE INIT
         auth = FirebaseAuth.getInstance();
 
+
+        //Check
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        ed_login_email = findViewById(R.id.ed_login_email);
+        ed_login_pwd = findViewById(R.id.ed_login_pwd);
+        rem_userpass = (CheckBox) findViewById(R.id.rem_userpass);
+
+        if (sharedPreferences.getBoolean(KEY_REMEMBER, false)) {
+            rem_userpass.setChecked(true);
+        } else {
+            rem_userpass.setChecked(false);
+        }
+
+        ed_login_email.setText(sharedPreferences.getString(KEY_USERNAME, ""));
+        ed_login_pwd.setText(sharedPreferences.getString(KEY_PASS, ""));
+
+        ed_login_email.addTextChangedListener(this);
+        ed_login_pwd.addTextChangedListener(this);
+        rem_userpass.setOnCheckedChangeListener(this);
+
+
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (submitForm()) {
-                    String email = emailLogin.getText().toString();
-                    String pwd = passwordlogin.getText().toString();
+                    String email = ed_login_email.getText().toString();
+                    String pwd = ed_login_pwd.getText().toString();
                     VerificacionFirebase(email, pwd);
                 }
             }
@@ -165,8 +195,8 @@ public class LoginActivity extends AppCompatActivity {
     private boolean checkDNI() {
 
 
-        if (emailLogin.getText().toString().trim().isEmpty()) {
-            emailLogin.setError("vacio");
+        if (ed_login_email.getText().toString().trim().isEmpty()) {
+            ed_login_email.setError("vacio");
             return false;
         }
         return true;
@@ -174,12 +204,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean checkPassword() {
 
-        if (passwordlogin.length() < 2) {
-            passwordlogin.setError("Error : ingresar password");
+        if (ed_login_pwd.length() < 2) {
+            ed_login_pwd.setError("Error : ingresar password");
             return false;
         }
-        if (passwordlogin.getText().toString().trim().isEmpty()) {
-            passwordlogin.setError("vacio");
+        if (ed_login_pwd.getText().toString().trim().isEmpty()) {
+            ed_login_pwd.setError("vacio");
             return false;
         }
         return true;
@@ -188,14 +218,14 @@ public class LoginActivity extends AppCompatActivity {
     private boolean submitForm() {
 
         if (!checkDNI()) {
-            emailLogin.setAnimation(animation);
-            emailLogin.startAnimation(animation);
+            ed_login_email.setAnimation(animation);
+            ed_login_email.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
         if (!checkPassword()) {
-            emailLogin.setAnimation(animation);
-            emailLogin.startAnimation(animation);
+            ed_login_email.setAnimation(animation);
+            ed_login_email.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
@@ -218,10 +248,10 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser usuarioFirebase) {
         if (usuarioFirebase != null) {
             if (usuarioFirebase.isEmailVerified()) {
-                // Toast.makeText(this, "Correo verificado", Toast.LENGTH_SHORT).show();
+
             }
         } else {
-//            Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -231,4 +261,37 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        managePrefs();
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        managePrefs();
+    }
+
+    private void managePrefs() {
+        if (rem_userpass.isChecked()) {
+            editor.putString(KEY_USERNAME, ed_login_email.getText().toString().trim());
+            editor.putString(KEY_PASS, ed_login_pwd.getText().toString().trim());
+            editor.putBoolean(KEY_REMEMBER, true);
+            editor.apply();
+        } else {
+            editor.putBoolean(KEY_REMEMBER, true);
+            editor.remove(KEY_PASS);
+            editor.remove(KEY_USERNAME);
+            editor.apply();
+        }
+    }
 }

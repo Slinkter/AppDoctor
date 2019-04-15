@@ -48,6 +48,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -325,11 +326,19 @@ public class Fragment_2 extends Fragment implements
                         public void onSuccess(Location location) {
                             if (location != null) {
                                 Common.mLastLocation = location;
-                                Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLatitude() " + Common.mLastLocation.getLatitude());
-                                Log.e(TAG, "fusedLocationClient : Common.mLastLocation.getLongitude()" + Common.mLastLocation.getLongitude());
+                                Log.e(TAG, "location "+location);
+
                             }
                         }
-                    });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "addOnFailureListener :" + e.getMessage());
+                        }
+                    })
+
+            ;
 
             Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
             if (Common.mLastLocation != null) {
