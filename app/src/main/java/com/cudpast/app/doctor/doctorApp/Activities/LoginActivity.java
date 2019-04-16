@@ -1,10 +1,14 @@
 package com.cudpast.app.doctor.doctorApp.Activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -63,12 +67,15 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASS = "password";
 
+    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
+        permisos();
         //
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
@@ -111,6 +118,44 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 }
             }
         });
+
+
+    }
+
+    //permisos
+    public void permisos() {
+        if (ContextCompat
+                .checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat
+                        .checkSelfPermission(this,
+                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_CODE);
+        } else {
+            // Si tiene los permisos
+            // verficiar el  checkPlayService
+            Log.e(TAG, "si tiene los permisos");
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e(TAG, "si tiene los permisos  v2 ");
+                }
+            }
+        }
+
     }
 
 

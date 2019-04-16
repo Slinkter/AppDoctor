@@ -96,7 +96,11 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         textTime = findViewById(R.id.txtTime);
         textDistance = findViewById(R.id.txtDistance);
 
-        Common.location_switch.toggle();
+        if (Common.location_switch == null){
+            Log.e(TAG,"NULL");
+        }else{
+            Common.location_switch.toggle();
+        }
 
         //Recibir token y la coordernadas de MyfirebaseMessaging
 

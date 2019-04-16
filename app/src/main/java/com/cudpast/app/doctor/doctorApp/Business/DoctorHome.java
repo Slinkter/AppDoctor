@@ -33,7 +33,7 @@ public class DoctorHome extends AppCompatActivity implements
 
 
     private static final String TAG = DoctorHome.class.getSimpleName();
-
+    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
 
     //Header Menu
     ImageView imageViewDoctor;
@@ -69,6 +69,13 @@ public class DoctorHome extends AppCompatActivity implements
 
 
     }
+
+
+
+
+
+
+
 
     @Override
     public void onBackPressed() {
