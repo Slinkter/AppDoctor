@@ -1,5 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Service;
 
+import android.util.Log;
+
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Token;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,9 +25,10 @@ public class MyFirebaseIdService extends FirebaseInstanceIdService {
         DatabaseReference tokens = db.getReference(Common.token_tbl);
 
         Token token = new Token(refreshedToken);
-        if (FirebaseAuth.getInstance().getCurrentUser() !=null){
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
             Common.token_doctor = token.getToken();
+            Log.e("TOKEN : ",refreshedToken);
         }
 
     }
