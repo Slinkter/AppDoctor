@@ -55,19 +55,14 @@ import retrofit2.Response;
 public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallback {
 
     private static String TAG = DoctorBooking.class.getSimpleName();
+    private IGoogleAPI mService;
+    private IFCMService mFCMService;
+    private TextView textTime, textAddress, textDistance, textPaciente;
+    private Button btnCancel, btnAccept;
+    public FirebaseAuth auth;
+    public String title, body, pToken, dToken, pacienteUID;
+    public double lat, lng;
 
-    TextView textTime, textAddress, textDistance;
-    Button btnCancel, btnAccept;
-    //  MediaPlayer mediaPlayer;
-    IGoogleAPI mService;
-    IFCMService mFCMService;
-    String IdTokenPaciente;
-    String IdTokenDoctor;
-
-    private String   pacienteUID;
-
-    double lat, lng;
-    private FirebaseAuth auth;
 
     double doclat, doclng;
 
@@ -86,51 +81,12 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         btnCancel = (Button) findViewById(R.id.btn_decline_booking);
         btnAccept = (Button) findViewById(R.id.btn_accept_booking);
 
+        mService = Common.getGoogleAPI();
+        mFCMService = Common.getIFCMService();
         auth = FirebaseAuth.getInstance();
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
 
-        mService = Common.getGoogleAPI();
-        mFCMService = Common.getIFCMService();
-
-        textAddress = findViewById(R.id.txtAddress);
-        textTime = findViewById(R.id.txtTime);
-        textDistance = findViewById(R.id.txtDistance);
-
-        if (Common.location_switch == null){
-            Log.e(TAG,"NULL");
-        }else{
-            Common.location_switch.toggle();
-        }
-
-        //Recibir token y la coordernadas de MyfirebaseMessaging
-
-        if (getIntent() != null) {
-            lat = getIntent().getDoubleExtra("lat", -1.0);
-            lng = getIntent().getDoubleExtra("lng", -1.0);
-            pacienteUID =  getIntent().getStringExtra("pacienteUID");
-            IdTokenPaciente = getIntent().getStringExtra("tokenPaciente");
-            IdTokenDoctor = getIntent().getStringExtra("tokenDoctor");
-            getDirection(lat, lng);
-
-        }
-        //.
-        btnAccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG,"----------------> aceptBooking");
-                aceptBooking(IdTokenPaciente);
-
-            }
-        });
-        //.
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!TextUtils.isEmpty(IdTokenPaciente))
-                    cancelBooking(IdTokenPaciente);
-            }
-        });
-
+        //Get Paciente
         tb_Info_Paciente
                 .child(pacienteUID)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -138,16 +94,63 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
                         Common.currentPaciente = userPaciente;
-                        Log.e(TAG," currentPaciente :" +  Common.currentPaciente.getNombre());
+                        Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.e(TAG,"ERROR");
+
                     }
                 });
 
+
+
+        textPaciente = findViewById(R.id.textPaciente);
+        textAddress = findViewById(R.id.txtAddress);
+        textTime = findViewById(R.id.txtTime);
+        textDistance = findViewById(R.id.txtDistance);
+
+        if (Common.location_switch == null) {
+            Log.e(TAG, "NULL");
+        } else {
+            Common.location_switch.toggle();
+        }
+
+
+        if (getIntent() != null) {
+
+            title = getIntent().getStringExtra("title");
+            body = getIntent().getStringExtra("body");
+            pToken = getIntent().getStringExtra("pToken");
+            dToken = getIntent().getStringExtra("dToken");
+            lat = getIntent().getDoubleExtra("lat", -1.0);
+            lng = getIntent().getDoubleExtra("lng", -1.0);
+            pacienteUID = getIntent().getStringExtra("pacienteUID");
+
+            getDirection(lat, lng);
+
+        }
+        //.
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "----------------> acceptBooking");
+                aceptBooking(pToken);
+
+            }
+        });
+        //.
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "----------------> cancelBooking");
+                if (!TextUtils.isEmpty(pToken))
+                    cancelBooking(pToken);
+            }
+        });
+
     }
+
     //.
     private void aceptBooking(String sIdTokenPaciente) {
         Log.e(TAG, "==========================================");
@@ -173,6 +176,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                             Log.e(TAG, "onResponse: success");
                         }
                     }
+
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
                         Log.e(TAG, "onFailure : " + t.getMessage());
@@ -193,7 +197,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
         startActivity(intent);
         finish();
-
 
 
     }
@@ -231,7 +234,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        Log.e(TAG, "error : "+t.getMessage());
+                        Log.e(TAG, "error : " + t.getMessage());
                     }
 
                 });
@@ -277,6 +280,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                                 e.printStackTrace();
                             }
                         }
+
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
                             Toast.makeText(DoctorBooking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
