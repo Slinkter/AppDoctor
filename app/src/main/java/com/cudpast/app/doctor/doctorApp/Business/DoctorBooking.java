@@ -86,22 +86,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         auth = FirebaseAuth.getInstance();
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
 
-        //Get Paciente
-        tb_Info_Paciente
-                .child(pacienteUID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
-                        Common.currentPaciente = userPaciente;
-                        Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
 
 
 
@@ -130,6 +115,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             getDirection(lat, lng);
 
         }
+
+
+
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +136,24 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     cancelBooking(pToken);
             }
         });
+
+        //Get Paciente
+        tb_Info_Paciente
+                .child(pacienteUID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
+                        Common.currentPaciente = userPaciente;
+                        textPaciente.setText(userPaciente.getNombre() +  " " +userPaciente.getApellido());
+                        Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
     }
 
@@ -311,7 +317,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         LatLng sydney = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions()
                 .position(sydney)
-                .title("Cliente")
+                .title("Paciente")
                 .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
 
