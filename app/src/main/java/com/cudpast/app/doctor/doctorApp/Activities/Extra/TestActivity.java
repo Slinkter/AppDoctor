@@ -8,8 +8,15 @@ import com.cudpast.app.doctor.doctorApp.R;
 
 public class TestActivity extends AppCompatActivity {
 
-    TextView id_title, id_body, id_Paciente, id_ubicacion;
-    String title, body, Paciente, ubicacion;
+    TextView id_title, id_body, id_pToken, id_dToken, id_json_lat_log, id_pacienteUID;
+
+
+    public String title;
+    public String body;
+    public String pToken;
+    public String dToken;
+    public String json_lat_log;
+    public String pacienteUID;
 
 
     @Override
@@ -19,20 +26,25 @@ public class TestActivity extends AppCompatActivity {
 
         id_title = findViewById(R.id.id_title);
         id_body = findViewById(R.id.id_body);
-        id_Paciente = findViewById(R.id.id_Paciente);
-        id_ubicacion = findViewById(R.id.id_ubicacion);
-
+        id_pToken = findViewById(R.id.id_pToken);
+        id_dToken = findViewById(R.id.id_dToken);
+        id_json_lat_log = findViewById(R.id.id_json_lat_log);
+        id_pacienteUID = findViewById(R.id.id_pacienteUID);
 
         if (getIntent() != null) {
             title = getIntent().getStringExtra("title");
             body = getIntent().getStringExtra("body");
-            Paciente = getIntent().getStringExtra("idPaciente");
-            ubicacion = getIntent().getStringExtra("ubicacion");
+            pToken = getIntent().getStringExtra("pToken");
+            dToken = getIntent().getStringExtra("dToken");
+            json_lat_log = getIntent().getStringExtra("json_lat_log");
+            pacienteUID = getIntent().getStringExtra("pacienteUID");
 
             id_title.setText(title);
             id_body.setText(body);
-            id_Paciente.setText(Paciente);
-            id_ubicacion.setText(ubicacion);
+            id_pToken.setText(pToken);
+            id_dToken.setText(dToken);
+            id_json_lat_log.setText(json_lat_log);
+            id_pacienteUID.setText(pacienteUID);
 
         }
 

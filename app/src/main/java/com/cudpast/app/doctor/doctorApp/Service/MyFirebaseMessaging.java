@@ -44,29 +44,59 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     @SuppressLint("WrongThread")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
-
-
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle(remoteMessage.getData().get("title"))
-                .setContentText(remoteMessage.getData().get("body"))
-                .setSmallIcon(R.drawable.ic_hospital)
-                .build();
-        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-        manager.notify(123, notification);
-
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "                 MyFirebaseMessaging                    ");
         Log.e(TAG, "" + remoteMessage.getData().get("title"));
         Log.e(TAG, "" + remoteMessage.getData().get("body"));
+        Log.e(TAG, "" + remoteMessage.getData().get("pToken"));
+        Log.e(TAG, "" + remoteMessage.getData().get("dToken"));
+        Log.e(TAG, "" + remoteMessage.getData().get("json_lat_log"));
+        Log.e(TAG, "" + remoteMessage.getData().get("pacienteUID"));
+        //.Booking
+        if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Usted tiene una solicutud de atención")) {
+            Log.e(TAG, "========================================================");
+            Log.e(TAG, "       Atención Medica             ");
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setContentTitle(remoteMessage.getData().get("title"))
+                    .setContentText(remoteMessage.getData().get("body"))
+                    .setSmallIcon(R.drawable.ic_hospital)
+                    .build();
 
-        Intent resultIntent = new Intent(this, TestActivity.class);
+            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+            manager.notify(123, notification);
 
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        resultIntent.putExtra("title", remoteMessage.getData().get("title"));
-        resultIntent.putExtra("body", remoteMessage.getData().get("body"));
-        resultIntent.putExtra("idPaciente", remoteMessage.getData().get("idPaciente"));
-        resultIntent.putExtra("ubicacion", remoteMessage.getData().get("ubicacion"));
+            Intent resultIntent = new Intent(this, TestActivity.class);
 
-        startActivity(resultIntent);
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            resultIntent.putExtra("title", remoteMessage.getData().get("title"));
+            resultIntent.putExtra("body", remoteMessage.getData().get("body"));
+            resultIntent.putExtra("pToken", remoteMessage.getData().get("pToken"));
+            resultIntent.putExtra("dToken", remoteMessage.getData().get("dToken"));
+            resultIntent.putExtra("json_lat_log", remoteMessage.getData().get("json_lat_log"));
+            resultIntent.putExtra("pacienteUID", remoteMessage.getData().get("pacienteUID"));
+
+            startActivity(resultIntent);
+            Log.e(TAG, "============================FIN============================");
+        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado")) {
+            Log.e(TAG, "========================================================");
+            Log.e(TAG, "        El usuario ha cancelado             ");
+            Intent intent = new Intent(this, DoctorHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            Log.e(TAG, "============================FIN============================");
+        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
+            Log.e(TAG, "========================================================");
+            Log.e(TAG, "                        DoctorFin                     ");
+            Intent intent = new Intent(this, DoctorHome.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            Log.e(TAG, "============================FIN============================");
+        }
+    }
+
+
+
 
         /*
         Log.e(TAG, "========================================================");
@@ -81,10 +111,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             startActivity(intent);
         } else if (title.equalsIgnoreCase("CUDPAST")) {
             Log.e(TAG, "            DoctorBooking              ");
+
             String pToken = remoteMessage.getData().get("title").toString();
             String json_lat_log = remoteMessage.getData().get("descripcion").toString();
             String dToken = remoteMessage.getData().get("extradata").toString();
             String pacienteUID = remoteMessage.getData().get("uidPaciente").toString();
+
             LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
 
             Log.e(TAG, " title : " + title);
@@ -115,7 +147,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         }
 
        */
-    }
 
 }
 
