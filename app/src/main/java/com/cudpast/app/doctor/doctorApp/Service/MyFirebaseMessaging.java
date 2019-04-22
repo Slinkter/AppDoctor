@@ -16,6 +16,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cudpast.app.doctor.doctorApp.Activities.Extra.TestActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -43,6 +44,31 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     @SuppressLint("WrongThread")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentText(remoteMessage.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_hospital)
+                .build();
+        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+        manager.notify(123, notification);
+
+        Log.e(TAG, "" + remoteMessage.getData().get("title"));
+        Log.e(TAG, "" + remoteMessage.getData().get("body"));
+
+        Intent resultIntent = new Intent(this, TestActivity.class);
+
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        resultIntent.putExtra("title", remoteMessage.getData().get("title"));
+        resultIntent.putExtra("body", remoteMessage.getData().get("body"));
+        resultIntent.putExtra("idPaciente", remoteMessage.getData().get("idPaciente"));
+        resultIntent.putExtra("ubicacion", remoteMessage.getData().get("ubicacion"));
+
+        startActivity(resultIntent);
+
+        /*
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                 MyFirebaseMessaging                    ");
         final String title = remoteMessage.getNotification().getTitle();
@@ -88,9 +114,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             Log.e(TAG, "============================FIN============================");
         }
 
-
+       */
     }
-
 
 }
 

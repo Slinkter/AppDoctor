@@ -17,7 +17,6 @@ public class MyFirebaseIdService extends FirebaseInstanceIdService {
         super.onTokenRefresh();
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         updateTokenToServer(refreshedToken);
-
     }
 
     private void updateTokenToServer(String refreshedToken) {
@@ -26,9 +25,11 @@ public class MyFirebaseIdService extends FirebaseInstanceIdService {
 
         Token token = new Token(refreshedToken);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
+            tokens
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .setValue(token);
             Common.token_doctor = token.getToken();
-            Log.e("TOKEN : ",refreshedToken);
+            Log.e("TOKEN : ", refreshedToken);
         }
 
     }

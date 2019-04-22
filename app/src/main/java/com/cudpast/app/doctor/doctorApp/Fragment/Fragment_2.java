@@ -308,91 +308,98 @@ public class Fragment_2 extends Fragment implements
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
+        Log.e(TAG,  "Common.token_doctor : " + Common.token_doctor);
         //.Permisos
 
-        if (ContextCompat
-                .checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat
-                        .checkSelfPermission(getActivity(),
-                                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
+        try {
+            if (ContextCompat
+                    .checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat
+                            .checkSelfPermission(getActivity(),
+                                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
 
-            //.Obtener GPS del movil -- crear metodo
-            fusedLocationClient
-                    .getLastLocation()
-                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                Common.mLastLocation = location;
-                                Log.e(TAG, "location "+location);
+                //.Obtener GPS del movil -- crear metodo
+                fusedLocationClient
+                        .getLastLocation()
+                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    Common.mLastLocation = location;
+                                    Log.e(TAG, "location "+location);
 
+                                }
                             }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "addOnFailureListener :" + e.getMessage());
-                        }
-                    })
-
-            ;
-
-            Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
-            if (Common.mLastLocation != null) {
-                if (Common.location_switch.isChecked()) {
-                    //
-                    final ProgressDialog mDialog = new ProgressDialog(getActivity());
-                    mDialog.setMessage("Actualizando su Ubicación...");
-                    mDialog.show();
-                    //
-                    final double latitude = Common.mLastLocation.getLatitude();
-                    final double longitud = Common.mLastLocation.getLongitude();
-                    String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
-
-                    Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
-                    Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
-                    Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
-
-                    geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                        @Override
-                        public void onComplete(String key, DatabaseError error) {
-
-                            if (marketDoctorCurrent != null) {
-                                marketDoctorCurrent.remove();
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "addOnFailureListener :" + e.getMessage());
                             }
-                            MarkerOptions m1 = new MarkerOptions()
-                                    .position(new LatLng(latitude, longitud))
-                                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
-                                    .title("Usted");
-                            //Dibujar al doctor en el mapa
-                            marketDoctorCurrent = mMap.addMarker(m1);
-                            LatLng doctorLL = new LatLng(latitude, longitud);
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
-                            mDialog.dismiss();
-                        }
-                    });
+                        })
 
+                ;
+
+                Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
+                if (Common.mLastLocation != null) {
+                    if (Common.location_switch.isChecked()) {
+                        //
+                        final ProgressDialog mDialog = new ProgressDialog(getActivity());
+                        mDialog.setMessage("Actualizando su Ubicación...");
+                        mDialog.show();
+                        //
+                        final double latitude = Common.mLastLocation.getLatitude();
+                        final double longitud = Common.mLastLocation.getLongitude();
+                        String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
+
+                        Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
+                        Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
+                        Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
+
+                        geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                            @Override
+                            public void onComplete(String key, DatabaseError error) {
+
+                                if (marketDoctorCurrent != null) {
+                                    marketDoctorCurrent.remove();
+                                }
+                                MarkerOptions m1 = new MarkerOptions()
+                                        .position(new LatLng(latitude, longitud))
+                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
+                                        .title("Usted");
+                                //Dibujar al doctor en el mapa
+                                marketDoctorCurrent = mMap.addMarker(m1);
+                                LatLng doctorLL = new LatLng(latitude, longitud);
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                                mDialog.dismiss();
+                            }
+                        });
+
+                    } else {
+
+                        Log.e(TAG, "ERROR: no es checkeado");
+                    }
                 } else {
-
-                    Log.e(TAG, "ERROR: no es checkeado");
+                    Log.e(TAG, "ERROR: Cannot get your location");
                 }
+                Log.e(TAG, "=================================================================");
+
+
             } else {
-                Log.e(TAG, "ERROR: Cannot get your location");
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSION_REQUEST_CODE);
+                //mLocationPermissionGranted = false; --> no lo tenia
             }
-            Log.e(TAG, "=================================================================");
-
-
-        } else {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSION_REQUEST_CODE);
-            //mLocationPermissionGranted = false; --> no lo tenia
+        }catch (Exception e ){
+            e.printStackTrace();
         }
+
+
 
     }
 

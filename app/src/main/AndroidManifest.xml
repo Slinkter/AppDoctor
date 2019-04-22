@@ -14,18 +14,18 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.Extra.TestActivity"></activity>
         <activity
+            android:name=".Activities.Extra.UpdatePwdDoctor"
             android:parentActivityName=".Business.DoctorHome"
-            android:screenOrientation="portrait"
-            android:name=".Activities.Extra.UpdatePwdDoctor"/>
+            android:screenOrientation="portrait" />
         <activity
+            android:name=".Activities.Extra.UpdatePhotoDoctor"
             android:parentActivityName=".Business.DoctorHome"
-            android:screenOrientation="portrait"
-            android:name=".Activities.Extra.UpdatePhotoDoctor" />
+            android:screenOrientation="portrait" />
         <activity
-            android:parentActivityName=".Business.DoctorHome"
-
             android:name=".Activities.Extra.UpdateProfileDoctor"
+            android:parentActivityName=".Business.DoctorHome"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -44,7 +44,6 @@
         <activity
             android:name=".Business.DoctorFin"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.TripDetail"
             android:screenOrientation="portrait" />
