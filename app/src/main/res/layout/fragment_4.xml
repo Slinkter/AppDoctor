@@ -10,15 +10,6 @@
     tools:context=".Fragment.Fragment_4">
 
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/ic_hospital" />
-
     <Button
         android:id="@+id/btn_update_info_doctor"
         style="@style/Widget.AppCompat.Button"

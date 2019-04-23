@@ -63,18 +63,9 @@ public class MainActivity extends AppCompatActivity implements
         nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
         especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
 
-
         setFragment(1);
 
-
     }
-
-
-
-
-
-
-
 
     @Override
     public void onBackPressed() {

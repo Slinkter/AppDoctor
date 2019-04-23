@@ -7,29 +7,21 @@
     tools:context=".Activities.Extra.UpdatePhotoDoctor">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="95dp"
-            android:layout_height="95dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"
-            android:contentDescription="nada"
-            android:src="@drawable/ic_hospital" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="5dp"
-            android:text="ACTUALIZAR FOTO "
-            android:textStyle="bold"
+            android:text="Actualizar Foto "
             android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -57,43 +49,44 @@
                     android:layout_below="@+id/botones"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/ic_photo_doctor" />
+                    android:background="@drawable/ic_photo_doctor"
+                    app:civ_border_color="@color/colorVerdeAzul"
+                    app:civ_border_width="2dp" />
 
                 <Button
                     android:id="@+id/btn_chooseDoctorPhoto"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="30dp"
-
                     android:background="@drawable/custom_button_2"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:text="Elegir foto"
                     android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/btn_updateDoctorPhoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginBottom="50dp"
-                    android:background="@drawable/custom_button_5"
-                    android:enabled="false"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:text="Actualizar foto"
-                    android:textColor="@color/white" />
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
+        <Button
+            android:id="@+id/btn_updateDoctorPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/custom_button_5"
+            android:enabled="false"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Actualizar foto"
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </ScrollView>
