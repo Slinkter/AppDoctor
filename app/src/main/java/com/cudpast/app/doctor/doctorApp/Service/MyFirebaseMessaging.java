@@ -37,57 +37,69 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "" + remoteMessage.getData().get("json_lat_log"));
         Log.e(TAG, "" + remoteMessage.getData().get("pacienteUID"));
 
-
-
-
-
         //.Booking
         if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Usted tiene una solicutud de atención")) {
-            Log.e(TAG, "========================================================");
-            Log.e(TAG, "       Atención Medica             ");
-            Notification notification = new NotificationCompat.Builder(this)
-                    .setContentTitle(remoteMessage.getData().get("title"))
-                    .setContentText(remoteMessage.getData().get("body"))
-                    .setSmallIcon(R.drawable.ic_hospital)
-                    .build();
+            doctorBooking(remoteMessage);
 
-            NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-            manager.notify(123, notification);
-
-            Intent resultIntent = new Intent(this, DoctorBooking.class);
-
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
-
-            resultIntent.putExtra("title", remoteMessage.getData().get("title"));
-            resultIntent.putExtra("body", remoteMessage.getData().get("body"));
-            resultIntent.putExtra("pToken", remoteMessage.getData().get("pToken"));
-            resultIntent.putExtra("dToken", remoteMessage.getData().get("dToken"));
-            //resultIntent.putExtra("json_lat_log", remoteMessage.getData().get("json_lat_log"));
-            resultIntent.putExtra("lat", customer_location.latitude);
-            resultIntent.putExtra("lng", customer_location.longitude);
-            resultIntent.putExtra("pacienteUID", remoteMessage.getData().get("pacienteUID"));
-
-            startActivity(resultIntent);
-            Log.e(TAG, "============================FIN============================");
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado")) {
-            Log.e(TAG, "========================================================");
-            Log.e(TAG, "        El usuario ha cancelado             ");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            Log.e(TAG, "============================FIN============================");
+            doctorCanceled();
+
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
-            Log.e(TAG, "========================================================");
-            Log.e(TAG, "                        DoctorEnd                     ");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            Log.e(TAG, "============================FIN============================");
+            doctorUserEnded();
+
         }
     }
 
+
+    private void doctorBooking(RemoteMessage remoteMessage) {
+
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "       Atención Medica             ");
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentText(remoteMessage.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_hospital)
+                .build();
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+        manager.notify(123, notification);
+
+        Intent resultIntent = new Intent(this, DoctorBooking.class);
+
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
+
+        resultIntent.putExtra("title", remoteMessage.getData().get("title"));
+        resultIntent.putExtra("body", remoteMessage.getData().get("body"));
+        resultIntent.putExtra("pToken", remoteMessage.getData().get("pToken"));
+        resultIntent.putExtra("dToken", remoteMessage.getData().get("dToken"));
+        //resultIntent.putExtra("json_lat_log", remoteMessage.getData().get("json_lat_log"));
+        resultIntent.putExtra("lat", customer_location.latitude);
+        resultIntent.putExtra("lng", customer_location.longitude);
+        resultIntent.putExtra("pacienteUID", remoteMessage.getData().get("pacienteUID"));
+
+        startActivity(resultIntent);
+        Log.e(TAG, "============================FIN============================");
+    }
+
+    private void doctorCanceled() {
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "        El usuario ha cancelado             ");
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        Log.e(TAG, "============================FIN============================");
+    }
+
+    private void doctorUserEnded() {
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "                        DoctorEnd                     ");
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        Log.e(TAG, "============================FIN============================");
+    }
 
 
 
