@@ -2,7 +2,18 @@ package com.cudpast.app.doctor.doctorApp.Service;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -24,6 +35,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public static final String TAG = MyFirebaseMessaging.class.getSimpleName();
     private static final String CHANNEL_ID = "MyMessagin";
     private static final int NOTIFICATION_ID = 9;
+
+
+
+    public static final String APP_CHANNEL_ID = "Default";
+    public static final String APP_CHANNEL_NAME = "App Channel";
+
 
     @SuppressLint("WrongThread")
     @Override
@@ -55,31 +72,54 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Log.e(TAG, "========================================================");
         Log.e(TAG, "       Atención Medica             ");
-        Notification notification = new NotificationCompat.Builder(this)
+
+        LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
+        //
+        Intent intent = new Intent(this, DoctorBooking.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        intent.putExtra("title", remoteMessage.getData().get("title"));
+        intent.putExtra("body", remoteMessage.getData().get("body"));
+        intent.putExtra("pToken", remoteMessage.getData().get("pToken"));
+        intent.putExtra("dToken", remoteMessage.getData().get("dToken"));
+        intent.putExtra("lat", customer_location.latitude);
+        intent.putExtra("lng", customer_location.longitude);
+        intent.putExtra("pacienteUID", remoteMessage.getData().get("pacienteUID"));
+        //
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
+        builder
                 .setContentTitle(remoteMessage.getData().get("title"))
                 .setContentText(remoteMessage.getData().get("body"))
                 .setSmallIcon(R.drawable.ic_hospital)
-                .build();
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ambulance))
 
-        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
-        manager.notify(123, notification);
+                .setContentIntent(pendingIntent);
 
-        Intent resultIntent = new Intent(this, DoctorBooking.class);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            appChannel.setDescription(remoteMessage.getData().get("body"));
+            appChannel.enableLights(true);
+            appChannel.setLightColor(Color.GREEN);
+            appChannel.enableVibration(true);
+            appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
-        LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
+            notificationManager.createNotificationChannel(appChannel);
+        } else {
+            int color = getResources().getColor(R.color.colorRed);
+            builder
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setVibrate(new long[]{100, 250})
+                    .setColor(color)
+                    .setLights(Color.YELLOW, 500, 5000)
+                    .setAutoCancel(true);        }
 
-        resultIntent.putExtra("title", remoteMessage.getData().get("title"));
-        resultIntent.putExtra("body", remoteMessage.getData().get("body"));
-        resultIntent.putExtra("pToken", remoteMessage.getData().get("pToken"));
-        resultIntent.putExtra("dToken", remoteMessage.getData().get("dToken"));
-        //resultIntent.putExtra("json_lat_log", remoteMessage.getData().get("json_lat_log"));
-        resultIntent.putExtra("lat", customer_location.latitude);
-        resultIntent.putExtra("lng", customer_location.longitude);
-        resultIntent.putExtra("pacienteUID", remoteMessage.getData().get("pacienteUID"));
-
-        startActivity(resultIntent);
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
+        nmc.notify(123,builder.build());
         Log.e(TAG, "============================FIN============================");
     }
 
@@ -99,6 +139,29 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         Log.e(TAG, "============================FIN============================");
+    }
+
+
+    public static Bitmap drawableToBitmap (Drawable drawable) {
+        Bitmap bitmap = null;
+
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
+        }
+
+        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
 
