@@ -12,7 +12,7 @@ import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.squareup.picasso.Picasso;
 
-public class DoctorFin extends AppCompatActivity {
+public class DoctorEnd extends AppCompatActivity {
 
     private ImageView image_doctor;
     private TextView tv_doctor_firstname;

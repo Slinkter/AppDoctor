@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
+import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -229,7 +229,7 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
     }
 
     public void iniciarActivity() {
-        Intent intent = new Intent(UpdatePhotoDoctor.this, DoctorHome.class);
+        Intent intent = new Intent(UpdatePhotoDoctor.this, MainActivity.class);
         startActivity(intent);
         finish();
     }

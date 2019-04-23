@@ -23,14 +23,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.FCMResponse;
-import com.cudpast.app.doctor.doctorApp.Model.Notification;
-import com.cudpast.app.doctor.doctorApp.Model.Sender;
-import com.cudpast.app.doctor.doctorApp.Model.Token;
+import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
+import com.cudpast.app.doctor.doctorApp.Soporte.Notification;
+import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
+import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
@@ -81,13 +80,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DoctorRuta extends FragmentActivity implements
+public class DoctorRoad extends FragmentActivity implements
         OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
 
-    private static String TAG = DoctorRuta.class.getName();
+    private static String TAG = DoctorRoad.class.getName();
     //Google Play Service -->
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
     private GoogleApiClient mGoogleApiCliente;
@@ -225,7 +224,7 @@ public class DoctorRuta extends FragmentActivity implements
                     public void onClick(View view) {
 
                         sendArriveNotification(idTokenPaciente);
-                        Toast.makeText(DoctorRuta.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DoctorRoad.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -302,7 +301,7 @@ public class DoctorRuta extends FragmentActivity implements
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(DoctorRuta.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            ActivityCompat.requestPermissions(DoctorRoad.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             return;
         }
         try {
@@ -376,7 +375,7 @@ public class DoctorRuta extends FragmentActivity implements
                                 driverMarker = mMap.addMarker(new MarkerOptions()
                                         .position(doctorlatlng)
                                         .title("USTED")
-                                        .icon(BitmapDoctorApp(DoctorRuta.this, R.drawable.ic_doctorapp)));
+                                        .icon(BitmapDoctorApp(DoctorRoad.this, R.drawable.ic_doctorapp)));
 
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 16.0f));
 
@@ -390,7 +389,7 @@ public class DoctorRuta extends FragmentActivity implements
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(DoctorRuta.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorRoad.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         } catch (Exception e) {
@@ -402,7 +401,7 @@ public class DoctorRuta extends FragmentActivity implements
     //.
     private class getDireccionParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-        ProgressDialog mDialog = new ProgressDialog(DoctorRuta.this);
+        ProgressDialog mDialog = new ProgressDialog(DoctorRoad.this);
         Polyline direction;
 
         @Override
@@ -508,7 +507,7 @@ public class DoctorRuta extends FragmentActivity implements
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
         //parte 014
-        Intent intent = new Intent(DoctorRuta.this, DoctorFin.class);
+        Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
@@ -524,15 +523,15 @@ public class DoctorRuta extends FragmentActivity implements
             @Override
             public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                 if (response.body().success != 1) {
-                    Toast.makeText(DoctorRuta.this, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(DoctorRuta.this, "success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<FCMResponse> call, Throwable t) {
-                Toast.makeText(DoctorRuta.this, "onFailure", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DoctorRoad.this, "onFailure", Toast.LENGTH_SHORT).show();
             }
         });
 

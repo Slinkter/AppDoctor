@@ -20,17 +20,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Token;
+import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
-import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitchState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;

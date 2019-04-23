@@ -2,34 +2,18 @@ package com.cudpast.app.doctor.doctorApp.Service;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.cudpast.app.doctor.doctorApp.Activities.Extra.TestActivity;
+import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
-import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
-import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.github.glomadrian.materialanimatedswitch.MaterialAnimatedSwitch;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-
-import java.util.Map;
-import java.util.Random;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
     //son dos casos
@@ -90,14 +74,14 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado")) {
             Log.e(TAG, "========================================================");
             Log.e(TAG, "        El usuario ha cancelado             ");
-            Intent intent = new Intent(this, DoctorHome.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             Log.e(TAG, "============================FIN============================");
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
             Log.e(TAG, "========================================================");
-            Log.e(TAG, "                        DoctorFin                     ");
-            Intent intent = new Intent(this, DoctorHome.class);
+            Log.e(TAG, "                        DoctorEnd                     ");
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             Log.e(TAG, "============================FIN============================");
@@ -115,7 +99,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         if (title.equalsIgnoreCase("el usuario ha cancelado")) {
             Log.e(TAG, "        El usuario ha cancelado             ");
-            Intent intent = new Intent(this, DoctorHome.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         } else if (title.equalsIgnoreCase("CUDPAST")) {
@@ -146,10 +130,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             resultIntent.putExtra("pacienteUID", pacienteUID);
             startActivity(resultIntent);
             Log.e(TAG, "============================FIN============================");
-        } else if (title.equalsIgnoreCase("DoctorFin")) {
+        } else if (title.equalsIgnoreCase("DoctorEnd")) {
             Log.e(TAG, "========================================================");
-            Log.e(TAG, "                        DoctorFin                     ");
-            Intent intent = new Intent(this, DoctorHome.class);
+            Log.e(TAG, "                        DoctorEnd                     ");
+            Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             Log.e(TAG, "============================FIN============================");

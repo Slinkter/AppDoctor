@@ -1,105 +1,155 @@
 package com.cudpast.app.doctor.doctorApp.Activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_1;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_2;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_3;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_4;
+import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_5;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        NavigationView.OnNavigationItemSelectedListener {
 
-    private ImageView photoImageView;
-    private TextView nameTextView;
-    private TextView emailTextView;
-    private TextView idTextView;
-    private Button btn_salir_MainActivity;
-    private GoogleApiClient mGoogleApiCliente;
 
-    //todo al cerra session todavia se muestra al doctor en el mapa del paciente
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+
+    //Header Menu
+    ImageView imageViewDoctor;
+    TextView nameDoctor;
+    TextView especialidadDoctor;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        setContentView(R.layout.activity_doctor_home);
 
-        mGoogleApiCliente = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiCliente.connect();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-//        photoImageView = findViewById(R.id.idFotoUsuario);
-//        nameTextView = findViewById(R.id.nameTextView);
-//        emailTextView = findViewById(R.id.emailTextView);
-//        idTextView = findViewById(R.id.idTextView);
-//        btn_salir_MainActivity = findViewById(R.id.btn_salir_MainActivity);
-//
-//        btn_salir_MainActivity.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                goToLoginActivity();
-//            }
-//        });
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View headerView = navigationView.getHeaderView(0);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //
+        imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
+        nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
+        especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
+
+
+        setFragment(1);
 
 
     }
 
-    //.METODO PRINCIPAL
 
 
-    //METODO SUPORTE
-    //.OBTENER DATOS DEL USUARIO
-    private void metodoSignInResult() {
-        try {
-            Usuario usuario = Common.currentUser;
-            nameTextView.setText(usuario.getFirstname());
-            emailTextView.setText(usuario.getCorreoG());
-            idTextView.setText(usuario.getDni());
-            Picasso
-                    .with(this)
-                    .load(usuario.getImage())
-                    .placeholder(R.drawable.ic_photo_doctor)
-                    .error(R.drawable.ic_photo_doctor)
-                    .into(photoImageView);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+
+
+
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
 
-    //.IR A LA ACTIVIDDAD PRINCIPAL
-    public void Atender(View view) {
-        Intent intent = new Intent(this, DoctorHome.class);
-        startActivity(intent);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.doctor_home, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_a) {
+            setFragment(1);
+        } else if (id == R.id.nav_b) {
+            setFragment(2);
+        } else if (id == R.id.nav_c) {
+            setFragment(3);
+        } else if (id == R.id.nav_d) {
+            setFragment(4);
+        } else if (id == R.id.nav_e) {
+            setFragment(5);
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Usuario usuario = Common.currentUser;
+        if (usuario != null) {
+            Log.e(TAG, "ok");
+            cargarDataDoctor();
+        } else {
+            goToLoginActivity();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
 
     //.LOGIN_ACTIVITY
     private void goToLoginActivity() {
@@ -109,44 +159,64 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
-
-    //codmedpe,correoG,direccion,dni,especialidad,fecha,firstname, image,lastname,numphone,password;
-    //User Android
-    @Override
-    protected void onStart() {
-        super.onStart();
+    //.
+    private void cargarDataDoctor() {
         Usuario usuario = Common.currentUser;
-        if (usuario != null) {
-            metodoSignInResult();
-        } else {
-            goToLoginActivity();
+
+        String name = usuario.getFirstname();
+        String especialidad = usuario.getEspecialidad();
+
+        Log.e(TAG, " name :" + name);
+        Log.e(TAG, " especialidad :" + especialidad);
+        try {
+            nameDoctor.setText(name);
+            especialidadDoctor.setText(especialidad);
+
+            Glide.with(this).load(Common.currentUser.getImage()).into(imageViewDoctor);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    public void setFragment(int pos) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        switch (pos) {
+            case 1:
+                //Inicio
+                Fragment_1 fragment1 = new Fragment_1();
+                transaction.replace(R.id.fragment, fragment1);
+                transaction.commit();
+                break;
+            case 2:
+                //Servicio
+                Fragment_2 fragment2 = new Fragment_2();
+                transaction.replace(R.id.fragment, fragment2);
+                transaction.commit();
+                break;
+            case 3:
+                //hitorial
+                Fragment_3 fragment3 = new Fragment_3();
+                transaction.replace(R.id.fragment, fragment3);
+                transaction.commit();
+                break;
+            case 4:
+                //configuracion
+                Fragment_4 fragment4 = new Fragment_4();
+                transaction.replace(R.id.fragment, fragment4);
+                transaction.commit();
+                break;
+            case 5:
+                //Salir
+                Fragment_5 fragment5 = new Fragment_5();
+                transaction.replace(R.id.fragment, fragment5);
+                transaction.commit();
+                break;
+        }
+
 
     }
 
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
 }

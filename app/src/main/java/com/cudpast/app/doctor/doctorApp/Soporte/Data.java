@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorApp.Model;
+package com.cudpast.app.doctor.doctorApp.Soporte;
 
 public class Data {
 

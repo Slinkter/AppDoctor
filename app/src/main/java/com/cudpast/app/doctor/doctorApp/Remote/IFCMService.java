@@ -1,7 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Remote;
 
-import com.cudpast.app.doctor.doctorApp.Model.FCMResponse;
-import com.cudpast.app.doctor.doctorApp.Model.Sender;
+import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
+import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

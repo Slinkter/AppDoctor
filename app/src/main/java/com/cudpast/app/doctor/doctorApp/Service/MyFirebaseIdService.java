@@ -3,7 +3,7 @@ package com.cudpast.app.doctor.doctorApp.Service;
 import android.util.Log;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Token;
+import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

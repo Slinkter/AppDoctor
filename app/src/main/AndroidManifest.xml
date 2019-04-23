@@ -17,15 +17,15 @@
         <activity android:name=".Activities.Extra.TestActivity"></activity>
         <activity
             android:name=".Activities.Extra.UpdatePwdDoctor"
-            android:parentActivityName=".Business.DoctorHome"
+            android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Extra.UpdatePhotoDoctor"
-            android:parentActivityName=".Business.DoctorHome"
+            android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Extra.UpdateProfileDoctor"
-            android:parentActivityName=".Business.DoctorHome"
+            android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -42,13 +42,10 @@
             android:value="false" />
 
         <activity
-            android:name=".Business.DoctorFin"
+            android:name=".Business.DoctorEnd"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Business.TripDetail"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Business.DoctorRuta"
+            android:name=".Business.DoctorRoad"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Business.DoctorBooking"
@@ -66,10 +63,7 @@
             android:name=".Activities.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Activities.MapsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Business.DoctorHome"
+            android:name=".Activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -90,15 +84,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.MainActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity> <!-- Notification -->
+        <!-- Notification -->
         <service android:name=".Service.MyFirebaseIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

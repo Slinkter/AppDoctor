@@ -19,11 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Data;
-import com.cudpast.app.doctor.doctorApp.Model.FCMResponse;
-import com.cudpast.app.doctor.doctorApp.Model.Notification;
-import com.cudpast.app.doctor.doctorApp.Model.Sender;
-import com.cudpast.app.doctor.doctorApp.Model.Token;
+import com.cudpast.app.doctor.doctorApp.Soporte.Data;
+import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
+import com.cudpast.app.doctor.doctorApp.Soporte.Notification;
+import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
+import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
@@ -185,7 +185,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 });
         //<--
 
-        Intent intent = new Intent(DoctorBooking.this, DoctorRuta.class);
+        Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         doclat = Common.mLastLocation.getLatitude();
         doclng = Common.mLastLocation.getLongitude();

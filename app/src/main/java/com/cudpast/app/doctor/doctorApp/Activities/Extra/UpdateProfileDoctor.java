@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.cudpast.app.doctor.doctorApp.Business.DoctorHome;
+import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -31,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
@@ -311,7 +310,7 @@ public class UpdateProfileDoctor extends AppCompatActivity {
 
     //.
     public void iniciarActivity() {
-        Intent intent = new Intent(UpdateProfileDoctor.this, DoctorHome.class);
+        Intent intent = new Intent(UpdateProfileDoctor.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
