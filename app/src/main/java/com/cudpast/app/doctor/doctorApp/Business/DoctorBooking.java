@@ -86,10 +86,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         auth = FirebaseAuth.getInstance();
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
 
-
-
-
-
         textPaciente = findViewById(R.id.textPaciente);
         textAddress = findViewById(R.id.txtAddress);
         textTime = findViewById(R.id.txtTime);
@@ -115,7 +111,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             getDirection(lat, lng);
 
         }
-
 
 
         //.
@@ -145,7 +140,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
                         Common.currentPaciente = userPaciente;
-                        textPaciente.setText(userPaciente.getNombre() +  " " +userPaciente.getApellido());
+                        textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
                         Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
                     }
 
@@ -206,6 +201,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
 
     }
+
     //.
     private void cancelBooking(String IdToken) {
         Log.e(TAG, "==========================================");
@@ -246,6 +242,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 });
         finish();
     }
+
     //Cargar duración distancia y direccion final
     private void getDirection(double lat, double lng) {
 
@@ -300,6 +297,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         }
 
     }
+
     //.
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -322,6 +320,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
 
     }
+
     //.
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);

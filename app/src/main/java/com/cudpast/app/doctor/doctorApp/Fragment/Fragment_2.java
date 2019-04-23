@@ -176,12 +176,7 @@ public class Fragment_2 extends Fragment implements
                 });
         return rootView;
     }
-
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+    //Bloque A
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -199,6 +194,49 @@ public class Fragment_2 extends Fragment implements
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        displayLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Common.mLastLocation = location;
+        displayLocation();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                    if (checkPlayService()) {
+                        builGoogleApiClient();
+                        createLocationRequest();
+                        if (Common.location_switch.isChecked()) {
+                            displayLocation();
+                            Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     private void updateFirebaseToken() {
@@ -244,6 +282,7 @@ public class Fragment_2 extends Fragment implements
         Log.e(TAG, "=================================================================");
     }
 
+    //Bloque B
     private boolean checkPlayService() {
         Log.e(TAG, "checkPlayService() ");
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
@@ -280,35 +319,11 @@ public class Fragment_2 extends Fragment implements
         locationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case MY_PERMISSION_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                    if (checkPlayService()) {
-                        builGoogleApiClient();
-                        createLocationRequest();
-                        if (Common.location_switch.isChecked()) {
-                            displayLocation();
-                            Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-
+    //Bloque C
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
-        Log.e(TAG,  "Common.token_doctor : " + Common.token_doctor);
+        Log.e(TAG, "Common.token_doctor : " + Common.token_doctor);
         //.Permisos
 
         try {
@@ -328,7 +343,7 @@ public class Fragment_2 extends Fragment implements
                             public void onSuccess(Location location) {
                                 if (location != null) {
                                     Common.mLastLocation = location;
-                                    Log.e(TAG, "location "+location);
+                                    Log.e(TAG, "location " + location);
 
                                 }
                             }
@@ -395,10 +410,9 @@ public class Fragment_2 extends Fragment implements
                         MY_PERMISSION_REQUEST_CODE);
                 //mLocationPermissionGranted = false; --> no lo tenia
             }
-        }catch (Exception e ){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
     }
@@ -428,29 +442,7 @@ public class Fragment_2 extends Fragment implements
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        displayLocation();
-        //   startLocationUpdate();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        googleApiClient.connect();
-    }
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Common.mLastLocation = location;
-        displayLocation();
-    }
-
+    //Bloque D
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
