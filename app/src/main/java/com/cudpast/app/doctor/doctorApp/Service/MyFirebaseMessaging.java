@@ -37,7 +37,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     private static final int NOTIFICATION_ID = 9;
 
 
-
     public static final String APP_CHANNEL_ID = "Default";
     public static final String APP_CHANNEL_NAME = "App Channel";
 
@@ -57,13 +56,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //.Booking
         if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Usted tiene una solicutud de atención")) {
             doctorBooking(remoteMessage);
-
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado")) {
             doctorCanceled();
-
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
             doctorUserEnded();
-
         }
     }
 
@@ -76,7 +72,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
         //
         Intent intent = new Intent(this, DoctorBooking.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         intent.putExtra("title", remoteMessage.getData().get("title"));
         intent.putExtra("body", remoteMessage.getData().get("body"));
@@ -92,19 +88,23 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         builder
                 .setContentTitle(remoteMessage.getData().get("title"))
                 .setContentText(remoteMessage.getData().get("body"))
-                .setSmallIcon(R.drawable.ic_hospital)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ambulance))
-
+                .setSmallIcon(R.drawable.ic_local_hospital_black)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+
             NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             appChannel.setDescription(remoteMessage.getData().get("body"));
             appChannel.enableLights(true);
             appChannel.setLightColor(Color.GREEN);
             appChannel.enableVibration(true);
+
             appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
             notificationManager.createNotificationChannel(appChannel);
@@ -115,11 +115,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setVibrate(new long[]{100, 250})
                     .setColor(color)
-                    .setLights(Color.YELLOW, 500, 5000)
-                    .setAutoCancel(true);        }
+                    .setLights(Color.YELLOW, 500, 5000);
+        }
 
         NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
-        nmc.notify(123,builder.build());
+        nmc.notify(123, builder.build());
         Log.e(TAG, "============================FIN============================");
     }
 
@@ -142,17 +142,17 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     }
 
 
-    public static Bitmap drawableToBitmap (Drawable drawable) {
+    public static Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap = null;
 
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if(bitmapDrawable.getBitmap() != null) {
+            if (bitmapDrawable.getBitmap() != null) {
                 return bitmapDrawable.getBitmap();
             }
         }
 
-        if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
             bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
         } else {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
