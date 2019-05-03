@@ -14,7 +14,8 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.Extra.TestActivity"></activity>
+        <activity android:name=".Business.DoctorTimeOut"></activity>
+        <activity android:name=".Activities.Extra.TestActivity" />
         <activity
             android:name=".Activities.Extra.UpdatePwdDoctor"
             android:parentActivityName=".Activities.MainActivity"
@@ -83,8 +84,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
-        <!-- Notification -->
+        </activity> <!-- Notification -->
         <service android:name=".Service.MyFirebaseIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

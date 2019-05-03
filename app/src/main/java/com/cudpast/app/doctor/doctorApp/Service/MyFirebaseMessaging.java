@@ -20,6 +20,7 @@ import android.util.Log;
 
 import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
+import com.cudpast.app.doctor.doctorApp.Business.DoctorTimeOut;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -30,13 +31,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     //son dos casos
     //1.El usuario enviar una solicitud de atencion
     //2.El usuario cancela en cualquier momento la solicutud de atencion
-    //primer plano  Notificacion
-    //segundo plano Data
+
     public static final String TAG = MyFirebaseMessaging.class.getSimpleName();
-    private static final String CHANNEL_ID = "MyMessagin";
-    private static final int NOTIFICATION_ID = 9;
-
-
     public static final String APP_CHANNEL_ID = "Default";
     public static final String APP_CHANNEL_NAME = "App Channel";
 
@@ -60,6 +56,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             doctorCanceled();
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
             doctorUserEnded();
+        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Tiempo fuera")) {
+            timeOutRequestDoctor();
         }
     }
 
@@ -84,7 +82,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
-        Notification notification = new Notification.Builder(this).setContentText("hola").build() ;
+        Notification notification = new Notification.Builder(this).setContentText("hola").build();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
         builder
@@ -136,6 +134,15 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
+    private void timeOutRequestDoctor() {
+        Log.e(TAG, "========================================================");
+        Log.e(TAG, "       Tiempo fuera           ");
+        Intent intent = new Intent(this, DoctorTimeOut.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        Log.e(TAG, "============================FIN============================");
+    }
+
     private void doctorUserEnded() {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                        DoctorEnd                     ");
@@ -145,80 +152,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-        Bitmap bitmap = null;
-
-        if (drawable instanceof BitmapDrawable) {
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-            if (bitmapDrawable.getBitmap() != null) {
-                return bitmapDrawable.getBitmap();
-            }
-        }
-
-        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        }
-
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-
-
-        /*
-        Log.e(TAG, "========================================================");
-        Log.e(TAG, "                 MyFirebaseMessaging                    ");
-        final String title = remoteMessage.getNotification().getTitle();
-        final String body = remoteMessage.getNotification().getBody();
-
-        if (title.equalsIgnoreCase("el usuario ha cancelado")) {
-            Log.e(TAG, "        El usuario ha cancelado             ");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        } else if (title.equalsIgnoreCase("CUDPAST")) {
-            Log.e(TAG, "            DoctorBooking              ");
-
-            String pToken = remoteMessage.getData().get("title").toString();
-            String json_lat_log = remoteMessage.getData().get("descripcion").toString();
-            String dToken = remoteMessage.getData().get("extradata").toString();
-            String pacienteUID = remoteMessage.getData().get("uidPaciente").toString();
-
-            LatLng customer_location = new Gson().fromJson(json_lat_log, LatLng.class);
-
-            Log.e(TAG, " title : " + title);
-            Log.e(TAG, " body : " + body);
-            Log.e(TAG, " pToken : " + pToken);
-            Log.e(TAG, " dToken : " + dToken);
-            Log.e(TAG, " pacienteUID : " + pacienteUID);
-            Log.e(TAG, " customer_location : " + customer_location.latitude + " , " + customer_location.longitude);
-
-
-            Intent resultIntent = new Intent(this, DoctorBooking.class);
-
-            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            resultIntent.putExtra("lat", customer_location.latitude);
-            resultIntent.putExtra("lng", customer_location.longitude);
-            resultIntent.putExtra("tokenPaciente", pToken);
-            resultIntent.putExtra("tokenDoctor", pToken);
-            resultIntent.putExtra("pacienteUID", pacienteUID);
-            startActivity(resultIntent);
-            Log.e(TAG, "============================FIN============================");
-        } else if (title.equalsIgnoreCase("DoctorEnd")) {
-            Log.e(TAG, "========================================================");
-            Log.e(TAG, "                        DoctorEnd                     ");
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            Log.e(TAG, "============================FIN============================");
-        }
-
-       */
 
 }
 
