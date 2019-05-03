@@ -21,6 +21,7 @@ import android.util.Log;
 import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorTimeOut;
+import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -48,16 +49,15 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "" + remoteMessage.getData().get("dToken"));
         Log.e(TAG, "" + remoteMessage.getData().get("json_lat_log"));
         Log.e(TAG, "" + remoteMessage.getData().get("pacienteUID"));
-
         //.Booking
         if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Usted tiene una solicutud de atención")) {
             doctorBooking(remoteMessage);
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado")) {
-            doctorCanceled();
+            doctorCanceled(remoteMessage);
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
             doctorUserEnded();
         } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Tiempo fuera")) {
-            timeOutRequestDoctor();
+            timeOutRequestDoctor(remoteMessage);
         }
     }
 
@@ -66,9 +66,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         Log.e(TAG, "========================================================");
         Log.e(TAG, "       Atención Medica             ");
-
         LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
-        //
         Intent intent = new Intent(this, DoctorBooking.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
@@ -82,8 +80,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
-        Notification notification = new Notification.Builder(this).setContentText("hola").build();
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
         builder
                 .setContentTitle(remoteMessage.getData().get("title"))
@@ -98,17 +94,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-
             NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             appChannel.setDescription(remoteMessage.getData().get("body"));
             appChannel.enableLights(true);
-
             appChannel.setLightColor(Color.GREEN);
             appChannel.enableVibration(true);
-
             appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-
             notificationManager.createNotificationChannel(appChannel);
         } else {
             int color = getResources().getColor(R.color.colorRed);
@@ -125,25 +116,100 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void doctorCanceled() {
+    private void doctorCanceled(RemoteMessage remoteMessage) {
+
         Log.e(TAG, "========================================================");
         Log.e(TAG, "        El usuario ha cancelado             ");
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
+        builder
+                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentText(remoteMessage.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_local_hospital_black)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setColorized(true)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            appChannel.setDescription(remoteMessage.getData().get("body"));
+            appChannel.enableLights(true);
+            appChannel.setLightColor(Color.GREEN);
+            appChannel.enableVibration(true);
+            appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            notificationManager.createNotificationChannel(appChannel);
+        } else {
+            int color = getResources().getColor(R.color.colorRed);
+            builder
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setVibrate(new long[]{100, 250})
+                    .setColor(color)
+                    .setLights(Color.YELLOW, 500, 5000);
+        }
+
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
+        nmc.notify(123, builder.build());
         startActivity(intent);
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void timeOutRequestDoctor() {
+    private void timeOutRequestDoctor(RemoteMessage remoteMessage) {
+
         Log.e(TAG, "========================================================");
         Log.e(TAG, "       Tiempo fuera           ");
         Intent intent = new Intent(this, DoctorTimeOut.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        //
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
+        builder
+                .setContentTitle(remoteMessage.getData().get("title"))
+                .setContentText(remoteMessage.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_local_hospital_black)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setColorized(true)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            appChannel.setDescription(remoteMessage.getData().get("body"));
+            appChannel.enableLights(true);
+            appChannel.setLightColor(Color.GREEN);
+            appChannel.enableVibration(true);
+            appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            notificationManager.createNotificationChannel(appChannel);
+        } else {
+            int color = getResources().getColor(R.color.colorRed);
+            builder
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setVibrate(new long[]{100, 250})
+                    .setColor(color)
+                    .setLights(Color.YELLOW, 500, 5000);
+        }
+
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
+        nmc.notify(123, builder.build());
+
         Log.e(TAG, "============================FIN============================");
     }
 
     private void doctorUserEnded() {
+
+
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                        DoctorEnd                     ");
         Intent intent = new Intent(this, MainActivity.class);
