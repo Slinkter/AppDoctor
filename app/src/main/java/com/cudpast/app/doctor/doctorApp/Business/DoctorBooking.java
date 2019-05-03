@@ -110,6 +110,24 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
             getDirection(lat, lng);
 
+            //Get Paciente
+            tb_Info_Paciente
+                    .child(pacienteUID)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
+                            Common.currentPaciente = userPaciente;
+                            textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
+                            Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
         }
 
 
@@ -132,23 +150,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        //Get Paciente
-        tb_Info_Paciente
-                .child(pacienteUID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
-                        Common.currentPaciente = userPaciente;
-                        textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
-                        Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
 
     }
 

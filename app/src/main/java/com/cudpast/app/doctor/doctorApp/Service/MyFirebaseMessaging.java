@@ -84,6 +84,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
+        Notification notification = new Notification.Builder(this).setContentText("hola").build() ;
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
         builder
                 .setContentTitle(remoteMessage.getData().get("title"))
@@ -92,6 +94,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
+                .setColorized(true)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -102,6 +105,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             appChannel.setDescription(remoteMessage.getData().get("body"));
             appChannel.enableLights(true);
+
             appChannel.setLightColor(Color.GREEN);
             appChannel.enableVibration(true);
 

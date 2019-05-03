@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
 
     <LinearLayout
-
         android:id="@+id/formlogin"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="145dp"
-            android:layout_height="145dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginBottom="40dp"
-            android:contentDescription="nada"
+            android:layout_width="135dp"
+            android:layout_height="135dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
             android:src="@drawable/ic_hospital" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -33,9 +33,8 @@
             android:layout_marginRight="20dp"
             android:ems="8"
             android:gravity="center"
-            android:hint="EMAIL"
+            android:hint="Correo"
             android:inputType="textEmailAddress"
-
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
             android:textSize="20dp"
@@ -53,7 +52,7 @@
             android:layout_marginRight="20dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="CONTRASEÑA"
+            android:hint="Contraseña"
             android:inputType="textPassword"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
@@ -69,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:text="Recordarme " />
 
         <LinearLayout
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="15dp"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal">
 
@@ -86,7 +86,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="50dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/background_login"
                 android:clickable="true"
                 android:elevation="5dp"
@@ -96,33 +98,20 @@
 
         </LinearLayout>
 
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="145dp"
+        <TextView
+            android:id="@+id/txt_forgot_password"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/custom_button_5"
-            android:elevation="5dp"
-            android:text="Registrarse"
-            android:textColor="@color/white"
-            android:visibility="gone" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:onClick="signup"
+            android:text="¿Nuevo usuario? Registrate"
+            android:textColor="@color/bottomText"
+            android:textSize="16sp"
+            android:textStyle="italic" />
 
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/txt_forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="bottom|center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="signup"
-        android:text="¿Nuevo usuario? Registrate"
-        android:textColor="@color/bottomText"
-        android:textSize="16sp"
-        android:textStyle="italic" />
-</RelativeLayout>
+
+</LinearLayout>

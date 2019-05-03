@@ -4,7 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.cudpast.app.doctor.doctorApp"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 9
         versionName "1.9"
@@ -45,7 +45,6 @@ dependencies {
     //
     implementation 'com.google.android.gms:play-services-places:16.0.0' // autocomplete place
     implementation 'com.google.android.gms:play-services-location:16.0.0'
-
     //
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'
@@ -56,8 +55,8 @@ dependencies {
     // carga un efecto de carga
     implementation 'com.github.d-max:spots-dialog:0.7@aar'
     //Descargar imagenes
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     //imageview circle
     implementation 'de.hdodenhof:circleimageview:3.0.0'

@@ -65,12 +65,7 @@ public class DoctorEnd extends AppCompatActivity {
                     .error(R.drawable.ic_doctorapp)
                     .into(image_doctor);
 
-//            Picasso
-//                    .with(this)
-//                    .load(currentPaciente.getApellido())
-//                    .placeholder(R.drawable.ic_boy_svg)
-//                    .error(R.drawable.ic_boy_svg)
-//                    .into(image_doctor);
+
 
         } catch (Exception e) {
             e.printStackTrace();
