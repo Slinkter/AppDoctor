@@ -21,8 +21,6 @@ public class Common {
     public static final String AppPaciente_history= "AppPaciente_history";
     public static final String AppDoctor_history= "AppDoctor_history";
 
-
-
     public static String token_doctor;
     public static Usuario currentUser;
     public static UserPaciente currentPaciente;

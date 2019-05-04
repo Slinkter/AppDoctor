@@ -14,7 +14,8 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Business.DoctorCancel"></activity>
+        <activity android:name=".Business.DoctorCancelOnRoad"></activity>
+        <activity android:name=".Business.DoctorCancel" />
         <activity android:name=".Business.DoctorTimeOut" />
         <activity android:name=".Activities.Extra.TestActivity" />
         <activity
