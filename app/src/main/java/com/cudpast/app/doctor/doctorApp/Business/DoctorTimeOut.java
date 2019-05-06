@@ -18,7 +18,11 @@ public class DoctorTimeOut extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_doctor_time_out);
-
+        if (Common.location_switch == null) {
+            Log.e(TAG, "NULL");
+        } else {
+            Common.location_switch.toggle();
+        }
 
     }
 

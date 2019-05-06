@@ -25,9 +25,6 @@ public class DoctorCancel extends AppCompatActivity {
             Common.location_switch.toggle();
         }
 
-
-
-
     }
 
     public void returnMainCancel(View view) {
