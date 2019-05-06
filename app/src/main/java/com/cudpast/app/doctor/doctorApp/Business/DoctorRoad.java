@@ -1,6 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -69,6 +71,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -105,9 +108,6 @@ public class DoctorRoad extends FragmentActivity implements
     public Circle pacienteMarker;
     public Marker driverMarker;
 
-    //todo :boton de cancelar para enviar notificacion al appPaciente.
-    //todo: cambiar el diseño xml
-
 
     IGoogleAPI mService;
     IFCMService mFCMService;
@@ -121,11 +121,13 @@ public class DoctorRoad extends FragmentActivity implements
 
     LocationCallback mLocationCallback;
 
+    TextView id_tiempoDoctorRoad, id_distanciaDoctorRoad;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doctor_tracking);
+        setContentView(R.layout.activity_doctor_road);
         //*************************************************
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDoctorTracking);
         mapFragment.getMapAsync(this);
@@ -134,6 +136,10 @@ public class DoctorRoad extends FragmentActivity implements
 
         btnSendNotiArrived = findViewById(R.id.btnSendNotiArrived);
         btn_ruta_cancelar = findViewById(R.id.btn_ruta_cancelar);
+
+        id_tiempoDoctorRoad = findViewById(R.id.id_tiempoDoctorRoad);
+        id_distanciaDoctorRoad = findViewById(R.id.id_distanciaDoctorRoad);
+
         myDialog = new Dialog(this);
 
         mService = Common.getGoogleAPI();
@@ -190,7 +196,6 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    //.
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -205,55 +210,54 @@ public class DoctorRoad extends FragmentActivity implements
 
         mMap = googleMap;
 
-
         geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-
-                Log.e(TAG, "Send Notif key" + key);
-                Log.e(TAG, "Send Notif location" + location);
-
-
-                btnSendNotiArrived.setEnabled(true);
-                btnSendNotiArrived.setVisibility(View.VISIBLE);
-
-                btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
+        geoQuery
+                .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onKeyEntered(String key, GeoLocation location) {
 
-                        sendArriveNotification(idTokenPaciente);
-                        Toast.makeText(DoctorRoad.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Send Notif key" + key);
+                        Log.e(TAG, "Send Notif location" + location);
+
+                        btnSendNotiArrived.setEnabled(true);
+                        btnSendNotiArrived.setVisibility(View.VISIBLE);
+
+                        btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                sendArriveNotification(idTokenPaciente);
+                                Toast.makeText(DoctorRoad.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onKeyExited(String key) {
+
+                    }
+
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryReady() {
+
+                    }
+
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
+
                     }
                 });
-
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
-            }
-        });
 
 
     }
 
+    //######################################################
     //.
     private void setUpLocation() {
         if (checkPlayService()) {
@@ -263,7 +267,6 @@ public class DoctorRoad extends FragmentActivity implements
         }
     }
 
-    //.
     private boolean checkPlayService() {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -278,7 +281,6 @@ public class DoctorRoad extends FragmentActivity implements
         return true;
     }
 
-    //.
     private void builGoogleApiClient() {
         mGoogleApiCliente = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -296,7 +298,7 @@ public class DoctorRoad extends FragmentActivity implements
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-    //
+    //######################################################
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
@@ -304,6 +306,7 @@ public class DoctorRoad extends FragmentActivity implements
             ActivityCompat.requestPermissions(DoctorRoad.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             return;
         }
+
         try {
             ubicacion
                     .getLastLocation()
@@ -334,13 +337,14 @@ public class DoctorRoad extends FragmentActivity implements
                                     }
                                 });
                                 mMap.clear();
+                                //Dibujar area del paciente
                                 pacienteMarker = mMap.addCircle(new CircleOptions()
                                         .center(new LatLng(pacienteLat, pacienteLng))
-                                        .radius(40)// 50 metros 5  000000000000000
-                                        .strokeColor(Color.RED)
+                                        .radius(50)// 50 metros 5  000000000000000
+                                        .strokeColor(Color.WHITE)
                                         .fillColor(0x220000FF)
-                                        .strokeWidth(6.0f));
-                                getDirection();
+                                        .strokeWidth(5.0f));
+                                getRoadRealTime();
                             }
                         }
                     });
@@ -350,9 +354,9 @@ public class DoctorRoad extends FragmentActivity implements
     }
 
     //.
-    private void getDirection() {
+    private void getRoadRealTime() {
         Log.e(TAG, "=============================================================");
-        Log.e(TAG, "                     getDirection()                          ");
+        Log.e(TAG, "                     getRoadRealTime()                          ");
         LatLng currentPosition = new LatLng(Common.mLastLocation.getLatitude(), Common.mLastLocation.getLongitude());
         String requestApi = null;
         try {
@@ -379,7 +383,7 @@ public class DoctorRoad extends FragmentActivity implements
 
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 16.0f));
 
-                                new getDireccionParserTask().execute(response.body().toString());
+                                new getDirectionRealTime().execute(response.body().toString());
 
 
                             } catch (Exception e) {
@@ -398,66 +402,6 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    //.
-    private class getDireccionParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        ProgressDialog mDialog = new ProgressDialog(DoctorRoad.this);
-        Polyline direction;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mDialog.setMessage("Actualizando su Ubicación...");
-            mDialog.show();
-        }
-
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
-            JSONObject object;
-            List<List<HashMap<String, String>>> router = null;
-            try {
-                object = new JSONObject(strings[0]);
-                DirectionJSONParser parser = new DirectionJSONParser();
-                router = parser.parse(object);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return router;
-        }
-
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-
-            mDialog.dismiss();
-            ArrayList points = null;
-            PolylineOptions polylineOptions = null;
-
-            for (int i = 0; i < lists.size(); i++) {
-                points = new ArrayList();
-                polylineOptions = new PolylineOptions();
-                List<HashMap<String, String>> path = lists.get(i);
-                //-->
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-                    points.add(position);
-                }
-                //<--
-                polylineOptions.addAll(points);
-                polylineOptions.width(5);
-                polylineOptions.color(Color.MAGENTA);
-                polylineOptions.geodesic(true);
-            }
-
-            direction = mMap.addPolyline(polylineOptions);
-
-
-        }
-    }
-
-    //.
     private void startLocationUpdate() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -489,19 +433,73 @@ public class DoctorRoad extends FragmentActivity implements
         displayLocation();
     }
 
+    private class getDirectionRealTime extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-    //.
-    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
-        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
-        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        background.draw(canvas);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
+        ProgressDialog mDialog = new ProgressDialog(DoctorRoad.this);
+        Polyline direction;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDialog.setMessage("Actualizando su ubicación...");
+            mDialog.show();
+        }
+
+        @SuppressLint("WrongThread")
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+
+            List<List<HashMap<String, String>>> router = null;
+            try {
+                JSONObject objecto = new JSONObject(strings[0]);
+
+                DirectionJSONParser parser = new DirectionJSONParser();
+                router = parser.parse(objecto);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return router;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+
+            mDialog.dismiss();
+            ArrayList points = null;
+            PolylineOptions polylineOptions = null;
+
+            for (int i = 0; i < lists.size(); i++) {
+                points = new ArrayList();
+                polylineOptions = new PolylineOptions();
+                List<HashMap<String, String>> path = lists.get(i);
+                //-->
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    String distance = point.get("distance");
+                    String duration = point.get("duration");
+                    LatLng position = new LatLng(lat, lng);
+                    id_distanciaDoctorRoad.setText(distance);
+                    id_tiempoDoctorRoad.setText(duration);
+                    points.add(position);
+                }
+                //<--
+                polylineOptions.addAll(points);
+                polylineOptions.width(4);
+                polylineOptions.color(Color.RED);
+                polylineOptions.geodesic(true);
+            }
+
+
+            direction = mMap.addPolyline(polylineOptions);
+        }
     }
+
+
+
 
     private void sendArriveNotification(String customerId) {
         Log.e(TAG, "=====================================================");
@@ -540,37 +538,6 @@ public class DoctorRoad extends FragmentActivity implements
         finish();
         //parte014
     }
-
-    //.
-    public void ShowPopupCancelar() {
-        Button btn_accept_cancelar, btn_decline_cancelar;
-
-        myDialog.setContentView(R.layout.pop_up_cancelar);
-        btn_accept_cancelar = myDialog.findViewById(R.id.btn_accept_cancelar);
-        btn_decline_cancelar = myDialog.findViewById(R.id.btn_decline_cancelar);
-
-        btn_accept_cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                doctorService.onDisconnect().removeValue();
-                FirebaseDatabase.getInstance().goOffline();
-                cancelBooking(idTokenPaciente);
-                myDialog.dismiss();
-                finish();
-            }
-        });
-
-        btn_decline_cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myDialog.dismiss();
-            }
-        });
-
-        myDialog.show();
-    }
-
 
     private void cancelBooking(String IdToken) {
         Log.e(TAG, "==========================================");
@@ -613,5 +580,45 @@ public class DoctorRoad extends FragmentActivity implements
         finish();
     }
 
+    public void ShowPopupCancelar() {
+        Button btn_accept_cancelar, btn_decline_cancelar;
+
+        myDialog.setContentView(R.layout.pop_up_cancelar);
+        btn_accept_cancelar = myDialog.findViewById(R.id.btn_accept_cancelar);
+        btn_decline_cancelar = myDialog.findViewById(R.id.btn_decline_cancelar);
+
+        btn_accept_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                doctorService.onDisconnect().removeValue();
+                FirebaseDatabase.getInstance().goOffline();
+                cancelBooking(idTokenPaciente);
+                myDialog.dismiss();
+                finish();
+            }
+        });
+
+        btn_decline_cancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myDialog.dismiss();
+            }
+        });
+
+        myDialog.show();
+    }
+
+    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
 
 }

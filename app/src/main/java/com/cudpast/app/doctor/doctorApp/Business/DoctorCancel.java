@@ -19,6 +19,7 @@ public class DoctorCancel extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_doctor_cancel);
+
         if (Common.location_switch == null) {
             Log.e(TAG, "NULL");
         } else {

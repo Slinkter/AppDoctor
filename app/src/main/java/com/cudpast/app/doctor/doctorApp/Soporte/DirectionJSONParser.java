@@ -23,6 +23,19 @@ public class DirectionJSONParser {
 
             jRoutes = jObject.getJSONArray("routes");
 
+            //***
+
+            JSONObject object = jRoutes.getJSONObject(0);
+            JSONArray legs = object.getJSONArray("legs");
+            JSONObject legsObject = legs.getJSONObject(0);
+            //
+            JSONObject distance = legsObject.getJSONObject("distance");
+            //
+            JSONObject time = legsObject.getJSONObject("duration");
+            //
+
+
+
             /** Traversing all routes */
             for (int i = 0; i < jRoutes.length(); i++) {
                 jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
@@ -43,6 +56,8 @@ public class DirectionJSONParser {
                             HashMap<String, String> hm = new HashMap<String, String>();
                             hm.put("lat", Double.toString(((LatLng) list.get(l)).latitude));
                             hm.put("lng", Double.toString(((LatLng) list.get(l)).longitude));
+                            hm.put("distance",time.getString("text"));
+                            hm.put("duration",distance.getString("text"));
                             path.add(hm);
                         }
                     }

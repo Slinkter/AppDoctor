@@ -85,6 +85,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         mFCMService = Common.getIFCMService();
         auth = FirebaseAuth.getInstance();
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
+        tb_Info_Paciente.keepSynced(true);
 
         textPaciente = findViewById(R.id.textPaciente);
         textAddress = findViewById(R.id.txtAddress);
@@ -97,7 +98,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Common.location_switch.toggle();
         }
 
-
         if (getIntent() != null) {
 
             title = getIntent().getStringExtra("title");
@@ -107,29 +107,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             lat = getIntent().getDoubleExtra("lat", -1.0);
             lng = getIntent().getDoubleExtra("lng", -1.0);
             pacienteUID = getIntent().getStringExtra("pacienteUID");
-
-            getDirection(lat, lng);
-
             //Get Paciente
-            tb_Info_Paciente
-                    .child(pacienteUID)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
-                            Common.currentPaciente = userPaciente;
-                            textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
-                            Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
+            getDirection(lat, lng, pacienteUID);
         }
-
 
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +129,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     cancelBooking(pToken);
             }
         });
-
 
 
     }
@@ -246,20 +225,37 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     }
 
     //Cargar duración distancia y direccion final
-    private void getDirection(double lat, double lng) {
+    private void getDirection(double lat, double lng, String mpacienteUID) {
+
+        tb_Info_Paciente
+                .child(mpacienteUID)
+                .orderByKey()
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
+                        Common.currentPaciente = userPaciente;
+                        textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
+                        Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e(TAG, " databaseError : " + databaseError.getMessage());
+                    }
+                });
+
 
         String requestApi = null;
 
         try {
-
-            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
-                    "mode=driving&" +
-                    "transit_routing_preference=less_driving&" +
-                    "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
-                    "destination=" + lat + "," + lng + "&" +
-                    "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-
-            Log.e(TAG, "requestApiGoogleMaps:" + "\n" + requestApi);
+            requestApi =
+                    "https://maps.googleapis.com/maps/api/directions/json?" +
+                            "mode=driving&" +
+                            "transit_routing_preference=less_driving&" +
+                            "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
+                            "destination=" + lat + "," + lng + "&" +
+                            "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
 
             mService.getPath(requestApi)
                     .enqueue(new Callback<String>() {
@@ -268,6 +264,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                             try {
 
                                 JSONObject jsonObject = new JSONObject(response.body().toString());
+
                                 JSONArray routes = jsonObject.getJSONArray("routes");
                                 JSONObject object = routes.getJSONObject(0);
                                 JSONArray legs = object.getJSONArray("legs");
@@ -295,7 +292,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
     }
@@ -319,7 +316,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 .position(sydney)
                 .title("Paciente")
                 .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
 
     }
 
