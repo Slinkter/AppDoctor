@@ -492,8 +492,6 @@ public class DoctorRoad extends FragmentActivity implements
                 polylineOptions.color(Color.RED);
                 polylineOptions.geodesic(true);
             }
-
-
             direction = mMap.addPolyline(polylineOptions);
         }
     }
@@ -581,6 +579,13 @@ public class DoctorRoad extends FragmentActivity implements
     }
 
     public void ShowPopupCancelar() {
+
+        //**
+        //**
+
+
+
+
         Button btn_accept_cancelar, btn_decline_cancelar;
 
         myDialog.setContentView(R.layout.pop_up_cancelar);
