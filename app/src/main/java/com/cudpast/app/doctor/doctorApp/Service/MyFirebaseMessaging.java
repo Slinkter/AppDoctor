@@ -22,6 +22,7 @@ import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancel;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancelOnRoad;
+import com.cudpast.app.doctor.doctorApp.Business.DoctorFinish;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorTimeOut;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -150,7 +151,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     private void doctorUserEnded() {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                        DoctorEnd                     ");
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DoctorFinish.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         Log.e(TAG, "============================FIN============================");

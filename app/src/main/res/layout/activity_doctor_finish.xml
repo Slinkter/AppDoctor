@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".Business.DoctorTimeOut">
+    tools:context=".Business.DoctorFinish">
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,10 +16,10 @@
         android:text="Tiempo fuera" />
 
     <Button
-        android:onClick="returnMainTimeOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button_2"
+        android:onClick="returnMainTimeOut"
         android:text="Regresar"
         android:textColor="@color/white" />
 

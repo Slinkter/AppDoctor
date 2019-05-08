@@ -2,6 +2,7 @@ package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -22,6 +24,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -497,8 +500,6 @@ public class DoctorRoad extends FragmentActivity implements
     }
 
 
-
-
     private void sendArriveNotification(String customerId) {
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
@@ -581,37 +582,44 @@ public class DoctorRoad extends FragmentActivity implements
     public void ShowPopupCancelar() {
 
         //**
-        //**
-
-
-
-
+        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.pop_up_cancelar, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+        view.setKeepScreenOn(true);
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button btn_accept_cancelar, btn_decline_cancelar;
+        btn_accept_cancelar = view.findViewById(R.id.btn_accept_cancelar);
+        btn_decline_cancelar = view.findViewById(R.id.btn_decline_cancelar);
 
-        myDialog.setContentView(R.layout.pop_up_cancelar);
-        btn_accept_cancelar = myDialog.findViewById(R.id.btn_accept_cancelar);
-        btn_decline_cancelar = myDialog.findViewById(R.id.btn_decline_cancelar);
+        btn_accept_cancelar
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getApplicationContext(), "Si", Toast.LENGTH_SHORT).show();
+                        doctorService.onDisconnect().removeValue();
+                        FirebaseDatabase.getInstance().goOffline();
+                        cancelBooking(idTokenPaciente);
+                        dialog.dismiss();
+                        finish();
 
-        btn_accept_cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    }
+                });
 
-                doctorService.onDisconnect().removeValue();
-                FirebaseDatabase.getInstance().goOffline();
-                cancelBooking(idTokenPaciente);
-                myDialog.dismiss();
-                finish();
-            }
-        });
+        btn_decline_cancelar
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getApplicationContext(), "No", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
 
-        btn_decline_cancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myDialog.dismiss();
-            }
-        });
+        dialog.show();
 
-        myDialog.show();
+
     }
 
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
