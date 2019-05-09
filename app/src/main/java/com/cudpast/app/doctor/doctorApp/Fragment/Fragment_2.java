@@ -159,7 +159,7 @@ public class Fragment_2 extends Fragment implements
                             startLocationUpdate();
                             displayLocation();
                             esta_online = true;
-                            Toast.makeText(mapFragment.getContext(), "Online", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Online", Toast.LENGTH_SHORT).show();
                         } else {
                             if (marketDoctorCurrent != null) {
                                 FirebaseDatabase.getInstance().goOffline();

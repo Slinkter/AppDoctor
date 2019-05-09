@@ -1,221 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    android:gravity="center"
-    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="false"
     tools:context=".Business.DoctorBooking">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Display map-->
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="Atención Medica"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="5dp">
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:map="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/mapCustomerCall"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".Business.DoctorBooking" />
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <!-- Display info -->
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="40dp"
-                android:layout_marginRight="10dp"
-                android:orientation="vertical">
+                android:layout_marginRight="10dp">
 
-                <android.support.v7.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="320dp"
-                    android:elevation="10dp"
-                    app:cardCornerRadius="25dp">
+                <ImageView
+                    android:id="@+id/img_user"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/ic_action_user" />
 
-                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:map="http://schemas.android.com/apk/res-auto"
-                        xmlns:tools="http://schemas.android.com/tools"
-                        android:id="@+id/mapCustomerCall"
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:context=".Business.DoctorBooking" />
+                <ImageView
+                    android:id="@+id/img_address"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/img_user"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
 
-                </android.support.v7.widget.CardView>
-            </LinearLayout>
-
-            <!-- Display info -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp">
-
-                    <ImageView
-                        android:id="@+id/img_user"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-                        android:src="@drawable/ic_action_user" />
-
-                    <ImageView
-                        android:id="@+id/img_address"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_below="@+id/img_user"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-
-                        android:src="@drawable/ic_action_home"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/img_distance"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_below="@+id/img_address"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-
-                        android:src="@drawable/ic_action_timer"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/img_time"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_below="@+id/img_distance"
-                        android:paddingTop="15dp"
-                        android:paddingBottom="15dp"
-
-                        android:src="@drawable/ic_action_distance"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textPaciente"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/img_address"
-                        android:layout_alignTop="@+id/img_user"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="13dp"
-                        android:layout_toEndOf="@+id/img_user"
-                        android:gravity="center"
-                        android:text="nombre" />
-
-
-                    <TextView
-                        android:id="@+id/txtAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/img_distance"
-                        android:layout_alignTop="@+id/img_address"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="13dp"
-                        android:layout_toEndOf="@+id/img_address"
-                        android:gravity="center"
-                        android:text="Dirección" />
-
-
-                    <TextView
-                        android:id="@+id/txtTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/img_time"
-                        android:layout_alignTop="@+id/img_distance"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="13dp"
-                        android:layout_toEndOf="@+id/img_distance"
-                        android:gravity="center"
-                        android:text="Tiempo" />
-
-
-                    <TextView
-                        android:id="@+id/txtDistance"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/img_time"
-                        android:layout_alignBottom="@+id/img_time"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="13dp"
-                        android:layout_toEndOf="@+id/img_time"
-                        android:gravity="center"
-                        android:text="Distancia" />
-
-
-                </RelativeLayout>
-            </LinearLayout>
-
-            <!-- Botones -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/txt_rider_app"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="50dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="5dp"
-                    android:paddingTop="15dp"
-                    android:text="¿Desea atender al paciente?"
-
-                    android:textSize="20dp"
+                    android:src="@drawable/ic_action_home"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/img_distance"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/img_address"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/ic_action_timer"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/img_time"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_below="@+id/img_distance"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:src="@drawable/ic_action_distance"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textPaciente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_above="@+id/img_address"
+                    android:layout_alignTop="@+id/img_user"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/img_user"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:text="Nombre" />
 
-                    <Button
-                        android:id="@+id/btn_accept_booking"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/custom_button_5"
-                        android:text="aceptar"
-                        android:textColor="@android:color/white" />
 
-                    <Button
-                        android:id="@+id/btn_decline_booking"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/custom_button_1"
-                        android:text="Rechazar"
-                        android:textColor="@android:color/white" />
+                <TextView
+                    android:id="@+id/txtAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/img_distance"
+                    android:layout_alignTop="@+id/img_address"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/img_address"
+                    android:gravity="center"
+                    android:text="Dirección" />
 
-                </LinearLayout>
 
+                <TextView
+                    android:id="@+id/txtTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/img_time"
+                    android:layout_alignTop="@+id/img_distance"
+                    android:layout_marginStart="10dp"
+
+                    android:layout_toEndOf="@+id/img_distance"
+                    android:gravity="center"
+                    android:text="Tiempo" />
+
+
+                <TextView
+                    android:id="@+id/txtDistance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/img_time"
+                    android:layout_alignBottom="@+id/img_time"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/img_time"
+                    android:gravity="center"
+                    android:text="Distancia" />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- Botones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/txt_rider_app"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="5dp"
+                android:paddingTop="15dp"
+                android:text="¿Desea atender al paciente?"
+                android:textSize="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_accept_booking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button_5"
+                    android:text="aceptar"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btn_decline_booking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_button_1"
+                    android:text="Declinar"
+                    android:textColor="@android:color/white" />
 
             </LinearLayout>
 
 
         </LinearLayout>
 
-    </ScrollView>
-</LinearLayout>
+
+    </LinearLayout>
+
+
+</ScrollView>
 
 
 
