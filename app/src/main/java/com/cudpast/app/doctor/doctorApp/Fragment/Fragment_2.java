@@ -88,8 +88,6 @@ public class Fragment_2 extends Fragment implements
 
     private FusedLocationProviderClient fusedLocationClient;
     boolean esta_online;
-    int valor1;
-
 
     public Fragment_2() {
 
@@ -103,14 +101,6 @@ public class Fragment_2 extends Fragment implements
         builGoogleApiClient();
         createLocationRequest();
 
-        if (savedInstanceState == null) {
-            Log.e(TAG, "Hola null 1");
-        } else {
-            valor1 = savedInstanceState.getInt("prueba2", 0);
-            Boolean prueba1 = savedInstanceState.getBoolean("prueba1");
-            Log.e(TAG, "onCreateView : savedInstanceState : prueba 1 " + prueba1);
-            Log.e(TAG, "onCreateView : savedInstanceState : prueba 2 " + valor1);
-        }
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
@@ -437,10 +427,9 @@ public class Fragment_2 extends Fragment implements
                             Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-        }catch (Exception e ){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
