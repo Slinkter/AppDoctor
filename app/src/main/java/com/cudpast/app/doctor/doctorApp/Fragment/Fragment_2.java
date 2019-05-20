@@ -148,7 +148,6 @@ public class Fragment_2 extends Fragment implements
                             FirebaseDatabase.getInstance().goOnline();
                             startLocationUpdate();
                             displayLocation();
-                            esta_online = true;
                             Toast.makeText(getContext(), "Online", Toast.LENGTH_SHORT).show();
                         } else {
                             if (marketDoctorCurrent != null) {
@@ -397,7 +396,8 @@ public class Fragment_2 extends Fragment implements
                         MY_PERMISSION_REQUEST_CODE);
                 //mLocationPermissionGranted = false; --> no lo tenia
             }
-        } catch (Exception e) {
+        }
+        catch (NullPointerException e) {
             e.printStackTrace();
         }
 
