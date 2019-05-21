@@ -1,6 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.R;
 
 
@@ -37,6 +39,7 @@ public class Fragment_5 extends Fragment {
             public void onClick(View v) {
 
                 System.exit(0);
+
 
 
                 //  Intent intent = new Intent(Intent.ACTION_MAIN);

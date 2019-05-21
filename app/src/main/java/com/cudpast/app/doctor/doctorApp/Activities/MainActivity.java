@@ -26,6 +26,7 @@ import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_4;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_5;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -106,7 +107,10 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.nav_d) {
             setFragment(4);
         } else if (id == R.id.nav_e) {
-            setFragment(5);
+            FirebaseAuth.getInstance().signOut();
+            Intent loginActivity = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(loginActivity);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -201,9 +205,9 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case 5:
                 //Salir
-                Fragment_5 fragment5 = new Fragment_5();
-                transaction.replace(R.id.fragment, fragment5);
-                transaction.commit();
+//                Fragment_5 fragment5 = new Fragment_5();
+//                transaction.replace(R.id.fragment, fragment5);
+//                transaction.commit();
                 break;
         }
 

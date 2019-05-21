@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
 
@@ -33,7 +34,7 @@
             android:layout_marginRight="20dp"
             android:ems="8"
             android:gravity="center"
-            android:hint="email"
+            android:hint="Correo"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
@@ -52,7 +53,7 @@
             android:layout_marginRight="20dp"
             android:ems="10"
             android:gravity="center"
-            android:hint="contraseña"
+            android:hint="Contraseña"
             android:inputType="textPassword"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
@@ -74,7 +75,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp" >
+            android:layout_margin="20dp">
 
             <Button
                 android:id="@+id/btnLogin"

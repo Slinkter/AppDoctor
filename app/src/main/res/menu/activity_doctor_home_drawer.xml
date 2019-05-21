@@ -26,7 +26,7 @@
             android:title="Perfil" />
         <item
             android:id="@+id/nav_e"
-            android:icon="@drawable/ic_nav_close"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
             android:state_checked="false"
             android:title="Salir" />
     </group>

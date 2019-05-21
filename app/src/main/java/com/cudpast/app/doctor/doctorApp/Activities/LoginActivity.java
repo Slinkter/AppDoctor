@@ -294,8 +294,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
             if (usuarioFirebase.isEmailVerified()) {
 
             }
-        } else {
-            Toast.makeText(this, "correo no verificado", Toast.LENGTH_SHORT).show();
         }
     }
 
