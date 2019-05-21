@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements
     TextView especialidadDoctor;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
