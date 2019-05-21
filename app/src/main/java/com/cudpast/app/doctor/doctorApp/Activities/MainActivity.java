@@ -31,7 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
-
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
 
@@ -39,9 +38,6 @@ public class MainActivity extends AppCompatActivity implements
     ImageView imageViewDoctor;
     TextView nameDoctor;
     TextView especialidadDoctor;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
     }
 
-
     //.LOGIN_ACTIVITY
     private void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
@@ -176,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    //.
     public void setFragment(int pos) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
