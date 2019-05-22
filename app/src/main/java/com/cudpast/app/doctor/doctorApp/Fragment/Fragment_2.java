@@ -148,7 +148,7 @@ public class Fragment_2 extends Fragment implements
                             FirebaseDatabase.getInstance().goOnline();
                             startLocationUpdate();
                             displayLocation();
-                            Toast.makeText(getContext(), "Online", Toast.LENGTH_SHORT).show();
+
                         } else {
                             if (marketDoctorCurrent != null) {
                                 FirebaseDatabase.getInstance().goOffline();
@@ -307,12 +307,13 @@ public class Fragment_2 extends Fragment implements
 
     //Bloque C
     private void displayLocation() {
-        Log.e(TAG, "=================================================================");
-        Log.e(TAG, "                          displayLocation()                      ");
-        Log.e(TAG, "Common.token_doctor : " + Common.token_doctor);
+
         //.Permisos
 
         try {
+            Log.e(TAG, "=================================================================");
+            Log.e(TAG, "                          displayLocation()                      ");
+            Log.e(TAG, "Common.token_doctor : " + Common.token_doctor);
             if (ContextCompat
                     .checkSelfPermission(getActivity(),
                             Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
