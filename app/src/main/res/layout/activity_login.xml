@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center"
     android:background="@color/white"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".Activities.LoginActivity">
 
@@ -87,7 +87,6 @@
                 android:clickable="true"
                 android:text="Ingresar"
                 android:textColor="@color/white" />
-
         </LinearLayout>
 
         <TextView
@@ -99,9 +98,5 @@
             android:textColor="@color/bottomText"
             android:textSize="16sp"
             android:textStyle="italic" />
-
-
     </LinearLayout>
-
-
 </LinearLayout>
