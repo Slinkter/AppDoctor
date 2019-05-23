@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Soporte.Token;
@@ -69,8 +68,6 @@ public class Fragment_2 extends Fragment implements
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
-
-
     private static final int PLAY_SERVICE_RES_REQUEST = 9000;
 
     private static int UPDATE_INTERVAL = 5000;
@@ -80,65 +77,58 @@ public class Fragment_2 extends Fragment implements
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
 
-    public DatabaseReference db_available_doctor, db_online_offline_user, db_currentUserRef;
+    public DatabaseReference db_available_doctor, db_online_offline_user, currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
-
-    public String current_user_UID;
-
+    public String currentUserUID;
     private FusedLocationProviderClient fusedLocationClient;
-    boolean esta_online;
 
     public Fragment_2() {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_2, container, false);
-
-        builGoogleApiClient();
-        createLocationRequest();
-
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
         builGoogleApiClient();
         createLocationRequest();
-
-        //-->
+        setUpLocation();
+        //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor
         //Obtener el UID del doctor
-        //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor  : g y l : 0 y 1
         //Obtener ubicación del doctor
-        //On or Off : escucha el switch
-        current_user_UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //On or Off : escuchar el switch
         db_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
-        db_currentUserRef = db_available_doctor.child(current_user_UID);
+        currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        currentUserRef = db_available_doctor.child(currentUserUID);
+        //
         db_online_offline_user = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-        db_online_offline_user.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                db_currentUserRef.onDisconnect().removeValue();
-                Log.e(TAG, "current_user_UID " + current_user_UID);
-                Log.e(TAG, "db_available_doctor " + db_available_doctor);
-                Log.e(TAG, "db_currentUserRef " + db_currentUserRef);
-                Log.e(TAG, "db_online_offline_user " + db_online_offline_user);
-            }
+        db_online_offline_user
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        currentUserRef.onDisconnect().removeValue();
+                        Log.e(TAG, "db_available_doctor : " + db_available_doctor);
+                        Log.e(TAG, "currentUserUID : " + currentUserUID);
+                        Log.e(TAG, "currentUserRef : " + currentUserRef);
+                        Log.e(TAG, "db_online_offline_user : " + db_online_offline_user);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled " + databaseError);
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e(TAG, "onCancelled " + databaseError);
+                    }
+                });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         Common.location_switch = rootView.findViewById(R.id.location_switch);
 
-        setUpLocation();
+
         updateFirebaseToken();
 
-        geoFire = new GeoFire(db_available_doctor);// g y (l : 0 y 1)
+        geoFire = new GeoFire(db_available_doctor);
 
         Common.location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
@@ -234,38 +224,44 @@ public class Fragment_2 extends Fragment implements
 
     private void setUpLocation() {
         Log.e(TAG, "=================================================================");
-        Log.e(TAG, "                          setUpLocation()()                      ");
-        //Si no tiene permisos de  ACCESS_COARSE_LOCATION && ACCESS_FINE_LOCATION
-        // Requerir permisos  de ACCESS_COARSE_LOCATION && ACCESS_FINE_LOCATION
-        // con el codigo MY_PERMISSION_REQUEST_CODE --> onRequestPermissionsResult
+        Log.e(TAG, "                          setUpLocation()                      ");
         if (ContextCompat
                 .checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat
                         .checkSelfPermission(getActivity(),
                                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSION_REQUEST_CODE);
+            //Solicitar permiso
+            solicitarPermisoCoarseFine();
+            Log.e(TAG, "=================================================================");
         } else {
-            // Si tiene los permisos
-            // verficiar el  checkPlayService
-            if (checkPlayService()) {
-                builGoogleApiClient();
-                createLocationRequest();
-                //solo ocurre si esta activado
-                if (Common.location_switch.isChecked()) {
-                    Log.e(TAG, " Off location ");
-                    displayLocation();
-                }
-            } else {
-                Log.e(TAG, "ERROR: checkPlayService()");
-            }
+            // Si tiene los permisos - verficiar el  checkPlayService
+            verificarServicio();
+            Log.e(TAG, "=================================================================");
         }
-        Log.e(TAG, "=================================================================");
+
+    }
+
+    private void solicitarPermisoCoarseFine() {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSION_REQUEST_CODE);
+    }
+
+    private void verificarServicio() {
+        if (checkPlayService()) {
+            builGoogleApiClient();
+            createLocationRequest();
+            //solo ocurre si esta activado
+            if (Common.location_switch.isChecked()) {
+                Log.e(TAG, " Off location ");
+                displayLocation();
+            }
+        } else {
+            Log.e(TAG, "ERROR: checkPlayService()");
+        }
     }
 
     //Bloque B
@@ -308,8 +304,6 @@ public class Fragment_2 extends Fragment implements
     //Bloque C
     private void displayLocation() {
 
-        //.Permisos
-
         try {
             Log.e(TAG, "=================================================================");
             Log.e(TAG, "                          displayLocation()                      ");
@@ -330,8 +324,8 @@ public class Fragment_2 extends Fragment implements
                             public void onSuccess(Location location) {
                                 if (location != null) {
                                     Common.mLastLocation = location;
-                                    Log.e(TAG, "location " + location);
-
+                                    Log.e(TAG, "location :" + location);
+                                    Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
                                 }
                             }
                         })
@@ -340,88 +334,62 @@ public class Fragment_2 extends Fragment implements
                             public void onFailure(@NonNull Exception e) {
                                 Log.e(TAG, "addOnFailureListener :" + e.getMessage());
                             }
-                        })
-
-                ;
-
-                Log.e(TAG, " Common.mLastLocation : " + Common.mLastLocation);
-                if (Common.mLastLocation != null) {
-                    if (Common.location_switch.isChecked()) {
-                        //
-                        final ProgressDialog mDialog = new ProgressDialog(getActivity());
-                        mDialog.setMessage("Actualizando su Ubicación...");
-                        mDialog.show();
-                        //
-                        final double latitude = Common.mLastLocation.getLatitude();
-                        final double longitud = Common.mLastLocation.getLongitude();
-                        String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
-
-                        Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
-                        Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
-                        Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
-
-                        geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                            @Override
-                            public void onComplete(String key, DatabaseError error) {
-
-                                if (marketDoctorCurrent != null) {
-                                    marketDoctorCurrent.remove();
-                                }
-                                MarkerOptions m1 = new MarkerOptions()
-                                        .position(new LatLng(latitude, longitud))
-                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
-                                        .title("Usted");
-                                //Dibujar al doctor en el mapa
-                                marketDoctorCurrent = mMap.addMarker(m1);
-                                LatLng doctorLL = new LatLng(latitude, longitud);
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
-                                mDialog.dismiss();
-                            }
                         });
 
-                    } else {
 
-                        Log.e(TAG, "ERROR: no es checkeado");
-                    }
+                if (Common.mLastLocation != null && Common.location_switch.isChecked()) {
+                    //
+                    final ProgressDialog mDialog = new ProgressDialog(getActivity());
+                    mDialog.setMessage("Actualizando su Ubicación...");
+                    mDialog.show();
+                    //
+                    final double latitude = Common.mLastLocation.getLatitude();
+                    final double longitud = Common.mLastLocation.getLongitude();
+                    String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
+
+                    Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
+                    Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
+                    Log.e(TAG, " Common.mLastLocation.getLongitude() :  " + longitud);
+
+                    geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+
+                            if (marketDoctorCurrent != null) {
+                                marketDoctorCurrent.remove();
+                            }
+                            MarkerOptions m1 = new MarkerOptions()
+                                    .position(new LatLng(latitude, longitud))
+                                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
+                                    .title("Usted");
+                            //Dibujar al doctor en el mapa
+                            marketDoctorCurrent = mMap.addMarker(m1);
+                            LatLng doctorLL = new LatLng(latitude, longitud);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                            mDialog.dismiss();
+                        }
+                    });
                 } else {
                     Log.e(TAG, "ERROR: Cannot get your location");
+                    Log.e(TAG, "ERROR: no es checkeado");
                 }
                 Log.e(TAG, "=================================================================");
-
-
             } else {
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{
                                 Manifest.permission.ACCESS_COARSE_LOCATION,
                                 Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSION_REQUEST_CODE);
-                //mLocationPermissionGranted = false; --> no lo tenia
+
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
-
-
-    }
-
-    private void stopLocationUpdate() {
-        if (ContextCompat
-                .checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat
-                        .checkSelfPermission(getActivity(),
-                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-        Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
     }
 
     private void startLocationUpdate() {
-        Log.e(TAG, "startLocationUpdate()");
-
         try {
+            Log.e(TAG, "startLocationUpdate()");
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(getActivity(),
@@ -431,12 +399,27 @@ public class Fragment_2 extends Fragment implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
-    //Bloque D
+    private void stopLocationUpdate() {
+        try {
+            Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
+            if (ContextCompat
+                    .checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat
+                            .checkSelfPermission(getActivity(),
+                                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());

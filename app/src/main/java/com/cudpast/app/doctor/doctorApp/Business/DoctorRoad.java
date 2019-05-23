@@ -125,7 +125,7 @@ public class DoctorRoad extends FragmentActivity implements
     LocationCallback mLocationCallback;
 
     TextView id_tiempoDoctorRoad, id_distanciaDoctorRoad;
-
+    //todo: Cambios en doctor road , hacer que cuando llegue se muestre un alertDialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +137,7 @@ public class DoctorRoad extends FragmentActivity implements
         //*************************************************
         ubicacion = LocationServices.getFusedLocationProviderClient(this);
 
-        btnSendNotiArrived = findViewById(R.id.btnSendNotiArrived);
+//        btnSendNotiArrived = findViewById(R.id.btnSendNotiArrived);
         btn_ruta_cancelar = findViewById(R.id.btn_ruta_cancelar);
 
         id_tiempoDoctorRoad = findViewById(R.id.id_tiempoDoctorRoad);
@@ -222,17 +222,18 @@ public class DoctorRoad extends FragmentActivity implements
 
                         Log.e(TAG, "Send Notif key" + key);
                         Log.e(TAG, "Send Notif location" + location);
+                        ShowPopupNotification();
 
-                        btnSendNotiArrived.setEnabled(true);
-                        btnSendNotiArrived.setVisibility(View.VISIBLE);
-
-                        btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                sendArriveNotification(idTokenPaciente);
-                                Toast.makeText(DoctorRoad.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+//                        btnSendNotiArrived.setEnabled(true);
+//                        btnSendNotiArrived.setVisibility(View.VISIBLE);
+//
+//                        btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                sendArriveNotification(idTokenPaciente);
+//                                Toast.makeText(DoctorRoad.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
 
                     }
 
@@ -506,31 +507,34 @@ public class DoctorRoad extends FragmentActivity implements
         //parte 014
         Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        //
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
         String titile = "Arrived";
         String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
-
+        //
         Notification notification = new Notification(titile, body);
         Sender sender = new Sender(tokenpaciente, notification);
-
+        //
         ubicacion.removeLocationUpdates(mLocationCallback);
+        //
+        mFCMService
+                .sendMessage(sender)
+                .enqueue(new Callback<FCMResponse>() {
+                    @Override
+                    public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                        if (response.body().success != 1) {
+                            Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-        mFCMService.sendMessage(sender).enqueue(new Callback<FCMResponse>() {
-            @Override
-            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                if (response.body().success != 1) {
-                    Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<FCMResponse> call, Throwable t) {
-                Toast.makeText(DoctorRoad.this, "onFailure", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(Call<FCMResponse> call, Throwable t) {
+                        Toast.makeText(DoctorRoad.this, "onFailure", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         //APP Doctor
         startActivity(intent);
@@ -621,6 +625,40 @@ public class DoctorRoad extends FragmentActivity implements
 
 
     }
+
+
+    public void ShowPopupNotification() {
+
+        //**
+        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.pop_up_notification, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+        view.setKeepScreenOn(true);
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        Button btn_notificationPaciente;
+        btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
+
+
+        btn_notificationPaciente
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        sendArriveNotification(idTokenPaciente);
+                        Toast.makeText(getApplicationContext(), "Notificando", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+
+        dialog.show();
+
+
+    }
+
 
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
