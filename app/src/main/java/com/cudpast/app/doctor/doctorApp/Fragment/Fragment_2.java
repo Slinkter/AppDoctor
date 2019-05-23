@@ -260,7 +260,7 @@ public class Fragment_2 extends Fragment implements
                 displayLocation();
             }
         } else {
-            Log.e(TAG, "ERROR: checkPlayService()");
+            Log.e(TAG, "error : verificarServicio()");
         }
     }
 
