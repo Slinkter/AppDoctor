@@ -5,6 +5,7 @@ public class UserPaciente {
     private String dni,correo,password,nombre,apellido,telefono,fecha, direcion;
 
     public UserPaciente() {
+        //este constructor esta vacio
     }
 
     public UserPaciente(String dni, String correo, String password, String nombre, String apellido, String telefono, String fecha, String direcion) {
