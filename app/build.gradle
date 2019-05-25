@@ -4,10 +4,10 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.cudpast.app.doctor.doctorApp"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 27
-        versionCode 12
-        versionName "1.12"
+        versionCode 13
+        versionName "1.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
