@@ -1,5 +1,6 @@
 package com.cudpast.app.doctor.doctorApp.Activities;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,8 @@ public class IntroActivity extends AppIntro {
         addSlide(SampleSlide.newInstance(R.layout.slide_3));
 
         showSkipButton(false);
-
+        askForPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+        askForPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
 
     }
 

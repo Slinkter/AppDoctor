@@ -11,8 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Bienvenido "
-        android:textColor="#ffff" />
+        android:text="Bienvenido"
+        android:textColor="@color/white"
+        android:textSize="35dp"
+        android:textStyle="bold" />
 
     <ImageView
         android:layout_width="140dp"
@@ -25,9 +27,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Servicio de Consulta medica privada"
-        android:textColor="#ffff" />
-
+        android:text="Servicio de Consulta Medica Privada"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 
 
 </LinearLayout>
