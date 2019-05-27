@@ -75,6 +75,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
         permisos();
+
+        Intent intent =  new Intent(this,IntroActivity.class);
+        startActivity(intent);
+
         //
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();

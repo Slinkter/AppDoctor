@@ -95,7 +95,7 @@ public class Fragment_2 extends Fragment implements
         mapFragment.getMapAsync(this);
         builGoogleApiClient();
         createLocationRequest();
-        setUpLocation();
+
         //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor
         //Obtener el UID del doctor
         //Obtener ubicación del doctor
@@ -129,7 +129,7 @@ public class Fragment_2 extends Fragment implements
         updateFirebaseToken();
 
         geoFire = new GeoFire(db_available_doctor);
-
+        setUpLocation();
         Common.location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
                     @Override

@@ -32,5 +32,9 @@
     <color name="colorRed">#C4D30808</color>
     <color name="backgroundRegistro">#9A1FBAD6</color>
 
+    <color name="slide_1">#00bcd4</color>
+    <color name="slide_2">#FFA000</color>
+    <color name="slide_3">#C4D30808</color>
+
 
 </resources>
