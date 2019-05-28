@@ -92,7 +92,7 @@ public class DoctorRoad extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
         LocationListener {
 
-    private static String TAG = DoctorRoad.class.getName();
+    private static String TAG = DoctorRoad.class.getSimpleName();
     //Google Play Service -->
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
     private GoogleApiClient mGoogleApiCliente;
