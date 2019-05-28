@@ -32,6 +32,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
+
     //son dos casos
     //1.El usuario enviar una solicitud de atencion
     //2.El usuario cancela en cualquier momento la solicutud de atencion
@@ -45,65 +46,75 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                 MyFirebaseMessaging                    ");
-        Log.e(TAG, "" + remoteMessage.getData().get("title"));
-        Log.e(TAG, "" + remoteMessage.getData().get("body"));
-        Log.e(TAG, "" + remoteMessage.getData().get("pToken"));
-        Log.e(TAG, "" + remoteMessage.getData().get("dToken"));
-        Log.e(TAG, "" + remoteMessage.getData().get("json_lat_log"));
-        Log.e(TAG, "" + remoteMessage.getData().get("pacienteUID"));
+
+        Log.e(TAG, "title : " + remoteMessage.getData().get("title"));
+        Log.e(TAG, "body : " + remoteMessage.getData().get("body"));
+        Log.e(TAG, "pToken : " + remoteMessage.getData().get("pToken"));
+        Log.e(TAG, "dToken : " + remoteMessage.getData().get("dToken"));
+        Log.e(TAG, "json_lat_log : " + remoteMessage.getData().get("json_lat_log"));
+        Log.e(TAG, "pacienteUID : " + remoteMessage.getData().get("pacienteUID"));
+        //Casos
+        String caso_1 = "Usted tiene una solicutud de atención";
+        String caso_2 = "El usuario ha cancelado";
+        String caso_3 = "El usuario ha finalizado";
+        String caso_4 = "Tiempo fuera";
+        String caso_5 = "El usuario ha cancelado durante el servicio";
+        //
+        String body = remoteMessage.getData().get("body");
         //.Booking
-        if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Usted tiene una solicutud de atención")) {
+        if ((body).equalsIgnoreCase(caso_1)) {
             doctorBooking(remoteMessage);
-        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado")) {
+        } else if ((body).equalsIgnoreCase(caso_2)) {
             doctorCanceled(remoteMessage);
-        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha finalizado")) {
+        } else if ((body).equalsIgnoreCase(caso_3)) {
             doctorUserEnded();
-        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("Tiempo fuera")) {
+        } else if ((body).equalsIgnoreCase(caso_4)) {
             timeOutRequestDoctor(remoteMessage);
-        } else if ((remoteMessage.getData().get("body")).equalsIgnoreCase("El usuario ha cancelado durante el servicio")) {
+        } else if ((body).equalsIgnoreCase(caso_5)) {
             doctorCanceledOnRoad(remoteMessage);
         }
     }
 
 
-    private void doctorBooking(RemoteMessage remoteMessage) {
+    private void doctorBooking(RemoteMessage message) {
 
         Log.e(TAG, "========================================================");
-        Log.e(TAG, "       Atención Medica             ");
-        LatLng customer_location = new Gson().fromJson(remoteMessage.getData().get("json_lat_log"), LatLng.class);
+        Log.e(TAG, "Caso 1 : ");
+        LatLng customer_location = new Gson().fromJson(message.getData().get("json_lat_log"), LatLng.class);
+
         Intent intent = new Intent(this, DoctorBooking.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        intent.putExtra("title", remoteMessage.getData().get("title"));
-        intent.putExtra("body", remoteMessage.getData().get("body"));
-        intent.putExtra("pToken", remoteMessage.getData().get("pToken"));
-        intent.putExtra("dToken", remoteMessage.getData().get("dToken"));
+        //
+        intent.putExtra("title", message.getData().get("title"));
+        intent.putExtra("body", message.getData().get("body"));
+        intent.putExtra("pToken", message.getData().get("pToken"));
+        intent.putExtra("dToken", message.getData().get("dToken"));
         intent.putExtra("lat", customer_location.latitude);
         intent.putExtra("lng", customer_location.longitude);
-        intent.putExtra("pacienteUID", remoteMessage.getData().get("pacienteUID"));
+        intent.putExtra("pacienteUID", message.getData().get("pacienteUID"));
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
         builder
-                .setContentTitle(remoteMessage.getData().get("title"))
-                .setContentText(remoteMessage.getData().get("body"))
-                .setSmallIcon(R.drawable.ic_local_hospital_black)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance))
+                .setContentTitle(message.getData().get("title"))
+                .setContentText(message.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_local_hospital_black)//icono de la notificacion
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance)) // imagen del mensaje
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setColorized(true)
                 .setContentIntent(pendingIntent);
-
+        //
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            appChannel.setDescription(remoteMessage.getData().get("body"));
-            appChannel.enableLights(true);
+            appChannel.setDescription(message.getData().get("body"));
             appChannel.setLightColor(Color.GREEN);
-            appChannel.enableVibration(true);
             appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            appChannel.enableLights(true);
+            appChannel.enableVibration(true);
             notificationManager.createNotificationChannel(appChannel);
         } else {
             int color = getResources().getColor(R.color.colorRed);
