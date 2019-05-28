@@ -143,15 +143,13 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         //
         final SpotsDialog waitingDialog = new SpotsDialog(DoctorBooking.this, R.style.DialogUpdateDoctorEnviando);
         waitingDialog.show();
-
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         Notification notification = new Notification("Acepta", "Su medico esta en camino");
         Data data = new Data(doctorUID);
         Sender sender = new Sender(sIdTokenPaciente, notification, data);
-        //todo : hay que poner un Alert Dialog
         //todo : esto no ayudaa a controlar el envio de mensaje o notificacion
+        //todo :
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
@@ -162,7 +160,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Log.e(TAG, "response.body().results       : " + response.body().results.get(0));
                         Log.e(TAG, "response.body().canonical_ids : " + response.body().canonical_ids);
                         Log.e(TAG, "response.body().multicast_id  : " + response.body().multicast_id);
-
 
                         if (response.body().success == 1 ) {
                             waitingDialog.dismiss();
@@ -180,7 +177,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                             intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
                             startActivity(intent);
                             finish();
-
                         }
                     }
 
