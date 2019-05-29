@@ -145,11 +145,10 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         waitingDialog.show();
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Notification notification = new Notification("Acepta", "Su medico esta en camino");
-        Data data = new Data(doctorUID);
-        Sender sender = new Sender(sIdTokenPaciente, notification, data);
-        //todo : esto no ayudaa a controlar el envio de mensaje o notificacion
-        //todo :
+        Data data = new Data("APP Doctor", "Acepta","",doctorUID , "","");
+        Sender sender = new Sender(sIdTokenPaciente,  data);
+        //todo : esto nos ayuda a controlar el envio de mensaje o notificacion
+        //todo : se debe crear una db para controlar la session
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
@@ -183,6 +182,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
                         Log.e(TAG, "onFailure : " + t.getMessage());
+                        waitingDialog.dismiss();
                         Intent intent = new Intent(DoctorBooking.this, DoctorError.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -197,13 +197,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     private void cancelBooking(String IdToken) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelBooking             ");
-
+        //
+        final SpotsDialog waitingDialog = new SpotsDialog(DoctorBooking.this, R.style.DialogUpdateDoctorEnviando);
+        waitingDialog.show();
+        //Enviar Notificacion hacia el paciente
         Token token = new Token(IdToken);
         String title = "Cancel";
         String body = "el doctor ha cancelado la solicitud";
-
         //todo : mover la toggle (palanca) para que se active online
-
         Notification notification = new Notification(title, body);
         Sender sender = new Sender(token.getToken(), notification);
 
@@ -217,10 +218,12 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
+                            waitingDialog.dismiss();
                             Log.e(TAG, "response.body().success : " + response.body().success);
                             Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
 
                         } else {
+                            waitingDialog.dismiss();
                             Toast.makeText(DoctorBooking.this, "Failed ! ", Toast.LENGTH_SHORT).show();
                         }
                     }

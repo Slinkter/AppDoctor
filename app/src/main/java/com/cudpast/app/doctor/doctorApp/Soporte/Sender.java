@@ -20,6 +20,11 @@ public class Sender {
         this.data = data;
     }
 
+    public Sender(String to, Data data) {
+        this.to = to;
+        this.data = data;
+    }
+
     public String getTo() {
         return to;
     }

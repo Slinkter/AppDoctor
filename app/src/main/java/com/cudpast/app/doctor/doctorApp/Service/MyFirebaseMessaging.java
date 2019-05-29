@@ -46,32 +46,33 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "                 MyFirebaseMessaging                    ");
-
+        //
         Log.e(TAG, "title : " + remoteMessage.getData().get("title"));
         Log.e(TAG, "body : " + remoteMessage.getData().get("body"));
         Log.e(TAG, "pToken : " + remoteMessage.getData().get("pToken"));
         Log.e(TAG, "dToken : " + remoteMessage.getData().get("dToken"));
         Log.e(TAG, "json_lat_log : " + remoteMessage.getData().get("json_lat_log"));
         Log.e(TAG, "pacienteUID : " + remoteMessage.getData().get("pacienteUID"));
-        //Casos
+        //Casos -- Funciona con data
         String caso_1 = "Usted tiene una solicutud de atención";
         String caso_2 = "El usuario ha cancelado";
-        String caso_3 = "El usuario ha finalizado";
-        String caso_4 = "Tiempo fuera";
-        String caso_5 = "El usuario ha cancelado durante el servicio";
-        //
+        String caso_3 = "Tiempo fuera";
+        String caso_4 = "El usuario ha cancelado durante el servicio";
+        String caso_5 = "El usuario ha finalizado";
+        //.
         String body = remoteMessage.getData().get("body");
-        //.Booking
+        //.
         if ((body).equalsIgnoreCase(caso_1)) {
             doctorBooking(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_2)) {
             doctorCanceled(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_3)) {
-            doctorUserEnded();
-        } else if ((body).equalsIgnoreCase(caso_4)) {
             timeOutRequestDoctor(remoteMessage);
-        } else if ((body).equalsIgnoreCase(caso_5)) {
+        } else if ((body).equalsIgnoreCase(caso_4)) {
             doctorCanceledOnRoad(remoteMessage);
+        } else if ((body).equalsIgnoreCase(caso_5)) {
+            doctorUserEnded();
+
         }
     }
 

@@ -1,34 +1,24 @@
 package com.cudpast.app.doctor.doctorApp.Soporte;
 
 public class Data {
-
     public String title;
-    public String descripcion;
-    public String extra;
+    public String body;
+    public String pToken;
+    public String dToken;
+    public String json_lat_log;
+    public String pacienteUID;
 
     public Data() {
+
     }
 
-
-    public Data(String title, String descripcion) {
+    public Data(String title, String body, String pToken, String dToken, String json_lat_log, String pacienteUID) {
         this.title = title;
-        this.descripcion = descripcion;
-    }
-
-    public Data(String extra) {
-        this.extra = extra;
-    }
-
-
-
-
-
-    public String getExtra() {
-        return extra;
-    }
-
-    public void setExtra(String extra) {
-        this.extra = extra;
+        this.body = body;
+        this.pToken = pToken;
+        this.dToken = dToken;
+        this.json_lat_log = json_lat_log;
+        this.pacienteUID = pacienteUID;
     }
 
     public String getTitle() {
@@ -39,11 +29,43 @@ public class Data {
         this.title = title;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getBody() {
+        return body;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public String getpToken() {
+        return pToken;
+    }
+
+    public void setpToken(String pToken) {
+        this.pToken = pToken;
+    }
+
+    public String getdToken() {
+        return dToken;
+    }
+
+    public void setdToken(String dToken) {
+        this.dToken = dToken;
+    }
+
+    public String getJson_lat_log() {
+        return json_lat_log;
+    }
+
+    public void setJson_lat_log(String json_lat_log) {
+        this.json_lat_log = json_lat_log;
+    }
+
+    public String getPacienteUID() {
+        return pacienteUID;
+    }
+
+    public void setPacienteUID(String pacienteUID) {
+        this.pacienteUID = pacienteUID;
     }
 }
