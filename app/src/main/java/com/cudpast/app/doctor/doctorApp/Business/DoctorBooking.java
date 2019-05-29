@@ -238,7 +238,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     }
 
     //Cargar duración distancia y direccion final
-    private void getDirection(double lat, double lng, String mpacienteUID) {
+    private void getDirection(final double lat, final double lng, String mpacienteUID) {
 
         tb_Info_Paciente
                 .child(mpacienteUID)
@@ -250,6 +250,54 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Common.currentPaciente = userPaciente;
                         textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
                         Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
+                        String requestApi = null;
+
+                        try {
+                            requestApi =
+                                    "https://maps.googleapis.com/maps/api/directions/json?" +
+                                            "mode=driving&" +
+                                            "transit_routing_preference=less_driving&" +
+                                            "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
+                                            "destination=" + lat + "," + lng + "&" +
+                                            "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
+
+                            mService.getPath(requestApi)
+                                    .enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> response) {
+                                            try {
+
+                                                JSONObject jsonObject = new JSONObject(response.body().toString());
+
+                                                JSONArray routes = jsonObject.getJSONArray("routes");
+                                                JSONObject object = routes.getJSONObject(0);
+                                                JSONArray legs = object.getJSONArray("legs");
+                                                JSONObject legsObject = legs.getJSONObject(0);
+                                                //
+                                                JSONObject distance = legsObject.getJSONObject("distance");
+                                                textDistance.setText(distance.getString("text"));
+                                                //
+                                                JSONObject time = legsObject.getJSONObject("duration");
+                                                textTime.setText(time.getString("text"));
+                                                //
+                                                String address = legsObject.getString("end_address");
+                                                textAddress.setText(address);
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
+                                            Toast.makeText(DoctorBooking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                            //59:06
+                                        }
+                                    });
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -259,54 +307,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 });
 
 
-        String requestApi = null;
 
-        try {
-            requestApi =
-                    "https://maps.googleapis.com/maps/api/directions/json?" +
-                            "mode=driving&" +
-                            "transit_routing_preference=less_driving&" +
-                            "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
-                            "destination=" + lat + "," + lng + "&" +
-                            "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-
-            mService.getPath(requestApi)
-                    .enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            try {
-
-                                JSONObject jsonObject = new JSONObject(response.body().toString());
-
-                                JSONArray routes = jsonObject.getJSONArray("routes");
-                                JSONObject object = routes.getJSONObject(0);
-                                JSONArray legs = object.getJSONArray("legs");
-                                JSONObject legsObject = legs.getJSONObject(0);
-                                //
-                                JSONObject distance = legsObject.getJSONObject("distance");
-                                textDistance.setText(distance.getString("text"));
-                                //
-                                JSONObject time = legsObject.getJSONObject("duration");
-                                textTime.setText(time.getString("text"));
-                                //
-                                String address = legsObject.getString("end_address");
-                                textAddress.setText(address);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Toast.makeText(DoctorBooking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                            //59:06
-                        }
-                    });
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
