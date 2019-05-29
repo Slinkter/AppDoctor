@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Soporte.Data;
 import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
 import com.cudpast.app.doctor.doctorApp.Soporte.Notification;
 import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
@@ -82,6 +83,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -220,20 +222,7 @@ public class DoctorRoad extends FragmentActivity implements
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
 
-                        Log.e(TAG, "Send Notif key" + key);
-                        Log.e(TAG, "Send Notif location" + location);
                         ShowPopupNotification();
-
-//                        btnSendNotiArrived.setEnabled(true);
-//                        btnSendNotiArrived.setVisibility(View.VISIBLE);
-//
-//                        btnSendNotiArrived.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                sendArriveNotification(idTokenPaciente);
-//                                Toast.makeText(DoctorRoad.this, "Click para Notificar al Cliente", Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
 
                     }
 
@@ -301,8 +290,7 @@ public class DoctorRoad extends FragmentActivity implements
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
-
-    //######################################################
+    //.
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
@@ -327,17 +315,18 @@ public class DoctorRoad extends FragmentActivity implements
                                 Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
                                 //-->
                                 //guardar cada vez que cambie la ubicacion del usario
-                                geoFire.setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                                geoFire
+                                        .setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
                                     @Override
                                     public void onComplete(String key, DatabaseError error) {
-                                        Log.e(TAG, "==========  geofire  ======== ");
+
                                         Log.e(TAG, "inserto en la geofire");
                                         Log.e(TAG, "key" + key);
                                         Log.e(TAG, "firebaseUserUID" + doctorUid);
                                         Log.e(TAG, "latitude" + latitude);
                                         Log.e(TAG, "longitud" + longitud);
                                         Log.e(TAG, "error" + error);
-                                        Log.e(TAG, "==========  FIN  ======== ");
+
                                     }
                                 });
                                 mMap.clear();
@@ -349,6 +338,8 @@ public class DoctorRoad extends FragmentActivity implements
                                         .fillColor(0x220000FF)
                                         .strokeWidth(5.0f));
                                 getRoadRealTime();
+
+                                Log.e(TAG, "=================================================================");
                             }
                         }
                     });
@@ -360,7 +351,7 @@ public class DoctorRoad extends FragmentActivity implements
     //.
     private void getRoadRealTime() {
         Log.e(TAG, "=============================================================");
-        Log.e(TAG, "                     getRoadRealTime()                          ");
+        Log.e(TAG, "                     getRoadRealTime()                       ");
         LatLng currentPosition = new LatLng(Common.mLastLocation.getLatitude(), Common.mLastLocation.getLongitude());
         String requestApi = null;
         try {
@@ -504,17 +495,16 @@ public class DoctorRoad extends FragmentActivity implements
     private void sendArriveNotification(String customerId) {
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
-        //parte 014
-        Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        //
+        final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
+        waitingDialog.show();
+       //
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
-        String titile = "Arrived";
-        String body = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
+        String title =  String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
+        String body = "Arrived";
         //
-        Notification notification = new Notification(titile, body);
-        Sender sender = new Sender(tokenpaciente, notification);
+        Data data = new Data(title, body,"","" , "","");
+        Sender sender = new Sender(tokenpaciente, data);
         //
         ubicacion.removeLocationUpdates(mLocationCallback);
         //
@@ -524,40 +514,53 @@ public class DoctorRoad extends FragmentActivity implements
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success != 1) {
+                            waitingDialog.dismiss();
                             Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
+                            Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
+                            startActivity(intentError);
+                            finish();
+                            Log.e(TAG, "=====================================================");
                         } else {
+                            waitingDialog.dismiss();
                             Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                            Log.e(TAG, "=====================================================");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        Toast.makeText(DoctorRoad.this, "onFailure", Toast.LENGTH_SHORT).show();
+                        waitingDialog.dismiss();
+                        Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
+                        Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
+                        startActivity(intentError);
+                        finish();
+                        Log.e(TAG, "=====================================================");
                     }
                 });
 
-        //APP Doctor
-        startActivity(intent);
-        finish();
-        //parte014
     }
 
     private void cancelBooking(String IdToken) {
+        //todo : mover la toggle (palanca) para que se active online
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelBooking             ");
-
         Token token = new Token(IdToken);
-        String title = "Cancel";
-        String body = "el doctor ha cancelado la solicitud";
+        String title = "El doctor ha cancelado la solicitud";
+        String body = "Cancel";
 
-        //todo : mover la toggle (palanca) para que se active online
+        final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
+        waitingDialog.show();
 
-        Notification notification = new Notification(title, body);
-        Sender sender = new Sender(token.getToken(), notification);
+        Data data = new Data(title, body,"","" , "","");
+        Sender sender = new Sender(token.getToken(), data);
 
-        Log.e(TAG, "token        : " + token);
-        Log.e(TAG, "notification : " + notification);
-        Log.e(TAG, "sender       : " + sender);
+        Log.e(TAG, "token    : " + token);
+        Log.e(TAG, "data     : " + data);
+        Log.e(TAG, "sender   : " + sender);
 
         mFCMService
                 .sendMessage(sender)
@@ -566,21 +569,25 @@ public class DoctorRoad extends FragmentActivity implements
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
                             Log.e(TAG, "response.body().success : " + response.body().success);
-
+                            waitingDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "Cita ha sido cancelado", Toast.LENGTH_SHORT).show();
-
+                            finish();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Failed ! ", Toast.LENGTH_SHORT).show();
+                            waitingDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "Fallo la cancelación de la cita", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        Log.e(TAG, "error : " + t.getMessage());
+                        waitingDialog.dismiss();
+                        Log.e(TAG, "error : al enviar la notificación " + t.getMessage());
+                        finish();
                     }
 
                 });
-        finish();
+
     }
 
     public void ShowPopupCancelar() {
