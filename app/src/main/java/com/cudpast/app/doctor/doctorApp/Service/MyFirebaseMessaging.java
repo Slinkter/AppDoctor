@@ -86,6 +86,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Intent intent = new Intent(this, DoctorBooking.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         //
+
+        //
         intent.putExtra("title", message.getData().get("title"));
         intent.putExtra("body", message.getData().get("body"));
         intent.putExtra("pToken", message.getData().get("pToken"));

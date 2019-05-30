@@ -198,8 +198,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelBooking             ");
         //
-        final SpotsDialog waitingDialog = new SpotsDialog(DoctorBooking.this, R.style.DialogUpdateDoctorEnviando);
-        waitingDialog.show();
+
         //Enviar Notificacion hacia el paciente
         Token token = new Token(IdToken);
         String title = "Cancel";
@@ -218,12 +217,12 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
-                            waitingDialog.dismiss();
+
                             Log.e(TAG, "response.body().success : " + response.body().success);
                             Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
 
                         } else {
-                            waitingDialog.dismiss();
+
                             Toast.makeText(DoctorBooking.this, "Failed ! ", Toast.LENGTH_SHORT).show();
                         }
                     }
