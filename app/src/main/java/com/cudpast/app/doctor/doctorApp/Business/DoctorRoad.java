@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Soporte.Data;
 import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
-import com.cudpast.app.doctor.doctorApp.Soporte.Notification;
 import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
 import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -75,7 +74,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -139,7 +137,6 @@ public class DoctorRoad extends FragmentActivity implements
         //*************************************************
         ubicacion = LocationServices.getFusedLocationProviderClient(this);
 
-//        btnSendNotiArrived = findViewById(R.id.btnSendNotiArrived);
         btn_ruta_cancelar = findViewById(R.id.btn_ruta_cancelar);
 
         id_tiempoDoctorRoad = findViewById(R.id.id_tiempoDoctorRoad);
@@ -544,16 +541,13 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    private void cancelBooking(String IdToken) {
-        //todo : mover la toggle (palanca) para que se active online
+    private void cancelServiceOnRoad(String IdToken) {
+
         Log.e(TAG, "==========================================");
-        Log.e(TAG, "                cancelBooking             ");
+        Log.e(TAG, "                cancelServiceOnRoad             ");
         Token token = new Token(IdToken);
         String title = "El doctor ha cancelado la solicitud";
         String body = "Cancel";
-
-        final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
-        waitingDialog.show();
 
         Data data = new Data(title, body,"","" , "","");
         Sender sender = new Sender(token.getToken(), data);
@@ -569,11 +563,11 @@ public class DoctorRoad extends FragmentActivity implements
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
                             Log.e(TAG, "response.body().success : " + response.body().success);
-                            waitingDialog.dismiss();
+
                             Toast.makeText(getApplicationContext(), "Cita ha sido cancelado", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
-                            waitingDialog.dismiss();
+
                             Toast.makeText(getApplicationContext(), "Fallo la cancelación de la cita", Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -581,7 +575,7 @@ public class DoctorRoad extends FragmentActivity implements
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        waitingDialog.dismiss();
+
                         Log.e(TAG, "error : al enviar la notificación " + t.getMessage());
                         finish();
                     }
@@ -612,7 +606,7 @@ public class DoctorRoad extends FragmentActivity implements
                         Toast.makeText(getApplicationContext(), "Si", Toast.LENGTH_SHORT).show();
                         doctorService.onDisconnect().removeValue();
                         FirebaseDatabase.getInstance().goOffline();
-                        cancelBooking(idTokenPaciente);
+                        cancelServiceOnRoad(idTokenPaciente);
                         dialog.dismiss();
                         finish();
 

@@ -120,14 +120,12 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             public void onClick(View view) {
 
                 aceptBooking(pToken);
-
             }
         });
         //.
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if (!TextUtils.isEmpty(pToken))
                     cancelBooking(pToken);
             }
@@ -137,7 +135,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     }
 
     //.
-    private void aceptBooking(final String  sIdTokenPaciente) {
+    private void aceptBooking(final String sIdTokenPaciente) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                AceptBooking              ");
         //
@@ -145,8 +143,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         waitingDialog.show();
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Data data = new Data("APP Doctor", "Acepta","",doctorUID , "","");
-        Sender sender = new Sender(sIdTokenPaciente,  data);
+        Data data = new Data("APP Doctor", "Acepta", "", doctorUID, "", "");
+        Sender sender = new Sender(sIdTokenPaciente, data);
         //todo : esto nos ayuda a controlar el envio de mensaje o notificacion
         //todo : se debe crear una db para controlar la session
         mFCMService
@@ -160,7 +158,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Log.e(TAG, "response.body().canonical_ids : " + response.body().canonical_ids);
                         Log.e(TAG, "response.body().multicast_id  : " + response.body().multicast_id);
 
-                        if (response.body().success == 1 ) {
+                        if (response.body().success == 1) {
                             waitingDialog.dismiss();
                             Log.e(TAG, "onResponse: success");
                             Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
@@ -197,18 +195,16 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     private void cancelBooking(String IdToken) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelBooking             ");
-        //
-
         //Enviar Notificacion hacia el paciente
         Token token = new Token(IdToken);
-        String title = "Cancel";
-        String body = "el doctor ha cancelado la solicitud";
-        //todo : mover la toggle (palanca) para que se active online
-        Notification notification = new Notification(title, body);
-        Sender sender = new Sender(token.getToken(), notification);
+        String title = "el doctor ha cancelado la solicitud";
+        String body = "rechaza";
+        //
+        Data data = new Data(title, body, "", "", "", "");
+        Sender sender = new Sender(token.getToken(), data);
 
         Log.e(TAG, "token        : " + token);
-        Log.e(TAG, "notification : " + notification);
+        Log.e(TAG, "data         : " + data);
         Log.e(TAG, "sender       : " + sender);
 
         mFCMService
@@ -217,13 +213,10 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
-
                             Log.e(TAG, "response.body().success : " + response.body().success);
                             Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
-
                         } else {
-
-                            Toast.makeText(DoctorBooking.this, "Failed ! ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorBooking.this, "error al responder", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -304,8 +297,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Log.e(TAG, " databaseError : " + databaseError.getMessage());
                     }
                 });
-
-
 
 
     }

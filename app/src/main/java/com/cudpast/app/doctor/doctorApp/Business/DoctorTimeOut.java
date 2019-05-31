@@ -20,8 +20,6 @@ public class DoctorTimeOut extends AppCompatActivity {
         setContentView(R.layout.activity_doctor_time_out);
         if (Common.location_switch == null) {
             Log.e(TAG, "NULL");
-        } else {
-            Common.location_switch.toggle();
         }
 
     }

@@ -7,24 +7,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
-import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancel;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancelOnRoad;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorFinish;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorTimeOut;
-import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -65,7 +59,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         if ((body).equalsIgnoreCase(caso_1)) {
             doctorBooking(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_2)) {
-            doctorCanceled(remoteMessage);
+            pacienteConsultaCanceled(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_3)) {
             timeOutRequestDoctor(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_4)) {
@@ -134,10 +128,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void doctorCanceled(RemoteMessage remoteMessage) {
-
+    private void pacienteConsultaCanceled(RemoteMessage remoteMessage) {
         Log.e(TAG, "========================================================");
-        Log.e(TAG, "        El usuario ha cancelado             ");
+        Log.e(TAG, "        El paciente ha cancelado  la consulta           ");
         Intent intent = new Intent(this, DoctorCancel.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -146,7 +139,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     private void doctorCanceledOnRoad(RemoteMessage remoteMessage) {
         Log.e(TAG, "========================================================");
-        Log.e(TAG, "       El usuario ha cancelado durante el servicio            ");
+        Log.e(TAG, "       El paciente ha cancelado durante el servicio            ");
         Intent intent = new Intent(this, DoctorCancelOnRoad.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

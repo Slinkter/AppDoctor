@@ -11,12 +11,14 @@ import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 
 public class DoctorCancelOnRoad extends AppCompatActivity {
+
     private static final String TAG = DoctorCancelOnRoad.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_cancel_on_road);
+
         if (Common.location_switch == null) {
             Log.e(TAG, "NULL");
         } else {
