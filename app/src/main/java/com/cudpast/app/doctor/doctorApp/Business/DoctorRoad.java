@@ -287,6 +287,7 @@ public class DoctorRoad extends FragmentActivity implements
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
+
     //.
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
@@ -314,18 +315,18 @@ public class DoctorRoad extends FragmentActivity implements
                                 //guardar cada vez que cambie la ubicacion del usario
                                 geoFire
                                         .setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                                    @Override
-                                    public void onComplete(String key, DatabaseError error) {
+                                            @Override
+                                            public void onComplete(String key, DatabaseError error) {
 
-                                        Log.e(TAG, "inserto en la geofire");
-                                        Log.e(TAG, "key" + key);
-                                        Log.e(TAG, "firebaseUserUID" + doctorUid);
-                                        Log.e(TAG, "latitude" + latitude);
-                                        Log.e(TAG, "longitud" + longitud);
-                                        Log.e(TAG, "error" + error);
+                                                Log.e(TAG, "inserto en la geofire");
+                                                Log.e(TAG, "key" + key);
+                                                Log.e(TAG, "firebaseUserUID" + doctorUid);
+                                                Log.e(TAG, "latitude" + latitude);
+                                                Log.e(TAG, "longitud" + longitud);
+                                                Log.e(TAG, "error" + error);
 
-                                    }
-                                });
+                                            }
+                                        });
                                 mMap.clear();
                                 //Dibujar area del paciente
                                 pacienteMarker = mMap.addCircle(new CircleOptions()
@@ -494,13 +495,13 @@ public class DoctorRoad extends FragmentActivity implements
         Log.e(TAG, "             sendArriveNotification                  ");
         final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
         waitingDialog.show();
-       //
+        //
         Token token = new Token(customerId);
         String tokenpaciente = token.getToken();
-        String title =  String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
+        String title = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
         String body = "Arrived";
         //
-        Data data = new Data(title, body,"","" , "","");
+        Data data = new Data(title, body, "", "", "", "");
         Sender sender = new Sender(tokenpaciente, data);
         //
         ubicacion.removeLocationUpdates(mLocationCallback);
@@ -549,7 +550,7 @@ public class DoctorRoad extends FragmentActivity implements
         String title = "El doctor ha cancelado la solicitud";
         String body = "Cancel";
 
-        Data data = new Data(title, body,"","" , "","");
+        Data data = new Data(title, body, "", "", "", "");
         Sender sender = new Sender(token.getToken(), data);
 
         Log.e(TAG, "token    : " + token);
@@ -630,7 +631,6 @@ public class DoctorRoad extends FragmentActivity implements
 
     public void ShowPopupNotification() {
 
-        //**
         AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.pop_up_notification, null);
@@ -642,8 +642,6 @@ public class DoctorRoad extends FragmentActivity implements
 
         Button btn_notificationPaciente;
         btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
-
-
         btn_notificationPaciente
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -656,16 +654,13 @@ public class DoctorRoad extends FragmentActivity implements
                 });
 
         dialog.show();
-
-
     }
-
 
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth() + 0, vectorDrawable.getIntrinsicHeight() + 0);
         Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         background.draw(canvas);
