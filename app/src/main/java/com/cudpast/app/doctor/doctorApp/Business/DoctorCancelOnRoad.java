@@ -17,14 +17,8 @@ public class DoctorCancelOnRoad extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_doctor_cancel_on_road);
-
-        if (Common.location_switch == null) {
-            Log.e(TAG, "NULL");
-        } else {
-            Common.location_switch.toggle();
-        }
-
     }
 
     public void returnMainTimeOut(View view) {

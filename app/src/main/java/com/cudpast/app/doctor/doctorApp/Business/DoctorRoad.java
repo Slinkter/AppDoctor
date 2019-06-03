@@ -603,7 +603,7 @@ public class DoctorRoad extends FragmentActivity implements
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "Si", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Enviando cancelación del servicio", Toast.LENGTH_SHORT).show();
                         doctorService.onDisconnect().removeValue();
                         FirebaseDatabase.getInstance().goOffline();
                         cancelServiceOnRoad(idTokenPaciente);
@@ -617,7 +617,7 @@ public class DoctorRoad extends FragmentActivity implements
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "No", Toast.LENGTH_SHORT).show();
+
                         dialog.dismiss();
                     }
                 });
