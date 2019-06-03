@@ -80,8 +80,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Intent intent = new Intent(this, DoctorBooking.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         //
-
-        //
         intent.putExtra("title", message.getData().get("title"));
         intent.putExtra("body", message.getData().get("body"));
         intent.putExtra("pToken", message.getData().get("pToken"));
@@ -124,6 +122,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         }
 
         NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
+
+        //todo : aca debe ir una especie de ID del usuario para que cancele en la anterior notificaciòn
         nmc.notify(123, builder.build());
         Log.e(TAG, "============================FIN============================");
     }
