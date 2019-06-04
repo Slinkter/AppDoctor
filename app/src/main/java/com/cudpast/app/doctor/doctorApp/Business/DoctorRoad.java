@@ -638,22 +638,29 @@ public class DoctorRoad extends FragmentActivity implements
         builder.setCancelable(false);
         view.setKeepScreenOn(true);
         final AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        try {
 
-        Button btn_notificationPaciente;
-        btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
-        btn_notificationPaciente
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendArriveNotification(idTokenPaciente);
-                        Toast.makeText(getApplicationContext(), "Notificando", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                        finish();
-                    }
-                });
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            Button btn_notificationPaciente;
+            btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
+            btn_notificationPaciente
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendArriveNotification(idTokenPaciente);
+                            Toast.makeText(getApplicationContext(), "Notificando", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
 
-        dialog.show();
+            dialog.show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
     }
 
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
