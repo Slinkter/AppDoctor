@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
@@ -24,6 +25,7 @@ public class DoctorCancelOnRoad extends AppCompatActivity {
     public void returnMainTimeOut(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        Log.e(TAG, " Regresando a MainActivity ");
         finish();
     }
 }

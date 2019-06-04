@@ -22,8 +22,6 @@ public class DoctorCancel extends AppCompatActivity {
 
         if (Common.location_switch == null) {
             Log.e(TAG, "NULL");
-        } else {
-            Common.location_switch.toggle();
         }
 
     }

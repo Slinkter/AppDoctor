@@ -1,4 +1,4 @@
-package com.cudpast.app.doctor.doctorApp.Business;
+package com.cudpast.app.doctor.doctorApp.Business.Cancel;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

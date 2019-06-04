@@ -18,7 +18,7 @@ import com.cudpast.app.doctor.doctorApp.Business.DoctorBooking;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancel;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancelOnRoad;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorFinish;
-import com.cudpast.app.doctor.doctorApp.Business.DoctorTimeOut;
+import com.cudpast.app.doctor.doctorApp.Business.Cancel.DoctorTimeOut;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -59,24 +59,22 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         if ((body).equalsIgnoreCase(caso_1)) {
             doctorBooking(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_2)) {
-            pacienteConsultaCanceled(remoteMessage);
+            pacienteConsultaCanceled();
         } else if ((body).equalsIgnoreCase(caso_3)) {
-            timeOutRequestDoctor(remoteMessage);
+            timeOutRequestDoctor();
         } else if ((body).equalsIgnoreCase(caso_4)) {
-            doctorCanceledOnRoad(remoteMessage);
+            doctorCanceledOnRoad();
         } else if ((body).equalsIgnoreCase(caso_5)) {
             doctorUserEnded();
-
         }
+        //
     }
 
-
     private void doctorBooking(RemoteMessage message) {
-
         Log.e(TAG, "========================================================");
-        Log.e(TAG, "Caso 1 : ");
+        Log.e(TAG, " Caso 1 : ");
         LatLng customer_location = new Gson().fromJson(message.getData().get("json_lat_log"), LatLng.class);
-
+        //
         Intent intent = new Intent(this, DoctorBooking.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         //
@@ -120,15 +118,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                     .setColor(color)
                     .setLights(Color.YELLOW, 500, 5000);
         }
-
         NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
-
         //todo : aca debe ir una especie de ID del usuario para que cancele en la anterior notificaciòn
         nmc.notify(123, builder.build());
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void pacienteConsultaCanceled(RemoteMessage remoteMessage) {
+    private void pacienteConsultaCanceled() {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "        El paciente ha cancelado  la consulta           ");
         Intent intent = new Intent(this, DoctorCancel.class);
@@ -137,7 +133,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void doctorCanceledOnRoad(RemoteMessage remoteMessage) {
+    private void doctorCanceledOnRoad() {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "       El paciente ha cancelado durante el servicio            ");
         Intent intent = new Intent(this, DoctorCancelOnRoad.class);
@@ -146,7 +142,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void timeOutRequestDoctor(RemoteMessage remoteMessage) {
+    private void timeOutRequestDoctor() {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "       Tiempo fuera           ");
         Intent intent = new Intent(this, DoctorTimeOut.class);
@@ -163,7 +159,4 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         startActivity(intent);
         Log.e(TAG, "============================FIN============================");
     }
-
-
 }
-

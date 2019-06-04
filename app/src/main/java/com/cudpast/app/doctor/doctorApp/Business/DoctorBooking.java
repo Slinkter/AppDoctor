@@ -99,10 +99,11 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "Common.location_switch : NULL");
         } else {
             Common.location_switch.toggle();
+            Log.e(TAG, "Common.location_switch : " + Common.location_switch.isChecked());
+            Log.e(TAG, "se  puso en offline al doctor ");
         }
 
         if (getIntent() != null) {
-
             title = getIntent().getStringExtra("title");
             body = getIntent().getStringExtra("body");
             pToken = getIntent().getStringExtra("pToken");
@@ -187,8 +188,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         finish();
                     }
                 });
-
-
     }
 
     //.

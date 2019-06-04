@@ -18,7 +18,7 @@
         <activity android:name=".Business.DoctorFinish" />
         <activity android:name=".Business.DoctorCancelOnRoad" />
         <activity android:name=".Business.DoctorCancel" />
-        <activity android:name=".Business.DoctorTimeOut" />
+        <activity android:name=".Business.Cancel.DoctorTimeOut" />
         <activity android:name=".Activities.Extra.TestActivity" />
         <activity
             android:name=".Activities.Extra.UpdatePwdDoctor"

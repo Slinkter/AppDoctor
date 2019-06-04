@@ -42,20 +42,14 @@ import dmax.dialog.SpotsDialog;
 
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, CompoundButton.OnCheckedChangeListener {
-
+    //
     private static final String TAG = "LoginActivity";
-
-
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-
     private Button btnIngresar;
-
     private Animation animation;
     private Vibrator vib;
-
     private FirebaseAuth auth;
-
     //
     private EditText ed_login_email, ed_login_pwd;
     private CheckBox rem_userpass;
@@ -65,10 +59,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public static final String KEY_REMEMBER = "remeber";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASS = "password";
-
+    //
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
 
-
+    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         getSupportActionBar().hide();
         permisos();
 
-        Intent intent =  new Intent(this,IntroActivity.class);
+        Intent intent = new Intent(this, IntroActivity.class);
         startActivity(intent);
 
         //
