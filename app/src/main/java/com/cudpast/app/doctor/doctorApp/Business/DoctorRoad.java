@@ -587,7 +587,7 @@ public class DoctorRoad extends FragmentActivity implements
 
     public void ShowPopupCancelar() {
 
-        //**
+        //mostrar un display para cancelar el servicio
         AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.pop_up_cancelar, null);
@@ -630,7 +630,7 @@ public class DoctorRoad extends FragmentActivity implements
 
 
     public void ShowPopupNotification() {
-
+        // cuando el doctor llega a la zona o direccion del paciente
         AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.pop_up_notification, null);
