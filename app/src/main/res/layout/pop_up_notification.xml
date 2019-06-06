@@ -1,36 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="350dp"
-    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/custom_dialog_2"
-    android:gravity="center"
     android:orientation="vertical">
-
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="10">
 
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="3"
+            android:src="@drawable/ic_hospital" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Avisar al paciente "
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="¿Qué desea hacer ?" />
 
         <Button
-            android:id="@+id/btn_send_notification"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_login"
-            android:text="Notificar"
-            android:textColor="@color/white"/>
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_2"
+            android:onClick="returnMainCancel"
+            android:text="Enviar Mensaje"
+            android:textColor="@color/white" />
 
-
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button_1"
+            android:text="Llamar "
+            android:textColor="@color/white" />
     </LinearLayout>
 
 
 </LinearLayout>
-
-

@@ -118,7 +118,6 @@ public class DoctorRoad extends FragmentActivity implements
     LocationCallback mLocationCallback;
     TextView id_tiempoDoctorRoad, id_distanciaDoctorRoad;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
