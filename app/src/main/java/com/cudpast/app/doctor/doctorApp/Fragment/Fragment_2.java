@@ -77,7 +77,7 @@ public class Fragment_2 extends Fragment implements
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
 
-    public DatabaseReference db_available_doctor, db_online_offline_user, currentUserRef;
+    public DatabaseReference tb_available_doctor, db_ref_connect, currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
     public String currentUserUID;
@@ -95,25 +95,36 @@ public class Fragment_2 extends Fragment implements
         mapFragment.getMapAsync(this);
         builGoogleApiClient();
         createLocationRequest();
-
         //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor
         //Obtener el UID del doctor
         //Obtener ubicación del doctor
         //On or Off : escuchar el switch
-        db_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
+        tb_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
         currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        currentUserRef = db_available_doctor.child(currentUserUID);
-        //
-        db_online_offline_user = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-        db_online_offline_user
+        currentUserRef = tb_available_doctor.child(currentUserUID);
+        //cuando se pone offline el doctor desaparece en realtime database
+        db_ref_connect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        db_ref_connect
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        currentUserRef.onDisconnect().removeValue();
-                        Log.e(TAG, "db_available_doctor : " + db_available_doctor);
+                        //  currentUserRef.onDisconnect().removeValue();
+                        Log.e(TAG, "tb_available_doctor : " + tb_available_doctor);
                         Log.e(TAG, "currentUserUID : " + currentUserUID);
                         Log.e(TAG, "currentUserRef : " + currentUserRef);
-                        Log.e(TAG, "db_online_offline_user : " + db_online_offline_user);
+                        Log.e(TAG, "db_ref_connect : " + db_ref_connect);
+
+                        currentUserRef
+                                .onDisconnect()
+                                .removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.e(TAG, "db_ref_connect : onSuccess : ");
+                                    }
+                                });
+
+
                     }
 
                     @Override
@@ -124,12 +135,10 @@ public class Fragment_2 extends Fragment implements
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         Common.location_switch = rootView.findViewById(R.id.location_switch);
-
-
         updateFirebaseToken();
-
-        geoFire = new GeoFire(db_available_doctor);
+        geoFire = new GeoFire(tb_available_doctor);
         setUpLocation();
+
         Common.location_switch
                 .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
                     @Override
@@ -138,21 +147,30 @@ public class Fragment_2 extends Fragment implements
                             FirebaseDatabase.getInstance().goOnline();
                             startLocationUpdate();
                             displayLocation();
-
                         } else {
                             if (marketDoctorCurrent != null) {
                                 FirebaseDatabase.getInstance().goOffline();
                                 stopLocationUpdate();
                                 marketDoctorCurrent.remove();
                                 mMap.clear();
-//                                Toast.makeText(mapFragment.getContext(), "Offline", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
                 });
         return rootView;
     }
-    //Bloque A
+
+    @Override
+    public void onStop() {
+        Log.e(TAG, "onStop() ");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.e(TAG, "onDestroy()");
+        super.onDestroy();
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -194,7 +212,6 @@ public class Fragment_2 extends Fragment implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         mLocationPermissionGranted = false;
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_CODE: {
@@ -264,7 +281,6 @@ public class Fragment_2 extends Fragment implements
         }
     }
 
-    //Bloque B
     private boolean checkPlayService() {
         Log.e(TAG, "checkPlayService() ");
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
@@ -301,7 +317,6 @@ public class Fragment_2 extends Fragment implements
         locationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-    //Bloque C
     private void displayLocation() {
 
         try {

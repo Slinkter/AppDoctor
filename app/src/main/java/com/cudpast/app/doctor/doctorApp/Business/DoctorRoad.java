@@ -93,60 +93,49 @@ public class DoctorRoad extends FragmentActivity implements
         LocationListener {
 
     private static String TAG = DoctorRoad.class.getSimpleName();
-    //Google Play Service -->
-    private static final int PLAY_SERVICE_RES_REQUEST = 7001;
+    //Google Play Service
+    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    public static final int PLAY_SERVICE_RES_REQUEST = 7001;
+    public static final int UPDATE_INTERVAL = 5000;
+    public static final int FATEST_INTERVAL = 3000;
+    public static final int DISPLACEMENT = 10;
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiCliente;
     private LocationRequest mLocationRequest;
-    private static int UPDATE_INTERVAL = 5000;
-    private static int FATEST_INTERVAL = 3000;
-    private static int DISPLACEMENT = 10;
-
-
-    private GoogleMap mMap;
+    //
     double pacienteLat, pacienteLng;
     String idTokenPaciente;
-    private FusedLocationProviderClient ubicacion;
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
-
-    public Circle pacienteMarker;
-    public Marker driverMarker;
-
-
+    FusedLocationProviderClient ubicacion;
+    Circle pacienteMarker;
+    Marker driverMarker;
     IGoogleAPI mService;
     IFCMService mFCMService;
     GeoFire geoFire;
     String doctorUid;
-
-    Button btnSendNotiArrived, btn_ruta_cancelar;
+    Button btn_ruta_cancelar;
     Dialog myDialog;
-
-    private DatabaseReference referenceService, doctorService, onlineRef;
-
+    DatabaseReference referenceService, doctorService, onlineRef;
     LocationCallback mLocationCallback;
-
     TextView id_tiempoDoctorRoad, id_distanciaDoctorRoad;
-    //todo: Cambios en doctor road , hacer que cuando llegue se muestre un alertDialog
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_road);
-        //*************************************************
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDoctorTracking);
         mapFragment.getMapAsync(this);
-        //*************************************************
+        //
         ubicacion = LocationServices.getFusedLocationProviderClient(this);
-
         btn_ruta_cancelar = findViewById(R.id.btn_ruta_cancelar);
-
         id_tiempoDoctorRoad = findViewById(R.id.id_tiempoDoctorRoad);
         id_distanciaDoctorRoad = findViewById(R.id.id_distanciaDoctorRoad);
-
+        //
         myDialog = new Dialog(this);
-
+        //
         mService = Common.getGoogleAPI();
         mFCMService = Common.getIFCMService();
-
+        //
         if (getIntent() != null) {
             pacienteLat = getIntent().getDoubleExtra("pacienteLat", -1.0);
             pacienteLng = getIntent().getDoubleExtra("pacienteLng", -1.0);
@@ -247,106 +236,6 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    //######################################################
-    //.
-    private void setUpLocation() {
-        if (checkPlayService()) {
-            builGoogleApiClient();
-            createLocationRequest();
-            displayLocation();
-        }
-    }
-
-    private boolean checkPlayService() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
-            } else {
-                Toast.makeText(this, "this device is support ", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    private void builGoogleApiClient() {
-        mGoogleApiCliente = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        mGoogleApiCliente.connect();
-    }
-
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
-
-    //.
-    private void displayLocation() {
-        Log.e(TAG, "=================================================================");
-        Log.e(TAG, "                          displayLocation()                      ");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(DoctorRoad.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            return;
-        }
-
-        try {
-            ubicacion
-                    .getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-
-                            if (location != null) {
-                                final double latitude = location.getLatitude();
-                                final double longitud = location.getLongitude();
-
-                                Log.e(TAG, " firebaseUserUID : --> " + doctorUid);
-                                Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
-                                Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
-                                //-->
-                                //guardar cada vez que cambie la ubicacion del usario
-                                geoFire
-                                        .setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                                            @Override
-                                            public void onComplete(String key, DatabaseError error) {
-
-                                                Log.e(TAG, "inserto en la geofire");
-                                                Log.e(TAG, "key" + key);
-                                                Log.e(TAG, "firebaseUserUID" + doctorUid);
-                                                Log.e(TAG, "latitude" + latitude);
-                                                Log.e(TAG, "longitud" + longitud);
-                                                Log.e(TAG, "error" + error);
-
-                                            }
-                                        });
-                                mMap.clear();
-                                //Dibujar area del paciente
-                                pacienteMarker = mMap.addCircle(new CircleOptions()
-                                        .center(new LatLng(pacienteLat, pacienteLng))
-                                        .radius(50)// 50 metros 5  000000000000000
-                                        .strokeColor(Color.WHITE)
-                                        .fillColor(0x220000FF)
-                                        .strokeWidth(5.0f));
-                                getRoadRealTime();
-
-                                Log.e(TAG, "=================================================================");
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //.
     private void getRoadRealTime() {
         Log.e(TAG, "=============================================================");
         Log.e(TAG, "                     getRoadRealTime()                       ");
@@ -402,28 +291,6 @@ public class DoctorRoad extends FragmentActivity implements
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        displayLocation();
-        startLocationUpdate();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mGoogleApiCliente.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Common.mLastLocation = location;
-        displayLocation();
     }
 
     private class getDirectionRealTime extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
@@ -488,7 +355,84 @@ public class DoctorRoad extends FragmentActivity implements
             direction = mMap.addPolyline(polylineOptions);
         }
     }
+    // Eventos - Mensaje
 
+    public void ShowPopupCancelar() {
+
+        //mostrar un display para cancelar el servicio
+        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.pop_up_cancelar, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+        view.setKeepScreenOn(true);
+        final AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button btn_accept_cancelar, btn_decline_cancelar;
+        btn_accept_cancelar = view.findViewById(R.id.btn_accept_cancelar);
+        btn_decline_cancelar = view.findViewById(R.id.btn_decline_cancelar);
+
+        btn_accept_cancelar
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getApplicationContext(), "Enviando cancelación del servicio", Toast.LENGTH_SHORT).show();
+                        doctorService.onDisconnect().removeValue();
+                        FirebaseDatabase.getInstance().goOffline();
+                        cancelServiceOnRoad(idTokenPaciente);
+                        dialog.dismiss();
+                        finish();
+
+                    }
+                });
+
+        btn_decline_cancelar
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dialog.dismiss();
+                    }
+                });
+
+        dialog.show();
+
+
+    }
+
+    public void ShowPopupNotification() {
+        // cuando el doctor llega a la zona o direccion del paciente
+        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.pop_up_notification, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+        view.setKeepScreenOn(true);
+        final AlertDialog dialog = builder.create();
+        try {
+
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            Button btn_notificationPaciente;
+            btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
+            btn_notificationPaciente
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            sendArriveNotification(idTokenPaciente);
+                            Toast.makeText(getApplicationContext(), "Notificando", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+
+            dialog.show();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+    }
 
     private void sendArriveNotification(String customerId) {
         Log.e(TAG, "=====================================================");
@@ -585,84 +529,6 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    public void ShowPopupCancelar() {
-
-        //mostrar un display para cancelar el servicio
-        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.pop_up_cancelar, null);
-        builder.setView(view);
-        builder.setCancelable(false);
-        view.setKeepScreenOn(true);
-        final AlertDialog dialog = builder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button btn_accept_cancelar, btn_decline_cancelar;
-        btn_accept_cancelar = view.findViewById(R.id.btn_accept_cancelar);
-        btn_decline_cancelar = view.findViewById(R.id.btn_decline_cancelar);
-
-        btn_accept_cancelar
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "Enviando cancelación del servicio", Toast.LENGTH_SHORT).show();
-                        doctorService.onDisconnect().removeValue();
-                        FirebaseDatabase.getInstance().goOffline();
-                        cancelServiceOnRoad(idTokenPaciente);
-                        dialog.dismiss();
-                        finish();
-
-                    }
-                });
-
-        btn_decline_cancelar
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        dialog.dismiss();
-                    }
-                });
-
-        dialog.show();
-
-
-    }
-
-
-    public void ShowPopupNotification() {
-        // cuando el doctor llega a la zona o direccion del paciente
-        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.pop_up_notification, null);
-        builder.setView(view);
-        builder.setCancelable(false);
-        view.setKeepScreenOn(true);
-        final AlertDialog dialog = builder.create();
-        try {
-
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            Button btn_notificationPaciente;
-            btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
-            btn_notificationPaciente
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendArriveNotification(idTokenPaciente);
-                            Toast.makeText(getApplicationContext(), "Notificando", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            finish();
-                        }
-                    });
-
-            dialog.show();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-
-    }
-
     private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
         Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
@@ -673,6 +539,125 @@ public class DoctorRoad extends FragmentActivity implements
         background.draw(canvas);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    // Metodos de support
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        displayLocation();
+        startLocationUpdate();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiCliente.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Common.mLastLocation = location;
+        displayLocation();
+    }
+    // Metodos de Google Api
+    private void setUpLocation() {
+        if (checkPlayService()) {
+            builGoogleApiClient();
+            createLocationRequest();
+            displayLocation();
+        }
+    }
+
+    private boolean checkPlayService() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
+            } else {
+                Toast.makeText(this, "this device is support ", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private void builGoogleApiClient() {
+        mGoogleApiCliente = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiCliente.connect();
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+    private void displayLocation() {
+        Log.e(TAG, "=================================================================");
+        Log.e(TAG, "                          displayLocation()                      ");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(DoctorRoad.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            return;
+        }
+
+        try {
+            ubicacion
+                    .getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+
+                            if (location != null) {
+                                final double latitude = location.getLatitude();
+                                final double longitud = location.getLongitude();
+
+                                Log.e(TAG, " firebaseUserUID : --> " + doctorUid);
+                                Log.e(TAG, " Common.mLastLocation.getLatitude() : --> " + latitude);
+                                Log.e(TAG, " Common.mLastLocation.getLongitude(): --> " + longitud);
+                                //-->
+                                //guardar cada vez que cambie la ubicacion del usario
+                                geoFire
+                                        .setLocation(doctorUid, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                                            @Override
+                                            public void onComplete(String key, DatabaseError error) {
+
+                                                Log.e(TAG, "inserto en la geofire");
+                                                Log.e(TAG, "key" + key);
+                                                Log.e(TAG, "firebaseUserUID" + doctorUid);
+                                                Log.e(TAG, "latitude" + latitude);
+                                                Log.e(TAG, "longitud" + longitud);
+                                                Log.e(TAG, "error" + error);
+
+                                            }
+                                        });
+                                mMap.clear();
+                                //Dibujar area del paciente
+                                pacienteMarker = mMap.addCircle(new CircleOptions()
+                                        .center(new LatLng(pacienteLat, pacienteLng))
+                                        .radius(50)// 50 metros 5  000000000000000
+                                        .strokeColor(Color.WHITE)
+                                        .fillColor(0x220000FF)
+                                        .strokeWidth(5.0f));
+                                getRoadRealTime();
+
+                                Log.e(TAG, "=================================================================");
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
