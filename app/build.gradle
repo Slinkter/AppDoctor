@@ -6,8 +6,8 @@ android {
         applicationId "com.cudpast.app.doctor.doctorApp"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 16
-        versionName "1.16"
+        versionCode 17
+        versionName "1.17"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

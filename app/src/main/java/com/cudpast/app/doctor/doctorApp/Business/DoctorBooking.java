@@ -54,7 +54,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallback {
-    // Caso 1
+
     private static String TAG = DoctorBooking.class.getSimpleName();
     private IGoogleAPI mService;
     private IFCMService mFCMService;
@@ -63,26 +63,19 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     public FirebaseAuth auth;
     public String title, body, pToken, dToken, pacienteUID;
     public double lat, lng;
-
-
     double doclat, doclng;
-
     private GoogleMap mMap;
-
     private DatabaseReference tb_Info_Paciente;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_doctor_booking);
+        getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
         tb_Info_Paciente.keepSynced(true);
-
-
-        getSupportActionBar().hide();
 
         btnCancel = findViewById(R.id.btn_decline_booking);
         btnAccept = findViewById(R.id.btn_accept_booking);
@@ -112,12 +105,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             lat = getIntent().getDoubleExtra("lat", -1.0);
             lng = getIntent().getDoubleExtra("lng", -1.0);
             pacienteUID = getIntent().getStringExtra("pacienteUID");
-            //Get Paciente
-            getDirection(lat, lng, pacienteUID);
-
-
         }
-
+        getDirection(lat, lng, pacienteUID);
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,8 +123,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
-
-
     }
 
     //.
@@ -246,8 +233,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         String requestApi = null;
 
                         try {
-                            requestApi =
-                                    "https://maps.googleapis.com/maps/api/directions/json?" +
+                            requestApi =  "https://maps.googleapis.com/maps/api/directions/json?" +
                                             "mode=driving&" +
                                             "transit_routing_preference=less_driving&" +
                                             "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
@@ -282,12 +268,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
                                         @Override
                                         public void onFailure(Call<String> call, Throwable t) {
-                                            Toast.makeText(DoctorBooking.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                                            //59:06
+
                                         }
                                     });
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -316,13 +299,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         }
         mMap = googleMap;
         //
+
         LatLng geoPaciente = new LatLng(lat, lng);
-        mMap.addMarker(new MarkerOptions()
+        mMap
+                .addMarker(new MarkerOptions()
                 .position(geoPaciente)
                 .title("Paciente")
                 .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoPaciente, 16));
-
     }
 
     //.
