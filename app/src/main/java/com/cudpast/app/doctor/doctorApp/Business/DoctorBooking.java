@@ -74,14 +74,15 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doctor_booking);
 
+        setContentView(R.layout.activity_doctor_booking);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
-        getSupportActionBar().hide();
-
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
         tb_Info_Paciente.keepSynced(true);
+
+
+        getSupportActionBar().hide();
 
         btnCancel = findViewById(R.id.btn_decline_booking);
         btnAccept = findViewById(R.id.btn_accept_booking);
@@ -98,7 +99,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         if (Common.location_switch == null) {
             Log.e(TAG, "Common.location_switch : NULL");
         } else {
-            Common.location_switch.toggle();
+            Common.location_switch.toggle();// se pone en offline cuando se el doctor acepta la consulta medica
             Log.e(TAG, "Common.location_switch : " + Common.location_switch.isChecked());
             Log.e(TAG, "se  puso en offline al doctor ");
         }
@@ -113,13 +114,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             pacienteUID = getIntent().getStringExtra("pacienteUID");
             //Get Paciente
             getDirection(lat, lng, pacienteUID);
+
+
         }
 
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 aceptBooking(pToken);
             }
         });
@@ -127,8 +129,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(pToken))
+                if (!TextUtils.isEmpty(pToken)) {
                     cancelBooking(pToken);
+                }
             }
         });
 
@@ -233,8 +236,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
         tb_Info_Paciente
                 .child(mpacienteUID)
-                .orderByKey()
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
@@ -313,13 +315,13 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "Can't find style. Error: ", e);
         }
         mMap = googleMap;
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(lat, lng);
+        //
+        LatLng geoPaciente = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions()
-                .position(sydney)
+                .position(geoPaciente)
                 .title("Paciente")
                 .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoPaciente, 16));
 
     }
 
