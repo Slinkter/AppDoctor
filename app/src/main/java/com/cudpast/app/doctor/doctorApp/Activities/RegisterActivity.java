@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -48,7 +50,7 @@ import com.google.firebase.storage.UploadTask;
 import dmax.dialog.SpotsDialog;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    // todo : no carga el alert o Dialog para que espere el usuarios cuando se registrar
     public static final String TAG = RegisterActivity.class.getSimpleName();
     public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;
@@ -65,7 +67,6 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference db_doctor_consulta;
     private DatabaseReference tb_Info_Doctor;
     private StorageReference StorageReference;
-
 
     SpotsDialog waitingDialog;
     StorageReference fileReference;
@@ -117,6 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+
                 final String firstname = signupName.getText().toString();
                 final String lastname = signupLast.getText().toString();
                 final String numphone = signupNumPhone.getText().toString();
@@ -125,16 +127,16 @@ public class RegisterActivity extends AppCompatActivity {
                 final String especialidad = signupEsp.getText().toString();
                 final String dni = signupDNI.getText().toString();
 
-
                 final String fecha = getCurrentTimeStamp();
-
 
                 // Validar Formulario
                 if (submitForm()) {
-                    waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
-                    waitingDialog.show();
+
                     // Validar foto
                     if (uriPhoto != null) {
+
+                        waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
+                        waitingDialog.show();
 
                         fileReference = StorageReference.child(dni + "." + getFileExtension(uriPhoto));
                         uploadTask = fileReference.putFile(uriPhoto);
@@ -154,12 +156,13 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if (task.isSuccessful()) {
                                             try {
+
                                                 Uri downloadUri = task.getResult();
                                                 final String imageUrl = downloadUri.toString();
                                                 //Guardar en firebase
                                                 String email = signupMail.getText().toString().trim();
                                                 String password = signupPassword.getText().toString().trim();
-
+                                                //
                                                 auth
                                                         .createUserWithEmailAndPassword(email, password)
                                                         .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -180,15 +183,19 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                 Toast.makeText(RegisterActivity.this, "Usuario Registrado , espere correo de verificación", Toast.LENGTH_SHORT).show();
                                                                                 Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
                                                                                 db_doctor_consulta.child("db_doctor_consulta").child(dni).setValue(user3);
+
                                                                                 waitingDialog.dismiss();
+                                                                                iniciarActivity();
+
                                                                             }
                                                                         })
                                                                         .addOnFailureListener(new OnFailureListener() {
                                                                             @Override
                                                                             public void onFailure(@NonNull Exception e) {
-                                                                                waitingDialog.dismiss();
+
                                                                                 Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
                                                                                 Log.e("RegisterActivity ", "onFailure ");
+                                                                                waitingDialog.dismiss();
                                                                             }
                                                                         });
 
@@ -220,8 +227,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 });
                     }
-                    waitingDialog.dismiss();
-                    iniciarActivity();
+                    //waitingDialog.dismiss();
+                    //iniciarActivity();
                 }
             }
         });
@@ -402,5 +409,23 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
+
+    public void generarToken() {
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+
+
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference(Common.token_tbl);
+
+        Token token = new Token(refreshedToken);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            tokens
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .setValue(token);
+            Common.token_doctor = token.getToken();
+            Log.e("TOKEN : ", refreshedToken);
+        }
+    }
 
 }
