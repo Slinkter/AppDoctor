@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -183,7 +184,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                                                 Toast.makeText(RegisterActivity.this, "Usuario Registrado , espere correo de verificación", Toast.LENGTH_SHORT).show();
                                                                                 Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
                                                                                 db_doctor_consulta.child("db_doctor_consulta").child(dni).setValue(user3);
-
+                                                                                generarToken();
+                                                                               // generarToken2();
                                                                                 waitingDialog.dismiss();
                                                                                 iniciarActivity();
 
@@ -411,21 +413,46 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public void generarToken() {
-
+        Log.e(TAG, "generarToken1()");
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-
-
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference tokens = db.getReference(Common.token_tbl);
 
         Token token = new Token(refreshedToken);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
             tokens
-                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child(doctorUID)
                     .setValue(token);
             Common.token_doctor = token.getToken();
             Log.e("TOKEN : ", refreshedToken);
         }
+    }
+
+
+    public void generarToken2() {
+        // Get token
+        // [START retrieve_current_token]
+        Log.e(TAG, "generarToken2()");
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+                        // Log and toast
+                        String msg = "token" + token;
+                        Log.e(TAG, msg);
+                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+        // [END retrieve_current_token]
     }
 
 }

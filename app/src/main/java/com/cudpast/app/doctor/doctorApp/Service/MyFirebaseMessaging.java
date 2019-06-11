@@ -19,8 +19,14 @@ import com.cudpast.app.doctor.doctorApp.Business.DoctorCancel;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorCancelOnRoad;
 import com.cudpast.app.doctor.doctorApp.Business.DoctorFinish;
 import com.cudpast.app.doctor.doctorApp.Business.Cancel.DoctorTimeOut;
+import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
+import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
@@ -159,4 +165,33 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         startActivity(intent);
         Log.e(TAG, "============================FIN============================");
     }
+
+
+    @Override
+    public void onNewToken(String token) {
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+
+        Log.e(TAG, "Refreshed token: " + token);
+        Log.e(TAG,"Refreshed token: " + refreshedToken);
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // Instance ID token to your app server.
+        updateTokenToServer(token);
+    }
+
+    private void updateTokenToServer(String refreshedToken) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
+        Token token = new Token(refreshedToken);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            tokens.child(FirebaseAuth
+                    .getInstance()
+                    .getCurrentUser()
+                    .getUid())
+                    .setValue(token);
+        }
+
+    }
+
+
 }
