@@ -51,7 +51,7 @@ import com.google.firebase.storage.UploadTask;
 import dmax.dialog.SpotsDialog;
 
 public class RegisterActivity extends AppCompatActivity {
-    // todo : no carga el alert o Dialog para que espere el usuarios cuando se registrar
+
     public static final String TAG = RegisterActivity.class.getSimpleName();
     public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;

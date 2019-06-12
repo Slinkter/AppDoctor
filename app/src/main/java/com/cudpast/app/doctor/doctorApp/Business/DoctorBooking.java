@@ -126,7 +126,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     }
 
     //.
-    private void aceptBooking(final String sIdTokenPaciente) {
+    private void aceptBooking(final String tokenPaciente) {
+        //todo : esto nos ayuda a controlar el envio de mensaje o notificacion
+        //todo : se debe crear una db para controlar la session
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                AceptBooking              ");
         //
@@ -135,34 +137,28 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Data data = new Data("APP Doctor", "Acepta", "", doctorUID, "", "");
-        Sender sender = new Sender(sIdTokenPaciente, data);
-        //todo : esto nos ayuda a controlar el envio de mensaje o notificacion
-        //todo : se debe crear una db para controlar la session
+        Sender sender = new Sender(tokenPaciente, data);
+        //
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-
-                        Log.e(TAG, "response.body().success       : " + response.body().success);
-                        Log.e(TAG, "response.body().results       : " + response.body().results.get(0));
-                        Log.e(TAG, "response.body().canonical_ids : " + response.body().canonical_ids);
-                        Log.e(TAG, "response.body().multicast_id  : " + response.body().multicast_id);
-
                         if (response.body().success == 1) {
                             waitingDialog.dismiss();
                             Log.e(TAG, "onResponse: success");
-                            Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             doclat = Common.mLastLocation.getLatitude();
                             doclng = Common.mLastLocation.getLongitude();
+                            //
+                            Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             //APP Doctor
                             intent.putExtra("doclat", doclat);
                             intent.putExtra("doclng", doclng);
                             //APP Paciente
                             intent.putExtra("pacienteLat", lat);
                             intent.putExtra("pacienteLng", lng);
-                            intent.putExtra("sIdTokenPaciente", sIdTokenPaciente);
+                            intent.putExtra("tokenPaciente", tokenPaciente);
                             startActivity(intent);
                             finish();
                         }
@@ -173,7 +169,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         Log.e(TAG, "onFailure : " + t.getMessage());
                         waitingDialog.dismiss();
                         Intent intent = new Intent(DoctorBooking.this, DoctorError.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     }
@@ -184,6 +180,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     private void cancelBooking(String IdToken) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelBooking             ");
+        final SpotsDialog waitingDialog = new SpotsDialog(DoctorBooking.this, R.style.DialogUpdateDoctorEnviando);
+        waitingDialog.show();
         //Enviar Notificacion hacia el paciente
         Token token = new Token(IdToken);
         String title = "el doctor ha cancelado la solicitud";
@@ -202,20 +200,29 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
+                            waitingDialog.dismiss();
                             Log.e(TAG, "response.body().success : " + response.body().success);
                             Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
                         } else {
+                            waitingDialog.dismiss();
                             Toast.makeText(DoctorBooking.this, "error al responder", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        Log.e(TAG, "error : " + t.getMessage());
+                        waitingDialog.dismiss();
+                        Log.e(TAG, "onFailure : " + t.getMessage());
+                        Intent intent = new Intent(DoctorBooking.this, DoctorError.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                     }
 
                 });
+        // se cierra la actividad y regresa
         finish();
+        //
     }
 
     //Cargar duración distancia y direccion final
@@ -233,12 +240,12 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         String requestApi = null;
 
                         try {
-                            requestApi =  "https://maps.googleapis.com/maps/api/directions/json?" +
-                                            "mode=driving&" +
-                                            "transit_routing_preference=less_driving&" +
-                                            "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
-                                            "destination=" + lat + "," + lng + "&" +
-                                            "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
+                            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
+                                    "mode=driving&" +
+                                    "transit_routing_preference=less_driving&" +
+                                    "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
+                                    "destination=" + lat + "," + lng + "&" +
+                                    "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
 
                             mService.getPath(requestApi)
                                     .enqueue(new Callback<String>() {
@@ -303,9 +310,9 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         LatLng geoPaciente = new LatLng(lat, lng);
         mMap
                 .addMarker(new MarkerOptions()
-                .position(geoPaciente)
-                .title("Paciente")
-                .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
+                        .position(geoPaciente)
+                        .title("Paciente")
+                        .icon(BitmapDoctorApp(DoctorBooking.this, R.drawable.ic_boy_svg)));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(geoPaciente, 16));
     }
 
