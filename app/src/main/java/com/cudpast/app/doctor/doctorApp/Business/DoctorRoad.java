@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Soporte.Data;
 import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
@@ -138,7 +139,7 @@ public class DoctorRoad extends FragmentActivity implements
         if (getIntent() != null) {
             pacienteLat = getIntent().getDoubleExtra("pacienteLat", -1.0);
             pacienteLng = getIntent().getDoubleExtra("pacienteLng", -1.0);
-            idTokenPaciente = getIntent().getStringExtra("sIdTokenPaciente");
+            idTokenPaciente = getIntent().getStringExtra("tokenPaciente");
         }
 
         doctorUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -162,7 +163,6 @@ public class DoctorRoad extends FragmentActivity implements
 
         geoFire = new GeoFire(referenceService);
         setUpLocation();
-
 
         btn_ruta_cancelar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,9 +206,9 @@ public class DoctorRoad extends FragmentActivity implements
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
-
+                        //--->
                         ShowPopupNotification();
-
+                        //<--
                     }
 
                     @Override
@@ -401,6 +401,7 @@ public class DoctorRoad extends FragmentActivity implements
 
     public void ShowPopupNotification() {
         // cuando el doctor llega a la zona o direccion del paciente
+        // se muestra cuando esta dentro del área en el metodo
         AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.pop_up_notification, null);
@@ -417,8 +418,9 @@ public class DoctorRoad extends FragmentActivity implements
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            //
                             sendArriveNotification(idTokenPaciente);
-                            Toast.makeText(getApplicationContext(), "Notificando", Toast.LENGTH_SHORT).show();
+                            //
                             dialog.dismiss();
                             finish();
                         }
@@ -433,43 +435,41 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    private void sendArriveNotification(String customerId) {
+    private void sendArriveNotification(final String tokenPaciente) {
+        // esta en el metodo onMapReady>ShowPopupNotification> sendArriveNotification(idTokenPaciente);
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
         final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
         waitingDialog.show();
-        //
-        Token token = new Token(customerId);
-        String tokenpaciente = token.getToken();
+        Log.e(TAG, tokenPaciente);
         String title = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
         String body = "Arrived";
         //
         Data data = new Data(title, body, "", "", "", "");
-        Sender sender = new Sender(tokenpaciente, data);
-        //
-        ubicacion.removeLocationUpdates(mLocationCallback);
-        //
+        Sender sender = new Sender(tokenPaciente, data);
+        Log.e(TAG, " " + data);
+        Log.e(TAG, " " + sender);
+
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                        if (response.body().success != 1) {
-                            waitingDialog.dismiss();
-                            Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
-                            Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
-                            startActivity(intentError);
-                            finish();
-                            Log.e(TAG, "=====================================================");
-                        } else {
+                        if (response.body().success == 1) {
                             waitingDialog.dismiss();
                             Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
-                            Log.e(TAG, "=====================================================");
+                        } else {
+                            waitingDialog.dismiss();
+                            Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
+                            Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
+                            startActivity(intentError);
+                            finish();
                         }
+                        Log.e(TAG, "=====================================================");
                     }
 
                     @Override
@@ -482,49 +482,59 @@ public class DoctorRoad extends FragmentActivity implements
                         Log.e(TAG, "=====================================================");
                     }
                 });
-
+        ubicacion.removeLocationUpdates(mLocationCallback);
     }
 
-    private void cancelServiceOnRoad(String IdToken) {
+    private void cancelServiceOnRoad(final String tokenPaciente) {
 
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelServiceOnRoad             ");
-        Token token = new Token(IdToken);
+        //
+        final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
+        waitingDialog.show();
+        //Enviar Notificacion hacia el paciente
         String title = "El doctor ha cancelado la solicitud";
         String body = "Cancel";
-
+        //
         Data data = new Data(title, body, "", "", "", "");
-        Sender sender = new Sender(token.getToken(), data);
-
-        Log.e(TAG, "token    : " + token);
+        Sender sender = new Sender(tokenPaciente, data);
+        //
+        Log.e(TAG, "tokenPaciente    : " + tokenPaciente);
         Log.e(TAG, "data     : " + data);
         Log.e(TAG, "sender   : " + sender);
+        //
+        try {
+            mFCMService
+                    .sendMessage(sender)
+                    .enqueue(new Callback<FCMResponse>() {
+                        @Override
+                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                            if (response.body().success == 1) {
+                                waitingDialog.dismiss();
+                                Log.e(TAG, "success : " + response.body().success);
+                                Toast.makeText(getApplicationContext(), "Cita ha sido cancelado", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(DoctorRoad.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
 
-        mFCMService
-                .sendMessage(sender)
-                .enqueue(new Callback<FCMResponse>() {
-                    @Override
-                    public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                        if (response.body().success == 1) {
-                            Log.e(TAG, "response.body().success : " + response.body().success);
-
-                            Toast.makeText(getApplicationContext(), "Cita ha sido cancelado", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-
-                            Toast.makeText(getApplicationContext(), "Fallo la cancelación de la cita", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            waitingDialog.dismiss();
+                            Log.e(TAG, "error : al enviar la notificación " + t.getMessage());
+                            Intent intent = new Intent(DoctorRoad.this, DoctorError.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             finish();
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<FCMResponse> call, Throwable t) {
+                    });
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
-                        Log.e(TAG, "error : al enviar la notificación " + t.getMessage());
-                        finish();
-                    }
-
-                });
 
     }
 
@@ -562,6 +572,7 @@ public class DoctorRoad extends FragmentActivity implements
         Common.mLastLocation = location;
         displayLocation();
     }
+
     // Metodos de Google Api
     private void setUpLocation() {
         if (checkPlayService()) {

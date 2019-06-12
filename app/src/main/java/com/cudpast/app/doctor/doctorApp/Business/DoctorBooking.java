@@ -177,23 +177,22 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     }
 
     //.
-    private void cancelBooking(String IdToken) {
+    private void cancelBooking(final String tokenPaciente) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, "                cancelBooking             ");
         final SpotsDialog waitingDialog = new SpotsDialog(DoctorBooking.this, R.style.DialogUpdateDoctorEnviando);
         waitingDialog.show();
         //Enviar Notificacion hacia el paciente
-        Token token = new Token(IdToken);
-        String title = "el doctor ha cancelado la solicitud";
+        String title = "El doctor ha cancelado la solicitud";
         String body = "rechaza";
         //
         Data data = new Data(title, body, "", "", "", "");
-        Sender sender = new Sender(token.getToken(), data);
-
-        Log.e(TAG, "token        : " + token);
+        Sender sender = new Sender(tokenPaciente, data);
+        //
+        Log.e(TAG, "token        : " + tokenPaciente);
         Log.e(TAG, "data         : " + data);
         Log.e(TAG, "sender       : " + sender);
-
+        //
         mFCMService
                 .sendMessage(sender)
                 .enqueue(new Callback<FCMResponse>() {
@@ -203,9 +202,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                             waitingDialog.dismiss();
                             Log.e(TAG, "response.body().success : " + response.body().success);
                             Toast.makeText(DoctorBooking.this, "Cita no atendida", Toast.LENGTH_SHORT).show();
+                            finish();
                         } else {
                             waitingDialog.dismiss();
                             Toast.makeText(DoctorBooking.this, "error al responder", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(DoctorBooking.this, DoctorError.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
                         }
                     }
 
@@ -221,7 +225,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
                 });
         // se cierra la actividad y regresa
-        finish();
+        // finish();
         //
     }
 
