@@ -135,7 +135,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "        El paciente ha cancelado  la consulta           ");
         Intent intent = new Intent(this, DoctorCancel.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ~startActivity(intent);
+        startActivity(intent);
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
