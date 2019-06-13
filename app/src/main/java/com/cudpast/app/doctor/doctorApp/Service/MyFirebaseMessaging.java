@@ -65,9 +65,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         if ((body).equalsIgnoreCase(caso_1)) {
             doctorBooking(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_2)) {
-            pacienteConsultaCanceled();
+            pacienteConsultaCanceled(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_3)) {
-            timeOutRequestDoctor();
+            timeOutRequestDoctor(remoteMessage);
         } else if ((body).equalsIgnoreCase(caso_4)) {
             doctorCanceledOnRoad();
         } else if ((body).equalsIgnoreCase(caso_5)) {
@@ -130,12 +130,50 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void pacienteConsultaCanceled() {
+    private void pacienteConsultaCanceled(RemoteMessage message) {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "        El paciente ha cancelado  la consulta           ");
         Intent intent = new Intent(this, DoctorCancel.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        ~startActivity(intent);
+        //
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //
+        //
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
+        builder
+                .setContentTitle(message.getData().get("title"))
+                .setContentText(message.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_local_hospital_black)//icono de la notificacion
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance)) // imagen del mensaje
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setColorized(true)
+                .setContentIntent(pendingIntent);
+        //
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            appChannel.setDescription(message.getData().get("body"));
+            appChannel.setLightColor(Color.GREEN);
+            appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            appChannel.enableLights(true);
+            appChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(appChannel);
+        } else {
+            int color = getResources().getColor(R.color.colorRed);
+            builder
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setVibrate(new long[]{100, 250})
+                    .setColor(color)
+                    .setLights(Color.YELLOW, 500, 5000);
+        }
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
+        //todo : aca debe ir una especie de ID del usuario para que cancele en la anterior notificación
+        nmc.notify(123, builder.build());
+
         Log.e(TAG, "============================FIN============================");
     }
 
@@ -148,12 +186,49 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Log.e(TAG, "============================FIN============================");
     }
 
-    private void timeOutRequestDoctor() {
+    private void timeOutRequestDoctor(RemoteMessage message) {
         Log.e(TAG, "========================================================");
         Log.e(TAG, "       Tiempo fuera           ");
         Intent intent = new Intent(this, DoctorTimeOut.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        //
+        //
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
+        builder
+                .setContentTitle(message.getData().get("title"))
+                .setContentText(message.getData().get("body"))
+                .setSmallIcon(R.drawable.ic_local_hospital_black)//icono de la notificacion
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ambulance)) // imagen del mensaje
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setColorized(true)
+                .setContentIntent(pendingIntent);
+        //
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel appChannel = new NotificationChannel(APP_CHANNEL_ID, APP_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            appChannel.setDescription(message.getData().get("body"));
+            appChannel.setLightColor(Color.GREEN);
+            appChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            appChannel.enableLights(true);
+            appChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(appChannel);
+        } else {
+            int color = getResources().getColor(R.color.colorRed);
+            builder
+                    .setContentIntent(pendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setVibrate(new long[]{100, 250})
+                    .setColor(color)
+                    .setLights(Color.YELLOW, 500, 5000);
+        }
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(getApplicationContext());
+        //todo : aca debe ir una especie de ID del usuario para que cancele en la anterior notificación
+        nmc.notify(123, builder.build());
+
         Log.e(TAG, "============================FIN============================");
     }
 
