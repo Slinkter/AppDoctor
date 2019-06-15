@@ -19,5 +19,11 @@
     <string name="title_activity_maps">Map</string>
     <string name="default_web_client_id_android">729041200286-nr5725pur0sep3epn7tf03qo9f26e3os.apps.googleusercontent.com</string>
     <string name="msg_token_fmt">token :</string>
+    
+    
+    <string-array name="categoria" >
+        <item >Medicina General</item>
+        <item >Plasma</item>
+    </string-array>
 
 </resources>

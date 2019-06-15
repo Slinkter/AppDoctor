@@ -14,6 +14,7 @@ public class Common {
 
     public static final String TB_AVAILABLE_DOCTOR = "TB_AVAILABLE_DOCTOR";
     public static final String TB_INFO_DOCTOR = "tb_Info_Doctor";
+    public static final String TB_INFO_PLASMA = "tb_Info_Plasma";
     public static final String TB_INFO_PACIENTE = "tb_Info_Paciente";
     public static final String TB_SERVICIO_DOCTOR_PACIENTE = "TB_SERVICIO_DOCTOR_PACIENTE";
     public static final String token_tbl = "Tokens";

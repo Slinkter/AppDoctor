@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -50,27 +53,31 @@ import com.google.firebase.storage.UploadTask;
 
 import dmax.dialog.SpotsDialog;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = RegisterActivity.class.getSimpleName();
+
     public static final int PICK_IMAGE_REQUEST = 1;
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-    private EditText signupDNI, signupName, signupLast, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupAnddress, signupPassword;
+    private EditText signupDNI, signupFirstName, signupLastName, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupAnddress, signupPassword;
     private Button btn_save, btn_uploadPhoto;
     private Animation animation;
     private Vibrator vib;
     private ImageView signupImagePhoto;
     private Uri uriPhoto;
-    private UploadTask uploadTask;
+    private UploadTask uploadTaskPhoto;
 
     private FirebaseAuth auth;
-    private DatabaseReference db_doctor_consulta;
+
     private DatabaseReference tb_Info_Doctor;
+    private DatabaseReference tb_Info_Plasma;
     private StorageReference StorageReference;
 
     SpotsDialog waitingDialog;
     StorageReference fileReference;
+    Spinner spinner;
+    String dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, email, fecha, imageUrl, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +87,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         btn_save = findViewById(R.id.btnGuardar);
         btn_uploadPhoto = findViewById(R.id.btn_choose_image);
+        spinner = findViewById(R.id.signupSpinnerCategoria);
+
+        ArrayAdapter<CharSequence> adapter;
+        adapter = ArrayAdapter.createFromResource(this, R.array.categoria, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
 
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
@@ -88,152 +103,182 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         //Almacenar info del nuevo Doctor registrado
         tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
-        //Para consulta offline del doctor registado
-        db_doctor_consulta = FirebaseDatabase.getInstance().getReference();
+        //Almacenar info del nuevo Plasma registrado
+        tb_Info_Plasma = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PLASMA);
+
         //Almacenar la foto del nuevo doctor
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
         //Animación de error al ingresar dato en el formulario
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        signupName = findViewById(R.id.signupName);
-        signupLast = findViewById(R.id.signupLast);
+        //xml
+        signupFirstName = findViewById(R.id.signupName);
+        signupLastName = findViewById(R.id.signupLast);
         signupNumPhone = findViewById(R.id.signupNumPhone);
         signupAnddress = findViewById(R.id.signupDir);
         signupCodMePe = findViewById(R.id.signupCodMePe);
-        signupEsp = findViewById(R.id.signupEsp);
+        // signupEsp = findViewById(R.id.signupEsp); <-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
         signupMail = findViewById(R.id.signupMail);
         signupDNI = findViewById(R.id.signupDNI);
-        signupPassword = findViewById(R.id.signupPassword);
         signupImagePhoto = findViewById(R.id.image_view);
+        //
 
 
-        btn_uploadPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFileChooser();
-            }
-        });
+        btn_uploadPhoto
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openFileChooser();
+                    }
+                });
 
-        btn_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btn_save
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (submitForm()) {// Form field
+                            if (uriPhoto != null) { //Selected Photo
 
+                                waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
+                                waitingDialog.show();
+//insertar photo en Storage
+                                fileReference = StorageReference.child(dni + "." + getFileExtension(uriPhoto));
+                                uploadTaskPhoto = fileReference.putFile(uriPhoto);
+                                uploadTaskPhoto
+                                        .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                            @Override
+                                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                                if (!task.isSuccessful()) {
+                                                    throw Objects.requireNonNull(task.getException());
+                                                }
+                                                return fileReference.getDownloadUrl();
+                                            }
+                                        })
+                                        .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Uri> task) {
+                                                if (task.isSuccessful()) {
+                                                    Uri downloadUri = task.getResult();
+                                                    imageUrl = downloadUri.toString();
 
-                final String firstname = signupName.getText().toString();
-                final String lastname = signupLast.getText().toString();
-                final String numphone = signupNumPhone.getText().toString();
-                final String direccion = signupAnddress.getText().toString();
-                final String codmedpe = signupCodMePe.getText().toString();
-                final String especialidad = signupEsp.getText().toString();
-                final String dni = signupDNI.getText().toString();
-
-                final String fecha = getCurrentTimeStamp();
-
-                // Validar Formulario
-                if (submitForm()) {
-
-                    // Validar foto
-                    if (uriPhoto != null) {
-
-                        waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
-                        waitingDialog.show();
-
-                        fileReference = StorageReference.child(dni + "." + getFileExtension(uriPhoto));
-                        uploadTask = fileReference.putFile(uriPhoto);
-
-                        uploadTask
-                                .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                    @Override
-                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                        if (!task.isSuccessful()) {
-                                            throw Objects.requireNonNull(task.getException());
-                                        }
-                                        return fileReference.getDownloadUrl();
-                                    }
-                                })
-                                .addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        if (task.isSuccessful()) {
-                                            try {
-
-                                                Uri downloadUri = task.getResult();
-                                                final String imageUrl = downloadUri.toString();
-                                                //Guardar en firebase
-                                                String email = signupMail.getText().toString().trim();
-                                                String password = signupPassword.getText().toString().trim();
-                                                //
-                                                auth
-                                                        .createUserWithEmailAndPassword(email, password)
-                                                        .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                                                            @Override
-                                                            public void onSuccess(AuthResult authResult) {
-
-                                                                String uid = authResult.getUser().getUid();
-                                                                Usuario FirebaseUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, "", signupMail.getText().toString().trim(), fecha, imageUrl, uid);
-
-                                                                tb_Info_Doctor.
-                                                                        child(uid)
-                                                                        .setValue(FirebaseUser)
-                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                            @Override
-                                                                            public void onSuccess(Void aVoid) {
-                                                                                sendEmailVerification();
-                                                                                Log.e(TAG, " onSuccess ");
-                                                                                Toast.makeText(RegisterActivity.this, "Usuario Registrado , espere correo de verificación", Toast.LENGTH_SHORT).show();
-                                                                                Usuario user3 = new Usuario(dni, firstname, lastname, numphone, especialidad, imageUrl);
-                                                                                db_doctor_consulta.child("db_doctor_consulta").child(dni).setValue(user3);
-                                                                                generarToken();
-                                                                               // generarToken2();
-                                                                                waitingDialog.dismiss();
-                                                                                iniciarActivity();
-
-                                                                            }
-                                                                        })
-                                                                        .addOnFailureListener(new OnFailureListener() {
-                                                                            @Override
-                                                                            public void onFailure(@NonNull Exception e) {
-
-                                                                                Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
-                                                                                Log.e("RegisterActivity ", "onFailure ");
-                                                                                waitingDialog.dismiss();
-                                                                            }
-                                                                        });
-
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                waitingDialog.dismiss();
-                                                                Toast.makeText(RegisterActivity.this, "Fallo de Internet  " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                Log.e("RegisterActivity", "Error : -->" + e);
+                                                    CreateUser();
+                                                }
                                             }
 
-                                        } else {
-
-                                        }
-                                    }
-
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(RegisterActivity.this, "Error : -->" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(RegisterActivity.this, "No se inserto la foto en la Storage : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
                     }
-                    //waitingDialog.dismiss();
-                    //iniciarActivity();
-                }
-            }
-        });
+                });
+    }
+
+    private void CreateUser() {
+        // Email
+        email = signupMail.getText().toString().trim();
+        password = signupPassword.getText().toString().trim();
+        // Datos
+        dni = signupDNI.getText().toString();
+        firstname = signupFirstName.getText().toString();
+        lastname = signupLastName.getText().toString();
+        numphone = signupNumPhone.getText().toString();
+        codmedpe = signupCodMePe.getText().toString();
+        especialidad = spinner.getSelectedItem().toString();
+        direccion = signupAnddress.getText().toString();
+        //password
+        fecha = getCurrentTimeStamp();
+        //image
+        //uid
+
+        auth
+                .createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        uid = authResult.getUser().getUid();
+                        especialidad = spinner.getSelectedItem().toString();
+                        Usuario newUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, " ", email, fecha, imageUrl, uid);
+                        if (especialidad.equalsIgnoreCase("Medicina General")) {
+                            insertNewDoctor(newUser);
+                        } else if (especialidad.equalsIgnoreCase("Plasma")) {
+                            insertarNewPlasma(newUser);
+                        }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterActivity.this, "No se creo el Usuario " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        waitingDialog.dismiss();
+                    }
+                });
+    }
+
+    private void insertNewDoctor(Usuario newUser) {
+        Usuario newDoctor = newUser;
+
+        tb_Info_Doctor
+                .child(uid)
+                .setValue(newDoctor)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //
+                        sendEmailVerification();
+                        generarToken();
+                        //
+                        Log.e(TAG, " onSuccess : insertNewDoctor");
+                        Toast.makeText(RegisterActivity.this, "Verifique su correo, por favor", Toast.LENGTH_SHORT).show();
+                        //
+                        iniciarActivity();
+                        waitingDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
+                        Log.e("RegisterActivity ", "onFailure ");
+                        waitingDialog.dismiss();
+                    }
+                });
+
+
+    }
+
+    private void insertarNewPlasma(Usuario newUser) {
+        Usuario newPlasma = newUser;
+        tb_Info_Plasma
+                .child(uid)
+                .setValue(newPlasma)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //
+                        sendEmailVerification();
+                        generarToken();
+                        //
+                        Log.e(TAG, " onSuccess : insertNewPlasma");
+                        Toast.makeText(RegisterActivity.this, "Verifique su correo, por favor", Toast.LENGTH_SHORT).show();
+                        //
+                        iniciarActivity();
+                        waitingDialog.dismiss();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
+                        Log.e("RegisterActivity ", "onFailure ");
+                        waitingDialog.dismiss();
+                    }
+                });
     }
 
     public static String getCurrentTimeStamp() {
@@ -312,15 +357,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!checkName()) {
-            signupName.setAnimation(animation);
-            signupName.startAnimation(animation);
+            signupFirstName.setAnimation(animation);
+            signupFirstName.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
 
         if (!checkLast()) {
-            signupLast.setAnimation(animation);
-            signupLast.startAnimation(animation);
+            signupLastName.setAnimation(animation);
+            signupLastName.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
@@ -356,16 +401,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean checkName() {
-        if (signupName.getText().toString().trim().isEmpty()) {
-            signupName.setError("Error ingresar nombre");
+        if (signupFirstName.getText().toString().trim().isEmpty()) {
+            signupFirstName.setError("Error ingresar nombre");
             return false;
         }
         return true;
     }
 
     private boolean checkLast() {
-        if (signupLast.getText().toString().trim().isEmpty()) {
-            signupLast.setError("Error ingresar apellido");
+        if (signupLastName.getText().toString().trim().isEmpty()) {
+            signupLastName.setError("Error ingresar apellido");
             return false;
         }
         return true;
@@ -411,7 +456,6 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-
     public void generarToken() {
         Log.e(TAG, "generarToken1()");
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
@@ -429,7 +473,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
+    // Validando Token
     public void generarToken2() {
         // Get token
         // [START retrieve_current_token]
@@ -455,4 +499,15 @@ public class RegisterActivity extends AppCompatActivity {
         // [END retrieve_current_token]
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String text = adapterView.getItemAtPosition(i).toString();
+        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, text);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }
