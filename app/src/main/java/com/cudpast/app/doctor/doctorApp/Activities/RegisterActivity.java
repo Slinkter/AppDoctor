@@ -117,8 +117,9 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         signupNumPhone = findViewById(R.id.signupNumPhone);
         signupAnddress = findViewById(R.id.signupDir);
         signupCodMePe = findViewById(R.id.signupCodMePe);
-        // signupEsp = findViewById(R.id.signupEsp); <-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
+         signupEsp = findViewById(R.id.signupEsp); //<-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
         signupMail = findViewById(R.id.signupMail);
+        signupPassword = findViewById(R.id.signupPassword);
         signupDNI = findViewById(R.id.signupDNI);
         signupImagePhoto = findViewById(R.id.image_view);
         //
@@ -141,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
                                 waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
                                 waitingDialog.show();
-//insertar photo en Storage
+                                //insertar photo en Storage
                                 fileReference = StorageReference.child(dni + "." + getFileExtension(uriPhoto));
                                 uploadTaskPhoto = fileReference.putFile(uriPhoto);
                                 uploadTaskPhoto
@@ -188,7 +189,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         lastname = signupLastName.getText().toString();
         numphone = signupNumPhone.getText().toString();
         codmedpe = signupCodMePe.getText().toString();
-        especialidad = spinner.getSelectedItem().toString();
+        //especialidad
         direccion = signupAnddress.getText().toString();
         //password
         fecha = getCurrentTimeStamp();
@@ -203,6 +204,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                         uid = authResult.getUser().getUid();
                         especialidad = spinner.getSelectedItem().toString();
                         Usuario newUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, " ", email, fecha, imageUrl, uid);
+                        Log.e(TAG, dni + firstname + lastname + numphone + codmedpe + especialidad + direccion + " " + email + fecha + imageUrl + uid);
                         if (especialidad.equalsIgnoreCase("Medicina General")) {
                             insertNewDoctor(newUser);
                         } else if (especialidad.equalsIgnoreCase("Plasma")) {
@@ -214,7 +216,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, "No se creo el Usuario " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "No se creo el usuario " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         waitingDialog.dismiss();
                     }
                 });
