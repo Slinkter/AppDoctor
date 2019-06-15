@@ -95,7 +95,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
 
@@ -325,7 +324,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
-        //onActivityResult
+        //-->onActivityResult
     }
 
     @Override
@@ -504,7 +503,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String text = adapterView.getItemAtPosition(i).toString();
-        Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
         Log.e(TAG, text);
     }
 
