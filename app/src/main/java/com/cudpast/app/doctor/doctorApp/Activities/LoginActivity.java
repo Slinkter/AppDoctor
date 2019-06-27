@@ -44,6 +44,7 @@ import dmax.dialog.SpotsDialog;
 public class LoginActivity extends AppCompatActivity implements TextWatcher, CompoundButton.OnCheckedChangeListener {
     //
     private static final String TAG = "LoginActivity";
+
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
     private Button btnIngresar;
@@ -76,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         //
         volleyRP = VolleyRP.getInstance(this);
         mRequest = volleyRP.getRequestQueue();
+
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
