@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     private FirebaseAuth auth;
     //
     private EditText ed_login_email, ed_login_pwd;
-    private CheckBox rem_userpass;
+    private CheckBox checkBox;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     public static final String PREF_NAME = "prefs";
@@ -91,12 +91,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         editor = sharedPreferences.edit();
         ed_login_email = findViewById(R.id.ed_login_email);
         ed_login_pwd = findViewById(R.id.ed_login_pwd);
-        rem_userpass = (CheckBox) findViewById(R.id.rem_userpass);
+        checkBox = (CheckBox) findViewById(R.id.rem_userpass);
 
         if (sharedPreferences.getBoolean(KEY_REMEMBER, false)) {
-            rem_userpass.setChecked(true);
+            checkBox.setChecked(true);
         } else {
-            rem_userpass.setChecked(false);
+            checkBox.setChecked(false);
         }
 
         ed_login_email.setText(sharedPreferences.getString(KEY_USERNAME, ""));
@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
         ed_login_email.addTextChangedListener(this);
         ed_login_pwd.addTextChangedListener(this);
-        rem_userpass.setOnCheckedChangeListener(this);
+        checkBox.setOnCheckedChangeListener(this);
 
 
         btnIngresar.setOnClickListener(new View.OnClickListener() {
@@ -324,7 +324,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     }
 
     private void managePrefs() {
-        if (rem_userpass.isChecked()) {
+        if (checkBox.isChecked()) {
             editor.putString(KEY_USERNAME, ed_login_email.getText().toString().trim());
             editor.putString(KEY_PASS, ed_login_pwd.getText().toString().trim());
             editor.putBoolean(KEY_REMEMBER, true);
