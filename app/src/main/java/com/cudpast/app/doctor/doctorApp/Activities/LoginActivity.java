@@ -162,10 +162,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
         Log.e(TAG, " ===========================================================");
         Log.e(TAG, "                VerificacionFirebase");
-
+        //
         final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         waitingDialog.show();
-
+        //
         auth
                 .signInWithEmailAndPassword(usernamelogin, passwordlogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {

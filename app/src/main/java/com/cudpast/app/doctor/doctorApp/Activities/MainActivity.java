@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_home);
-
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -87,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
@@ -123,10 +119,11 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         Usuario usuario = Common.currentUser;
         if (usuario != null) {
-            Log.e(TAG, "ok");
             cargarDataDoctor();
+            Log.e(TAG, "usuario existe");
         } else {
             goToLoginActivity();
+            Log.e(TAG, "usuario no logeado");
         }
     }
 
