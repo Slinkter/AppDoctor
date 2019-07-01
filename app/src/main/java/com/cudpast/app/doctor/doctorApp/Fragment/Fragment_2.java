@@ -66,13 +66,10 @@ public class Fragment_2 extends Fragment implements
     SupportMapFragment mapFragment;
 
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean mLocationPermissionGranted;
     private static final int PLAY_SERVICE_RES_REQUEST = 9000;
-
-    private static int UPDATE_INTERVAL = 5000;
-    private static int FASTEST_INTERVAL = 3000;
-    private static int DISPLACEMENT = 10;
+    private static final int UPDATE_INTERVAL = 5000;
+    private static final int FASTEST_INTERVAL = 3000;
+    private static final int DISPLACEMENT = 10;
 
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
@@ -82,6 +79,10 @@ public class Fragment_2 extends Fragment implements
     private Marker marketDoctorCurrent;
     public String currentUserUID;
     private FusedLocationProviderClient fusedLocationClient;
+
+
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean mLocationPermissionGranted;
 
     public Fragment_2() {
 

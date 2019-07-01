@@ -27,12 +27,9 @@ import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
-
     //Header Menu
     ImageView imageViewDoctor;
     TextView nameDoctor;
@@ -52,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+        //
         imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
         nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
         especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
@@ -86,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        //
         if (id == R.id.nav_a) {
             setFragment(1);
         } else if (id == R.id.nav_b) {
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements
             startActivity(loginActivity);
             finish();
         }
-
+        //
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -113,39 +111,14 @@ public class MainActivity extends AppCompatActivity implements
         Usuario usuario = Common.currentUserDoctor;
         if (usuario != null) {
             loadInfoDoctorHeader();
-            Log.e(TAG, "usuario existe");
         } else {
             goToLoginActivity();
-            Log.e(TAG, "usuario no logeado");
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    //.LOGIN_ACTIVITY
-    private void goToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 
     //.
     private void loadInfoDoctorHeader() {
-
+        Log.e(TAG, "usuario esta logeado");
         try {
             Usuario usuario = Common.currentUserDoctor;
 
@@ -169,6 +142,15 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //.
+    private void goToLoginActivity() {
+        Log.e(TAG, "usuario no logeado");
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     //.
@@ -201,15 +183,7 @@ public class MainActivity extends AppCompatActivity implements
                 transaction.replace(R.id.fragment, fragment4);
                 transaction.commit();
                 break;
-            case 5:
-                //Salir
-//                Fragment_5 fragment5 = new Fragment_5();
-//                transaction.replace(R.id.fragment, fragment5);
-//                transaction.commit();
-                break;
         }
-
-
     }
 
 }
