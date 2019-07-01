@@ -74,12 +74,11 @@ public class Fragment_2 extends Fragment implements
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
 
-    public DatabaseReference tb_available_doctor, db_ref_connect, currentUserRef;
+    public DatabaseReference refDB_available_doctor, refDB_connect, currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
-    public String currentUserUID;
-    private FusedLocationProviderClient fusedLocationClient;
 
+    private FusedLocationProviderClient fusedLocationClient;
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
@@ -100,20 +99,18 @@ public class Fragment_2 extends Fragment implements
         //Obtener el UID del doctor
         //Obtener ubicación del doctor
         //On or Off : escuchar el switch
-        tb_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
-        currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        currentUserRef = tb_available_doctor.child(currentUserUID);
+        refDB_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
+        currentUserRef = refDB_available_doctor.child(Common.currentUserDoctor.getUid());
         //cuando se pone offline el doctor desaparece en realtime database
-        db_ref_connect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-        db_ref_connect
+        refDB_connect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        refDB_connect
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //  currentUserRef.onDisconnect().removeValue();
-                        Log.e(TAG, "tb_available_doctor : " + tb_available_doctor);
-                        Log.e(TAG, "currentUserUID : " + currentUserUID);
+                        Log.e(TAG, "refDB_available_doctor : " + refDB_available_doctor);
                         Log.e(TAG, "currentUserRef : " + currentUserRef);
-                        Log.e(TAG, "db_ref_connect : " + db_ref_connect);
+                        Log.e(TAG, "refDB_connect : " + refDB_connect);
 
                         currentUserRef
                                 .onDisconnect()
@@ -121,7 +118,7 @@ public class Fragment_2 extends Fragment implements
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.e(TAG, "db_ref_connect : onSuccess : ");
+                                        Log.e(TAG, "refDB_connect : onSuccess : ");
                                     }
                                 });
 
@@ -137,7 +134,7 @@ public class Fragment_2 extends Fragment implements
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         Common.location_switch = rootView.findViewById(R.id.location_switch);
         updateFirebaseToken();
-        geoFire = new GeoFire(tb_available_doctor);
+        geoFire = new GeoFire(refDB_available_doctor);
         setUpLocation();
 
         Common.location_switch
@@ -323,7 +320,7 @@ public class Fragment_2 extends Fragment implements
         try {
             Log.e(TAG, "=================================================================");
             Log.e(TAG, "                          displayLocation()                      ");
-            Log.e(TAG, "Common.token_doctor : " + Common.token_doctor);
+
             if (ContextCompat
                     .checkSelfPermission(getActivity(),
                             Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -359,9 +356,9 @@ public class Fragment_2 extends Fragment implements
                     mDialog.setMessage("Actualizando su Ubicación...");
                     mDialog.show();
                     //
+                    String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
                     final double latitude = Common.mLastLocation.getLatitude();
                     final double longitud = Common.mLastLocation.getLongitude();
-                    String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
 
                     Log.e(TAG, " firebaseUserUID :  " + firebaseUserUID);
                     Log.e(TAG, " Common.mLastLocation.getLatitude()  :  " + latitude);
