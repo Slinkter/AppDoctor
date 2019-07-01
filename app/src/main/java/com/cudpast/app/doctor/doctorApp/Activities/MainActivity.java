@@ -45,23 +45,17 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         View headerView = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
-
-        //
         imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
         nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
         especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
-
         setFragment(1);
-
     }
 
     @Override
@@ -118,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onStart();
         Usuario usuario = Common.currentUserDoctor;
         if (usuario != null) {
-            cargarDataDoctor();
+            loadInfoDoctorHeader();
             Log.e(TAG, "usuario existe");
         } else {
             goToLoginActivity();
@@ -150,19 +144,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     //.
-    private void cargarDataDoctor() {
-        Usuario usuario = Common.currentUserDoctor;
+    private void loadInfoDoctorHeader() {
 
-        String name = usuario.getFirstname();
-        String especialidad = usuario.getEspecialidad();
-
-        Log.e(TAG, " name :" + name);
-        Log.e(TAG, " especialidad :" + especialidad);
         try {
+            Usuario usuario = Common.currentUserDoctor;
+
+            String name = usuario.getFirstname();
+            String especialidad = usuario.getEspecialidad();
+            String urlImg = usuario.getImage();
+
             nameDoctor.setText(name);
             especialidadDoctor.setText(especialidad);
+            Glide
+                    .with(this)
+                    .load(Common.currentUserDoctor.getImage())
+                    .placeholder(R.drawable.ic_doctorapp)
+                    .error(R.drawable.ic_doctorapp)
+                    .into(imageViewDoctor);
 
-            Glide.with(this).load(Common.currentUserDoctor.getImage()).into(imageViewDoctor);
+            Log.e(TAG, " name = " + name);
+            Log.e(TAG, " especialidad = " + especialidad);
+            Log.e(TAG, " urlImg = " + urlImg);
 
         } catch (Exception e) {
             e.printStackTrace();

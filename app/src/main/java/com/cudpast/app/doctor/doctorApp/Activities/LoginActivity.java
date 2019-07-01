@@ -241,11 +241,11 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
 
     //Validación de formulario parte 2
-    private boolean checkDNI() {
+    private boolean checkEmail() {
 
 
         if (ed_login_email.getText().toString().trim().isEmpty()) {
-            ed_login_email.setError("vacio");
+            ed_login_email.setError("por favor, ingresar su correo");
             return false;
         }
         return true;
@@ -253,12 +253,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
     private boolean checkPassword() {
 
-        if (ed_login_pwd.length() < 2) {
-            ed_login_pwd.setError("Error : ingresar password");
-            return false;
-        }
         if (ed_login_pwd.getText().toString().trim().isEmpty()) {
-            ed_login_pwd.setError("vacio");
+            ed_login_pwd.setError("por favor, ingresar su contraseña");
             return false;
         }
         return true;
@@ -266,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
     private boolean submitForm() {
 
-        if (!checkDNI()) {
+        if (!checkEmail()) {
             ed_login_email.setAnimation(animation);
             ed_login_email.startAnimation(animation);
             vib.vibrate(120);
@@ -382,7 +378,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                                 dialogInterface.dismiss();
                                 waitingDialog.dismiss();
                                 Log.e(TAG, e.getMessage());
-                                Toast.makeText(LoginActivity.this, "su correo no esta registrado", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Su correo no esta registrado", Toast.LENGTH_SHORT).show();
 
                             }
                         });
