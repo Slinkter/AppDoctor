@@ -62,14 +62,14 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
 
         tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
-        usuario = Common.currentUser;
+        usuario = Common.currentUserDoctor;
         userAuthId = usuario.getUid();
 
         updateDoctorPhotoView = findViewById(R.id.updateDoctorPhoto);
 
         Glide
                 .with(this)
-                .load(Common.currentUser.getImage())
+                .load(Common.currentUserDoctor.getImage())
                 .into(updateDoctorPhotoView);
 
         btn_UploadPhotoDoctor = findViewById(R.id.btn_updateDoctorPhoto);
@@ -105,7 +105,7 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
         final SpotsDialog waitingDialog = new SpotsDialog(UpdatePhotoDoctor.this, R.style.DialogUpdateDoctorProfile);
         waitingDialog.show();
 
-        String userdni = Common.currentUser.getDni();
+        String userdni = Common.currentUserDoctor.getDni();
 
 
         final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
@@ -151,8 +151,8 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
                                 updateUser.setImage(imageUrl);//<-- set nueva imagen
                                 updateUser.setUid(usuario.getUid());
 
-                                Common.currentUser.setImage(imageUrl);
-                                Common.currentUser = updateUser;
+                                Common.currentUserDoctor.setImage(imageUrl);
+                                Common.currentUserDoctor = updateUser;
 
 
                                 tb_Info_Doctor

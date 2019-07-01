@@ -46,7 +46,7 @@ public class Fragment_1 extends Fragment {
 
 
         try {
-            Usuario usuario = Common.currentUser;
+            Usuario usuario = Common.currentUserDoctor;
             String name = usuario.getFirstname();
             String email = usuario.getCorreoG();
 

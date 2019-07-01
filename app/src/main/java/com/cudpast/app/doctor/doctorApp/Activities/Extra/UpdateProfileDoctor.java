@@ -90,7 +90,7 @@ public class UpdateProfileDoctor extends AppCompatActivity {
 
 
         //.Obtener usuario actualizr
-        usuario = Common.currentUser;
+        usuario = Common.currentUserDoctor;
         //.Display on XMLc
         updateDoctorName.setText(usuario.getFirstname());
         updateDoctorLast.setText(usuario.getLastname());
@@ -118,7 +118,7 @@ public class UpdateProfileDoctor extends AppCompatActivity {
                 final Usuario updateUser = new Usuario();
                 final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctor.this, R.style.DialogUpdateDoctorProfile);
                 waitingDialog.show();
-                String imgPath = Common.currentUser.getImage();
+                String imgPath = Common.currentUserDoctor.getImage();
 
                 //.Usuario a actualizar on Firebase
                 updateUser.setDni(usuario.getDni());
@@ -134,7 +134,7 @@ public class UpdateProfileDoctor extends AppCompatActivity {
                 updateUser.setFecha(usuario.getFecha());
                 updateUser.setUid(usuario.getUid());
 //                Log.e(TAG, "updatePhotoToStorage" + updateUser.getCadena());
-                Common.currentUser = updateUser;
+                Common.currentUserDoctor = updateUser;
 
 
                 //.Actualizar campos
@@ -191,7 +191,7 @@ public class UpdateProfileDoctor extends AppCompatActivity {
         final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctor.this, R.style.DialogUpdateDoctorProfile);
         waitingDialog.show();
 
-        String userdni = Common.currentUser.getDni();
+        String userdni = Common.currentUserDoctor.getDni();
 
         final StorageReference photoRefe = StorageReference.child(userdni + "." + getFileExtension(mUriPhoto));
         //Todo : reducir el tamaño de la imagen o foto
@@ -239,8 +239,8 @@ public class UpdateProfileDoctor extends AppCompatActivity {
                                 updateUser.setImage(imageUrl);//<-- set nueva imagen
                                 updateUser.setUid(usuario.getUid());
 
-                                Common.currentUser.setImage(imageUrl);
-                                Common.currentUser = updateUser;
+                                Common.currentUserDoctor.setImage(imageUrl);
+                                Common.currentUserDoctor = updateUser;
 
 //                                Log.e(TAG, "updatePhotoToStorage : " + updateUser.getCadena());
 

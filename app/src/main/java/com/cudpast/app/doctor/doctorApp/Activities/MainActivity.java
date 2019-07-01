@@ -23,7 +23,6 @@ import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_1;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_2;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_3;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_4;
-import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_5;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        Usuario usuario = Common.currentUser;
+        Usuario usuario = Common.currentUserDoctor;
         if (usuario != null) {
             cargarDataDoctor();
             Log.e(TAG, "usuario existe");
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //.
     private void cargarDataDoctor() {
-        Usuario usuario = Common.currentUser;
+        Usuario usuario = Common.currentUserDoctor;
 
         String name = usuario.getFirstname();
         String especialidad = usuario.getEspecialidad();
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements
             nameDoctor.setText(name);
             especialidadDoctor.setText(especialidad);
 
-            Glide.with(this).load(Common.currentUser.getImage()).into(imageViewDoctor);
+            Glide.with(this).load(Common.currentUserDoctor.getImage()).into(imageViewDoctor);
 
         } catch (Exception e) {
             e.printStackTrace();

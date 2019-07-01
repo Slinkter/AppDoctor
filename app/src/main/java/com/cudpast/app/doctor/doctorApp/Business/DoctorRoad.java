@@ -35,7 +35,6 @@ import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Soporte.Data;
 import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
 import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
-import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
@@ -442,7 +441,7 @@ public class DoctorRoad extends FragmentActivity implements
         final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
         waitingDialog.show();
         Log.e(TAG, tokenPaciente);
-        String title = String.format("el doctor %s ha llegado", Common.currentUser.getFirstname());
+        String title = String.format("el doctor %s ha llegado", Common.currentUserDoctor.getFirstname());
         String body = "Arrived";
         //
         Data data = new Data(title, body, "", "", "", "");

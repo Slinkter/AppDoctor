@@ -28,7 +28,7 @@ public class Common {
 
 
     public static String token_doctor;
-    public static Usuario currentUser;
+    public static Usuario currentUserDoctor;
     public static UserPaciente currentPaciente;
     public static Location mLastLocation;
 

@@ -2,6 +2,7 @@ package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,11 +10,14 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,6 +25,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -28,8 +33,10 @@ import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +44,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import dmax.dialog.SpotsDialog;
 
@@ -62,6 +70,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public static final String KEY_PASS = "password";
     //
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+    SpotsDialog waitingDialog;
+
+    private TextView txt_forgot_pwd;
 
     //
     @Override
@@ -84,8 +95,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         btnIngresar = findViewById(R.id.btnLogin);
         //FIREBASE INIT
         auth = FirebaseAuth.getInstance();
-
-
+        //
+        waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         //Check
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -115,6 +126,16 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                     String pwd = ed_login_pwd.getText().toString();
                     VerificacionFirebase(email, pwd);
                 }
+            }
+        });
+
+
+        txt_forgot_pwd = findViewById(R.id.txt_forgot_password);
+        txt_forgot_pwd.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                showDialogForgotPwd();
+                return false;
             }
         });
 
@@ -162,10 +183,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
         Log.e(TAG, " ===========================================================");
         Log.e(TAG, "                VerificacionFirebase");
-        //
-        final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         waitingDialog.show();
-        //
         auth
                 .signInWithEmailAndPassword(usernamelogin, passwordlogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -173,49 +191,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                     public void onSuccess(AuthResult authResult) {
                         Log.e(TAG, " Sign In With Email : success");
                         FirebaseUser firebaseUser = auth.getCurrentUser();
-                        String userAuthId = firebaseUser.getUid();
-
+                        String userIUD = firebaseUser.getUid();
                         if (firebaseUser.isEmailVerified()) {
                             updateUI(firebaseUser);
-                            FirebaseDatabase
-                                    .getInstance()
-                                    .getReference(Common.TB_INFO_DOCTOR)
-                                    .child(userAuthId)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                            try {
-                                                waitingDialog.dismiss();
-                                                Usuario userAndroid = dataSnapshot.getValue(Usuario.class);
-                                                Common.currentUser = userAndroid;
-                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                startActivity(intent);
-                                                finish();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            waitingDialog.dismiss();
-                                            Log.e("ERROR", "DatabaseError -->" + databaseError.toString());
-                                            updateUI(null);
-                                        }
-                                    });
-
-
-                        } else {
-
-                            updateUI(null);
+                            goToMain(userIUD);
                             waitingDialog.dismiss();
                         }
-                        Log.e(TAG, "                END-VerificacionFirebase                       ");
-                        Log.e(TAG, " ===========================================================");
-
                     }
 
 
@@ -224,14 +205,38 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "sign In With Email: Failure  " + e.getMessage());
-                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         updateUI(null);
                         waitingDialog.dismiss();
-                        Log.e(TAG, "                END-VerificacionFirebase                       ");
-                        Log.e(TAG, " ===========================================================");
                     }
                 });
 
+    }
+
+    private void goToMain(String userIUD) {
+        FirebaseDatabase
+                .getInstance()
+                .getReference(Common.TB_INFO_DOCTOR)
+                .child(userIUD)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        Common.currentUserDoctor = dataSnapshot.getValue(Usuario.class);
+
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+
+                        Log.e("onDataChange : ", "Common.currentUserDoctor : " + Common.currentUserDoctor);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("onCancelled : ", "DatabaseError databaseError = " + databaseError.toString());
+                        updateUI(null);
+                    }
+                });
     }
 
 
@@ -285,8 +290,11 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = auth.getCurrentUser();
-        updateUI(currentUser);
+        if (auth.getCurrentUser() != null) {
+            FirebaseUser currentUser = auth.getCurrentUser();
+            updateUI(currentUser);
+        }
+
     }
 
     private void updateUI(FirebaseUser usuarioFirebase) {
@@ -294,6 +302,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
             if (usuarioFirebase.isEmailVerified()) {
 
             }
+        } else {
+            Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -335,5 +345,57 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
             editor.remove(KEY_USERNAME);
             editor.apply();
         }
+    }
+
+    private void showDialogForgotPwd() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+        alertDialog.setTitle("Recuperar Contraseña");
+        alertDialog.setMessage("Escriba su correo");
+
+        LayoutInflater inflater = LayoutInflater.from(LoginActivity.this);
+        View forgot_pwd_layout = inflater.inflate(R.layout.layout_forgot_pwd, null);
+
+        final MaterialEditText editEmail = (MaterialEditText) forgot_pwd_layout.findViewById(R.id.edtEmailForgot);
+        alertDialog.setView(forgot_pwd_layout);
+
+        alertDialog.setPositiveButton("ENVIAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialogInterface, int i) {
+
+                final SpotsDialog waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogResetearPassword);
+                waitingDialog.show();
+
+                auth
+                        .sendPasswordResetEmail(editEmail.getText().toString().trim())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                dialogInterface.dismiss();
+                                waitingDialog.dismiss();
+                                Log.e(TAG, "");
+                                Toast.makeText(LoginActivity.this, "Revise su correo", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                dialogInterface.dismiss();
+                                waitingDialog.dismiss();
+                                Log.e(TAG, e.getMessage());
+                                Toast.makeText(LoginActivity.this, "su correo no esta registrado", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+            }
+        });
+
+        alertDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        alertDialog.show();
     }
 }

@@ -2,15 +2,12 @@ package com.cudpast.app.doctor.doctorApp.Business;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.User;
 import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.squareup.picasso.Picasso;
 
 public class DoctorEnd extends AppCompatActivity {
 
@@ -34,7 +31,7 @@ public class DoctorEnd extends AppCompatActivity {
     private void metodoSignInResult() {
         try {
 
-            Usuario currentDoctor = Common.currentUser;
+            Usuario currentDoctor = Common.currentUserDoctor;
             UserPaciente currentPaciente = Common.currentPaciente;
 
             tv_paciente_firstname.setText(currentPaciente.getNombre());

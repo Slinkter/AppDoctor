@@ -116,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         signupNumPhone = findViewById(R.id.signupNumPhone);
         signupAnddress = findViewById(R.id.signupDir);
         signupCodMePe = findViewById(R.id.signupCodMePe);
-         signupEsp = findViewById(R.id.signupEsp); //<-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
+        signupEsp = findViewById(R.id.signupEsp); //<-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
         signupMail = findViewById(R.id.signupMail);
         signupPassword = findViewById(R.id.signupPassword);
         signupDNI = findViewById(R.id.signupDNI);
@@ -160,7 +160,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                                                 if (task.isSuccessful()) {
                                                     Uri downloadUri = task.getResult();
                                                     imageUrl = downloadUri.toString();
-
                                                     CreateUser();
                                                 }
                                             }
@@ -201,15 +200,10 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         uid = authResult.getUser().getUid();
-                        especialidad = spinner.getSelectedItem().toString();
+                        especialidad = spinner.getSelectedItem().toString();// plasma o medico general
                         Usuario newUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, " ", email, fecha, imageUrl, uid);
                         Log.e(TAG, dni + firstname + lastname + numphone + codmedpe + especialidad + direccion + " " + email + fecha + imageUrl + uid);
-                        if (especialidad.equalsIgnoreCase("Medicina General")) {
-                            insertNewDoctor(newUser);
-                        } else if (especialidad.equalsIgnoreCase("Plasma")) {
-                            insertarNewPlasma(newUser);
-                        }
-
+                        insertNewDoctor(newUser);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -249,8 +243,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                         waitingDialog.dismiss();
                     }
                 });
-
-
     }
 
     private void insertarNewPlasma(Usuario newUser) {
@@ -503,7 +495,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String text = adapterView.getItemAtPosition(i).toString();
-      //  Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(adapterView.getContext(), text, Toast.LENGTH_SHORT).show();
         Log.e(TAG, text);
     }
 
