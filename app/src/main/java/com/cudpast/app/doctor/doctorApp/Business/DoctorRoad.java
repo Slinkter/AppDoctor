@@ -441,10 +441,12 @@ public class DoctorRoad extends FragmentActivity implements
         final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
         waitingDialog.show();
         Log.e(TAG, tokenPaciente);
+        //Enviar Notificacion hacia el paciente
+        String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String title = String.format("el doctor %s ha llegado", Common.currentUserDoctor.getFirstname());
         String body = "Arrived";
         //
-        Data data = new Data(title, body, "", "", "", "");
+        Data data = new Data(title, body, "", doctorUID, "", "");
         Sender sender = new Sender(tokenPaciente, data);
         Log.e(TAG, " " + data);
         Log.e(TAG, " " + sender);
