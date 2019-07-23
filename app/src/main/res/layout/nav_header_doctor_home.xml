@@ -12,40 +12,56 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <LinearLayout
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageViewDoctor"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
             android:layout_gravity="center"
+            android:layout_marginRight="20sp"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             app:civ_border_color="@color/white"
             app:civ_border_width="2dp" />
 
-        <TextView
-            android:id="@+id/nameDoctor"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Name Doctor"
-            android:textColor="@color/white"
-            android:textSize="20dp" />
-        <!--Especialidad-->
-        <TextView
-            android:id="@+id/especialidadDoctor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Especialidad"
-            android:textColor="@color/white" />
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/nameDoctor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Name Doctor"
+                android:textColor="@color/white"
+                android:textSize="21dp"
+                android:textStyle="bold" />
+            <!--Especialidad-->
+            <TextView
+
+                android:id="@+id/especialidadDoctor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Especialidad"
+                android:textColor="@color/white"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
 
 </LinearLayout>
+
