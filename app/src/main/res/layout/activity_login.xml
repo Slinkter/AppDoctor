@@ -19,10 +19,10 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="140dp"
-            android:layout_height="135dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="25dp"
             android:src="@drawable/ic_hospital" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -34,7 +34,7 @@
             android:layout_marginRight="20dp"
             android:ems="8"
             android:gravity="center"
-            android:hint="Correo"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorRed"
@@ -69,15 +69,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="10dp"
             android:text="Recordarme " />
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp">
+            android:layout_margin="10dp">
 
             <Button
+                android:elevation="8dp"
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,6 +91,7 @@
                 android:textColor="@color/white" />
 
             <Button
+                android:elevation="8dp"
                 android:onClick="signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,8 +108,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿Olvidaste tu contraeña ?"
-            android:textColor="@color/bottomText"
-            android:textSize="16sp"
+            android:textColor="@color/grey_500"
+            android:textSize="15dp"
             android:layout_marginBottom="5dp"
             android:textStyle="italic" />
     </LinearLayout>

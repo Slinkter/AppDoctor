@@ -25,8 +25,6 @@ public class Common {
 
     public static final String db_session = "db_session";
 
-
-
     public static String token_doctor;
     public static Usuario currentUserDoctor;
     public static UserPaciente currentPaciente;
