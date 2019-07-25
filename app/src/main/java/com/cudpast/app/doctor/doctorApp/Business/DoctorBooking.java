@@ -97,6 +97,16 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             lat = getIntent().getDoubleExtra("lat", -1.0);
             lng = getIntent().getDoubleExtra("lng", -1.0);
             pacienteUID = getIntent().getStringExtra("pacienteUID");
+
+            Log.e(TAG, "Title  =" + title);
+            Log.e(TAG, "Body  =" + body);
+            Log.e(TAG, "ptoken  =" + pToken);
+            Log.e(TAG, "dtoken  =" + dToken);
+            Log.e(TAG, "lat  =" + lat);
+            Log.e(TAG, "lng  =" + lng);
+            Log.e(TAG, "pacienteUID  =" + pacienteUID);
+
+
         }
 
         if (Common.location_switch == null) {
