@@ -89,6 +89,16 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         textTime = findViewById(R.id.txtTime);
         textDistance = findViewById(R.id.txtDistance);
 
+        if (getIntent() != null) {
+            title = getIntent().getStringExtra("title");
+            body = getIntent().getStringExtra("body");
+            pToken = getIntent().getStringExtra("pToken");
+            dToken = getIntent().getStringExtra("dToken");
+            lat = getIntent().getDoubleExtra("lat", -1.0);
+            lng = getIntent().getDoubleExtra("lng", -1.0);
+            pacienteUID = getIntent().getStringExtra("pacienteUID");
+        }
+
         if (Common.location_switch == null) {
             Log.e(TAG, "Common.location_switch : NULL");
         } else {
@@ -144,6 +154,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         waitingDialog.show();
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String tokenPaciente1 = "";
         Data data = new Data("APP Doctor", "Acepta", "", doctorUID, "", "");
         Sender sender = new Sender(tokenPaciente, data);
         //
