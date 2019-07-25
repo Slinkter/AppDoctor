@@ -66,7 +66,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     double doclat, doclng;
     private GoogleMap mMap;
     private DatabaseReference tb_Info_Paciente;
-
+//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
