@@ -359,15 +359,21 @@ public class Fragment_2 extends Fragment implements
                                                 if (marketDoctorCurrent != null) {
                                                     marketDoctorCurrent.remove();
                                                 }
-                                                MarkerOptions m1 = new MarkerOptions()
-                                                        .position(new LatLng(latitude, longitud))
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
-                                                        .title("Usted");
-                                                //Dibujar al doctor en el mapa
-                                                marketDoctorCurrent = mMap.addMarker(m1);
-                                                LatLng doctorLL = new LatLng(latitude, longitud);
-                                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
-                                                mDialog.dismiss();
+
+                                                try {
+                                                    MarkerOptions m1 = new MarkerOptions()
+                                                            .position(new LatLng(latitude, longitud))
+                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
+                                                            .title("Usted");
+                                                    //Dibujar al doctor en el mapa
+                                                    marketDoctorCurrent = mMap.addMarker(m1);
+                                                    LatLng doctorLL = new LatLng(latitude, longitud);
+                                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                                                    mDialog.dismiss();
+                                                }catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
                                             }
                                         });
                                     } else {

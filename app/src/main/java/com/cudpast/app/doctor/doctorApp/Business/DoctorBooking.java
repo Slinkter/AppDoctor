@@ -97,16 +97,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "se  puso en offline al doctor ");
         }
 
-        if (getIntent() != null) {
-            title = getIntent().getStringExtra("title");
-            body = getIntent().getStringExtra("body");
-            pToken = getIntent().getStringExtra("pToken");
-            dToken = getIntent().getStringExtra("dToken");
-            lat = getIntent().getDoubleExtra("lat", -1.0);
-            lng = getIntent().getDoubleExtra("lng", -1.0);
-            pacienteUID = getIntent().getStringExtra("pacienteUID");
-        }
-        getDirection(lat, lng, pacienteUID);
+
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +114,23 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (getIntent() != null) {
+            title = getIntent().getStringExtra("title");
+            body = getIntent().getStringExtra("body");
+            pToken = getIntent().getStringExtra("pToken");
+            dToken = getIntent().getStringExtra("dToken");
+            lat = getIntent().getDoubleExtra("lat", -1.0);
+            lng = getIntent().getDoubleExtra("lng", -1.0);
+            pacienteUID = getIntent().getStringExtra("pacienteUID");
+        }
+
+        getDirection(lat, lng, pacienteUID);
     }
 
     //.

@@ -139,7 +139,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
-        //
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, APP_CHANNEL_ID);
         builder
                 .setContentTitle(message.getData().get("title"))

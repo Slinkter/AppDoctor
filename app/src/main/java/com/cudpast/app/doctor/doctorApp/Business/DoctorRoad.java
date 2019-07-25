@@ -438,8 +438,7 @@ public class DoctorRoad extends FragmentActivity implements
         // esta en el metodo onMapReady>ShowPopupNotification> sendArriveNotification(idTokenPaciente);
         Log.e(TAG, "=====================================================");
         Log.e(TAG, "             sendArriveNotification                  ");
-        final SpotsDialog waitingDialog = new SpotsDialog(DoctorRoad.this, R.style.DialogUpdateDoctorEnviando);
-        waitingDialog.show();
+
         Log.e(TAG, tokenPaciente);
         //Enviar Notificacion hacia el paciente
         String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -457,14 +456,14 @@ public class DoctorRoad extends FragmentActivity implements
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
-                            waitingDialog.dismiss();
+
                             Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         } else {
-                            waitingDialog.dismiss();
+
                             Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
                             Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
                             startActivity(intentError);
@@ -475,7 +474,7 @@ public class DoctorRoad extends FragmentActivity implements
 
                     @Override
                     public void onFailure(Call<FCMResponse> call, Throwable t) {
-                        waitingDialog.dismiss();
+
                         Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
                         Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
                         startActivity(intentError);

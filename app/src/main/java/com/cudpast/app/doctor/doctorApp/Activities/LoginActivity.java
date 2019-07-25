@@ -195,7 +195,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                         if (firebaseUser.isEmailVerified()) {
                             updateUI(firebaseUser);
                             goToMain(userIUD);
-                            waitingDialog.dismiss();
+
                         }
                     }
 
@@ -220,14 +220,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                         Common.currentUserDoctor = dataSnapshot.getValue(Usuario.class);
-
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        waitingDialog.dismiss();
                         finish();
-
                         Log.e("onDataChange : ", "Common.currentUserDoctor : " + Common.currentUserDoctor);
                     }
 
@@ -242,8 +240,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
     //Validación de formulario parte 2
     private boolean checkEmail() {
-
-
         if (ed_login_email.getText().toString().trim().isEmpty()) {
             ed_login_email.setError("por favor, ingresar su correo");
             return false;
