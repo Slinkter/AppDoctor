@@ -194,8 +194,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         //image
         //uid
 
-        auth
-                .createUserWithEmailAndPassword(email, password)
+        auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {

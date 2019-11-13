@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/colorPrimary"
     android:fitsSystemWindows="false"
     tools:context=".Activities.RegisterActivity">
 
@@ -14,8 +15,8 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="40sp"
             android:layout_marginBottom="10dp"
@@ -27,76 +28,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="NUEVO USUARIO"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="8dp"
-            app:cardUseCompatPadding="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/signupMail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="6"
-                    android:gravity="center"
-                    android:hint="Correo"
-                    android:inputType="textEmailAddress"
-                    android:text=""
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
-                    android:textSize="@dimen/txt_register_size"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
-                    app:met_singleLineEllipsis="false" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/signupPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="center"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"
-                    android:text=""
-                    android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
-                    android:textSize="@dimen/txt_register_size"
-                    app:met_baseColor="@color/colorPrimary"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
-                    app:met_singleLineEllipsis="false" />
-            </LinearLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:text="DATOS PERSONALES "
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -125,11 +60,11 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -142,11 +77,11 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -160,11 +95,11 @@
                     android:maxLength="9"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -177,11 +112,11 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
 
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -190,21 +125,20 @@
                     android:layout_height="wrap_content"
                     android:freezesText="false"
                     android:gravity="center"
-                    android:hint="Codigo Medico Perú"
+                    android:hint="Código Medico Perú"
                     android:inputType="phone"
                     android:maxLength="6"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
 
 
                 <com.rengwuxian.materialedittext.MaterialEditText
-                    android:visibility="gone"
                     android:id="@+id/signupEsp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -214,11 +148,11 @@
                     android:inputType="textPersonName"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
                 <!--  -->
                 <com.rengwuxian.materialedittext.MaterialEditText
@@ -232,16 +166,81 @@
                     android:maxLength="8"
                     android:text=""
                     android:textColor="@color/colorPrimary"
-                    android:textColorHint="@color/colorRed"
+                    android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/colorRed"
+                    app:met_primaryColor="@color/colorPrimary"
                     app:met_singleLineEllipsis="false" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+
+            android:text="NUEVO USUARIO"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupMail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="6"
+                    android:gravity="center"
+                    android:hint="Correo"
+                    android:inputType="textEmailAddress"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/signupPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:hint="Contraseña"
+                    android:inputType="textPassword"
+                    android:text=""
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textSize="@dimen/txt_register_size"
+                    app:met_baseColor="@color/colorPrimary"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/colorPrimary"
+                    app:met_singleLineEllipsis="false" />
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
 
         <TextView
             android:layout_width="wrap_content"
@@ -250,8 +249,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:text="CATEGORIA"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -265,11 +265,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="8dp"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <!--Categoria -->
@@ -278,35 +278,80 @@
                     android:id="@+id/signupSpinnerCategoria"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center">
-                </Spinner>
+                    android:textAlignment="center"></Spinner>
             </LinearLayout>
 
 
         </android.support.v7.widget.CardView>
 
-        <Button
-            android:id="@+id/btn_choose_image"
-            android:layout_width="90dp"
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/custom_button_2"
-            android:gravity="center"
-            android:text="subir foto"
-            android:textColor="@color/white" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Foto"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image_view"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_above="@+id/btn_choose_image"
+                    android:layout_below="@+id/botones"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ic_photo_doctor" />
+
+                <Button
+                    android:id="@+id/btn_choose_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/custom_button_2"
+                    android:gravity="center"
+                    android:text="subir foto"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btnGuardar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/custom_button_2"
+                    android:gravity="center"
+                    android:text="Guardar"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
 
 
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_above="@+id/btn_choose_image"
-            android:layout_below="@+id/botones"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/ic_photo_doctor" />
+
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/botones"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -322,16 +367,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 
-                <Button
-                    android:id="@+id/btnGuardar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/custom_button_5"
-                    android:elevation="5dp"
-                    android:text="Guardar"
-                    android:textColor="@color/white" />
+
             </LinearLayout>
 
         </RelativeLayout>

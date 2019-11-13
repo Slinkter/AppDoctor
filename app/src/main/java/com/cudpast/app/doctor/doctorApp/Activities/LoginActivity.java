@@ -312,17 +312,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     private void updateUI(FirebaseUser usuarioFirebase) {
         if (usuarioFirebase != null) {
             if (usuarioFirebase.isEmailVerified()) {
-
             }
         } else {
             Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
 
     @Override

@@ -14,24 +14,6 @@
         android:roundIcon="@drawable/ic_hospital"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Business.DoctorError"></activity>
-        <activity android:name=".Business.DoctorFinish" />
-        <activity android:name=".Business.DoctorCancelOnRoad" />
-        <activity android:name=".Business.DoctorCancel" />
-        <activity android:name=".Business.Cancel.DoctorTimeOut" />
-        <activity android:name=".Activities.Extra.TestActivity" />
-        <activity
-            android:name=".Activities.Extra.UpdatePwdDoctor"
-            android:parentActivityName=".Activities.MainActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.Extra.UpdatePhotoDoctor"
-            android:parentActivityName=".Activities.MainActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.Extra.UpdateProfileDoctor"
-            android:parentActivityName=".Activities.MainActivity"
-            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -47,12 +29,6 @@
             android:value="false" />
 
         <activity
-            android:name=".Business.DoctorEnd"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Business.DoctorRoad"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Business.DoctorBooking"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
@@ -60,10 +36,59 @@
             android:taskAffinity="">
             <intent-filter>
                 <action android:name=".Business.DoctorBooking" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".Business.DoctorError"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.DoctorFinish"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.DoctorCancelOnRoad"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.DoctorCancel"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.Cancel.DoctorTimeOut"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.Extra.TestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.Extra.UpdatePwdDoctor"
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.Extra.UpdatePhotoDoctor"
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activities.Extra.UpdateProfileDoctor"
+            android:parentActivityName=".Activities.MainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".Business.DoctorEnd"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Business.DoctorRoad"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".Activities.RegisterActivity"
             android:screenOrientation="portrait" />
@@ -71,25 +96,9 @@
             android:name=".Activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.SplashActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".Activities.IntroActivity" />
-        <activity
-            android:name=".Activities.LoginActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <!-- Notification -->
         <service
             android:name=".Service.MyFirebaseMessaging"
