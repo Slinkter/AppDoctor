@@ -34,11 +34,11 @@ dependencies {
     implementation 'com.github.glomadrian:MaterialAnimatedSwitch:1.1@aar'
 
     //Library Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.9'
-    implementation 'com.google.firebase:firebase-auth:17.0.0'
-    implementation 'com.google.firebase:firebase-database:17.0.0'
-    implementation 'com.google.firebase:firebase-storage:17.0.0'
-    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.9+'
+    implementation 'com.google.firebase:firebase-auth:17.0.0+'
+    implementation 'com.google.firebase:firebase-database:17.0.0+'
+    implementation 'com.google.firebase:firebase-storage:17.0.0+'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0+'
     //
     implementation 'com.firebase:geofire-android:2.3.0'
     //

@@ -1,46 +1,143 @@
 package com.cudpast.app.doctor.doctorApp.Activities;
 
-import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
+import com.cudpast.app.doctor.doctorApp.Activities.Support.IntroViewPagerAdapter;
+import com.cudpast.app.doctor.doctorApp.Activities.Support.ScreenItem;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.cudpast.app.doctor.doctorApp.Soporte.SampleSlide;
-import com.github.paolorotolo.appintro.AppIntro;
 
-public class IntroActivity extends AppIntro {
+import java.util.ArrayList;
+import java.util.List;
+
+public class IntroActivity extends AppCompatActivity {
+
+    private ViewPager viewPager;
+    private IntroViewPagerAdapter adapter;
+    private TabLayout tabIndicator;
+
+    private Animation btnAnim;
+    private List<ScreenItem> mListSlide;
+
+    private Button btnNext;
+    private int position;
+    private Button btnStarted;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getSupportActionBar().hide();
+        setContentView(R.layout.activity_intro);
+        //full-screen
+        viewPager = findViewById(R.id.viewPager);
+        tabIndicator = findViewById(R.id.tab_indicator);
+        btnNext = findViewById(R.id.btn_next);
+        btnStarted = findViewById(R.id.btn_get_started);
+        btnAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_animation);
+        // Falso = todavia no vio
+        // Verdadero = ya vio
+        if (showSlideFirst()) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        loadData();
+        //
+        adapter = new IntroViewPagerAdapter(this, mListSlide);
+        viewPager.setAdapter(adapter);
+        tabIndicator.setupWithViewPager(viewPager);
+        btnNext
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-        addSlide(SampleSlide.newInstance(R.layout.slide_1));
-        addSlide(SampleSlide.newInstance(R.layout.slide_2));
-        addSlide(SampleSlide.newInstance(R.layout.slide_3));
+                        position = viewPager.getCurrentItem();
+                        if (mListSlide.size() - 1 == position) {
+                            loadLastScreen();
+                        }
+                        if (mListSlide.size() - 1 > position) {
+                            position++;
+                            viewPager.setCurrentItem(position);
+                        }
+                    }
+                });
 
-        showSkipButton(false);
-        askForPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
-        askForPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 2);
+        tabIndicator
+                .addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        if (mListSlide.size() - 1 == tab.getPosition()) {
+                            loadLastScreen();
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+
+
+        btnStarted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goMain = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(goMain);
+                savePrefData();
+                finish();
+            }
+        });
 
     }
 
-    @Override
-    public void onSkipPressed(Fragment currentFragment) {
-        super.onSkipPressed(currentFragment);
-        finish();
+
+
+    private boolean showSlideFirst() {
+        SharedPreferences sp ;
+        Boolean isIntroActivityOpenedBefore ;
+        sp = getApplicationContext().getSharedPreferences("myPrefs", MODE_PRIVATE);
+        isIntroActivityOpenedBefore = sp.getBoolean("isIntroOpened", false);
+        return isIntroActivityOpenedBefore;
     }
 
-    @Override
-    public void onDonePressed(Fragment currentFragment) {
-        super.onDonePressed(currentFragment);
-        finish();
+    private void loadData() {
+        mListSlide = new ArrayList<>();
+        mListSlide.add(new ScreenItem("Bienvenido", " Appdoctor es una app para atención medica  ", R.drawable.ic_hospital));
+        mListSlide.add(new ScreenItem("Ubicación", "Para consultar medicos en tu zona es importante dar permisos de ubicación", R.drawable.ic_map_slide_2));
+        mListSlide.add(new ScreenItem("Disponibilidad", "Horarios flexibles para visitarte", R.drawable.ic_doctorapp));
+    }
+    private void loadLastScreen() {
+        btnNext.setVisibility(View.INVISIBLE);
+        tabIndicator.setVisibility(View.INVISIBLE);
+        btnStarted.setVisibility(View.VISIBLE);
+        btnStarted.setAnimation(btnAnim);
     }
 
-    @Override
-    public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
-        super.onSlideChanged(oldFragment, newFragment);
+    private void savePrefData() {
+        SharedPreferences sp ;
+        SharedPreferences.Editor editor ;
+        sp = getApplicationContext().getSharedPreferences("myPrefs", MODE_PRIVATE);
+        editor = sp.edit();
+        editor.putBoolean("isIntroOpened", true);
+        editor.commit();
     }
 }

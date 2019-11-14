@@ -53,9 +53,9 @@ import dmax.dialog.SpotsDialog;
 
 
 public class LoginActivity extends AppCompatActivity implements TextWatcher, CompoundButton.OnCheckedChangeListener {
-    //
-    private static final String TAG = "LoginActivity";
 
+    private static final String TAG = "LoginActivity";
+    //
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
     private Button btnIngresar;
@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     //
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     SpotsDialog waitingDialog;
-
     private TextView txt_forgot_pwd;
 
     //
@@ -83,10 +82,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-        permisos();
-
-        Intent intent = new Intent(this, IntroActivity.class);
-        startActivity(intent);
+        //permisos();
+        // Intent intent = new Intent(LoginActivity.this, IntroActivity.class);
+        // startActivity(intent);
 
         //
         volleyRP = VolleyRP.getInstance(this);
@@ -317,7 +315,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
             Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
         }
     }
-
 
 
     @Override
