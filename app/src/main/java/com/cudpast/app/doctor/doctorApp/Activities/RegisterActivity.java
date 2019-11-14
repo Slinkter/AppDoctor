@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 
 import com.android.volley.RequestQueue;
 import com.bumptech.glide.Glide;
@@ -56,11 +58,12 @@ import dmax.dialog.SpotsDialog;
 public class RegisterActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = RegisterActivity.class.getSimpleName();
-
     public static final int PICK_IMAGE_REQUEST = 1;
+
+    private EditText signupDNI, signupFirstName, signupLastName, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupAnddress, signupPassword;
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
-    private EditText signupDNI, signupFirstName, signupLastName, signupNumPhone, signupCodMePe, signupEsp, signupMail, signupAnddress, signupPassword;
+
     private Button btn_save, btn_uploadPhoto;
     private Animation animation;
     private Vibrator vib;
@@ -84,6 +87,18 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
         getSupportActionBar().hide();
+        //
+        Toolbar toolbar = findViewById(R.id.toolbarRegistro);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setTitle("");
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //
+
 
         btn_save = findViewById(R.id.btnGuardar);
         btn_uploadPhoto = findViewById(R.id.btn_choose_image);
@@ -116,11 +131,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         signupNumPhone = findViewById(R.id.signupNumPhone);
         signupAnddress = findViewById(R.id.signupDir);
         signupCodMePe = findViewById(R.id.signupCodMePe);
-        signupEsp = findViewById(R.id.signupEsp); //<-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
+
         signupMail = findViewById(R.id.signupMail);
         signupPassword = findViewById(R.id.signupPassword);
         signupDNI = findViewById(R.id.signupDNI);
         signupImagePhoto = findViewById(R.id.image_view);
+
+        signupEsp = findViewById(R.id.signupEsp); //<-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
         //
 
 
@@ -341,12 +358,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     //Validación de formulario parte 1
     private boolean submitForm() {
 
-        if (!checkDNI()) {
-            signupDNI.setAnimation(animation);
-            signupDNI.startAnimation(animation);
-            vib.vibrate(120);
-            return false;
-        }
+
 
         if (!checkName()) {
             signupFirstName.setAnimation(animation);
@@ -368,6 +380,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             vib.vibrate(120);
             return false;
         }
+        // direccion
+        if (!checkAnddress()) {
+            signupAnddress.setAnimation(animation);
+            signupAnddress.startAnimation(animation);
+            vib.vibrate(120);
+            return false;
+        }
 
         if (!checkCodMe()) {
             signupCodMePe.setAnimation(animation);
@@ -375,13 +394,16 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             vib.vibrate(120);
             return false;
         }
-        // direccion
-        if (!checkUser()) {
-            signupAnddress.setAnimation(animation);
-            signupAnddress.startAnimation(animation);
+
+        if (!checkDNI()) {
+            signupDNI.setAnimation(animation);
+            signupDNI.startAnimation(animation);
             vib.vibrate(120);
             return false;
         }
+
+
+
 
         if (!checkPassword()) {
             signupPassword.setAnimation(animation);
@@ -424,7 +446,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         return true;
     }
 
-    private boolean checkUser() {
+    private boolean checkAnddress() {
         if (signupAnddress.getText().toString().trim().isEmpty()) {
             signupAnddress.setError("Error ingresar direccion");
             return false;
@@ -432,17 +454,29 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         return true;
     }
 
-    private boolean checkPassword() {
-        if (signupPassword.getText().toString().trim().isEmpty()) {
-            signupPassword.setError("Error ingresar password");
+
+
+    private boolean checkDNI() {
+        if (signupDNI.length() < 8) {
+            signupDNI.setError("Error : ingresar  8 digitos");
             return false;
         }
         return true;
     }
 
-    private boolean checkDNI() {
-        if (signupDNI.length() < 8) {
-            signupDNI.setError("Error : ingresar  8 digitos");
+
+    private boolean checkEmail() {
+        if (signupMail.getText().toString().trim().isEmpty()) {
+            signupMail.setError("Error ingresar correo ");
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean checkPassword() {
+        if (signupPassword.getText().toString().trim().isEmpty()) {
+            signupPassword.setError("Error ingresar contraseña");
             return false;
         }
         return true;

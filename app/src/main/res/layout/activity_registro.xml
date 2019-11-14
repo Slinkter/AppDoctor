@@ -13,6 +13,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbarRegistro"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </android.support.design.widget.AppBarLayout>
+
         <ImageView
             android:id="@+id/icon"
             android:layout_width="60dp"
@@ -21,7 +34,8 @@
             android:layout_marginTop="40sp"
             android:layout_marginBottom="10dp"
             android:contentDescription="nada"
-            android:src="@drawable/ic_hospital" />
+            android:src="@drawable/ic_hospital"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -150,6 +164,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textColorHint="@color/colorPrimary"
                     android:textSize="@dimen/txt_register_size"
+                    android:visibility="gone"
                     app:met_baseColor="@color/colorPrimary"
                     app:met_floatingLabel="highlight"
                     app:met_primaryColor="@color/colorPrimary"
@@ -327,37 +342,38 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
-                    android:background="@drawable/custom_button_2"
+                    android:background="@drawable/custom_button_1"
                     android:gravity="center"
                     android:text="subir foto"
                     android:textColor="@color/white" />
 
-                <Button
-                    android:id="@+id/btnGuardar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/custom_button_2"
-                    android:gravity="center"
-                    android:text="Guardar"
-                    android:textColor="@color/white" />
 
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
 
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
 
+            android:background="@drawable/custom_button_2"
+            android:gravity="center"
+            android:text="Guardar"
+            android:textColor="@color/white" />
 
 
         <RelativeLayout
-            android:visibility="gone"
             android:id="@+id/botones"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/passwordlessButtons"
