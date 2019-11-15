@@ -27,7 +27,7 @@ public class IntroActivity extends AppCompatActivity {
     private IntroViewPagerAdapter adapter;
     private TabLayout tabIndicator;
 
-    private Animation btnAnim;
+    private Animation animation;
     private List<ScreenItem> mListSlide;
 
     private Button btnNext;
@@ -47,7 +47,7 @@ public class IntroActivity extends AppCompatActivity {
         tabIndicator = findViewById(R.id.tab_indicator);
         btnNext = findViewById(R.id.btn_next);
         btnStarted = findViewById(R.id.btn_get_started);
-        btnAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_animation);
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_animation);
         // Falso = todavia no vio
         // Verdadero = ya vio
         if (showSlideFirst()) {
@@ -129,7 +129,7 @@ public class IntroActivity extends AppCompatActivity {
         btnNext.setVisibility(View.INVISIBLE);
         tabIndicator.setVisibility(View.INVISIBLE);
         btnStarted.setVisibility(View.VISIBLE);
-        btnStarted.setAnimation(btnAnim);
+        btnStarted.setAnimation(animation);
     }
 
     private void savePrefData() {

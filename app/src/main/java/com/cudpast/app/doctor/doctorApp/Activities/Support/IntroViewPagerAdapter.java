@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ public class IntroViewPagerAdapter extends PagerAdapter {
 
     private Context mContext;
     private List<ScreenItem> mListScreen;
+
+    private Animation animation;
 
 
     public IntroViewPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
