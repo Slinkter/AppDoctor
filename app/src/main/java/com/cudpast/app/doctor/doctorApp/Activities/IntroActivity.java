@@ -81,6 +81,7 @@ public class IntroActivity extends AppCompatActivity {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         if (mListSlide.size() - 1 == tab.getPosition()) {
+
                             loadLastScreen();
                         }
                     }

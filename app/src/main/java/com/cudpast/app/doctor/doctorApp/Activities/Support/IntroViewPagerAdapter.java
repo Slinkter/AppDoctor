@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,26 +26,32 @@ public class IntroViewPagerAdapter extends PagerAdapter {
     public IntroViewPagerAdapter(Context mContext, List<ScreenItem> mListScreen) {
         this.mContext = mContext;
         this.mListScreen = mListScreen;
+
     }
 
 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-
+        //
         LayoutInflater li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = li.inflate(R.layout.layout_screen, null);
-
+        animation = AnimationUtils.loadAnimation(mContext, R.anim.button_animation);
+        //
         ImageView imgSlide = v.findViewById(R.id.intro_img);
         TextView title = v.findViewById(R.id.intro_title);
         TextView description = v.findViewById(R.id.intro_description);
-
+        //
+        imgSlide.setAnimation(animation);
+        title.setAnimation(animation);
+        description.setAnimation(animation);
+        //
         imgSlide.setImageResource(mListScreen.get(position).getScreenImg());
         title.setText(mListScreen.get(position).getTitle());
         description.setText(mListScreen.get(position).getDescription());
-
         //
         container.addView(v);
+
         //
         return v;
     }

@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-        //permisos();
+        permisos();
         // Intent intent = new Intent(LoginActivity.this, IntroActivity.class);
         // startActivity(intent);
 
