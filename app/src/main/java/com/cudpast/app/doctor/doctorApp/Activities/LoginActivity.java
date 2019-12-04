@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 if (submitForm()) {
                     String email = ed_login_email.getText().toString();
                     String pwd = ed_login_pwd.getText().toString();
-                    VerificacionFirebase(email, pwd);
+                    loginFirebase(email, pwd);
                 }
             }
         });
@@ -124,12 +124,13 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         });
     }
 
-    //Permisos de Location
+    // *********************************************************
+    //.Permisos de Location
     public void permisos() {
         if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            aux_solicitarPermiso(); // no tiene permisos y solicitar permisos
+            aux_solicitarPermiso(); // No tiene permisos y solicitar permisos
         } else {
-            Log.e(TAG, "si tiene los permisos");  // Si tiene los permisos
+            Log.e(TAG, "permisos : si tiene los permisos");  // Si tiene los permisos
         }
     }
 
@@ -141,22 +142,43 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_CODE_LOCATION: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e(TAG, "si tiene los permisos  v2 ");
+                if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
+                    Log.e(TAG, "onRequestPermissionsResult : si tiene los permisos  v2 ");
                 }
             }
         }
     }
 
+    // *********************************************************
+    //. Init
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (auth.getCurrentUser() != null) {
+            FirebaseUser currentUser = auth.getCurrentUser();
+            updateUI(currentUser);
+        }
 
-    //.AUTENTICACION CON FIREBASE
-    public void VerificacionFirebase(String usernamelogin, String passwordlogin) {
+    }
+
+    // *********************************************************
+    //. Verification  User
+    private void updateUI(FirebaseUser usuarioFirebase) {
+        if (usuarioFirebase != null) {
+
+        } else {
+            Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // *********************************************************
+    //. Auth - Firebase
+    public void loginFirebase(String usernamelogin, String passwordlogin) {
         Log.e(TAG, " ===========================================================");
-        Log.e(TAG, "                VerificacionFirebase");
+        Log.e(TAG, "                loginFirebase");
         waitingDialog.show();
         auth
                 .signInWithEmailAndPassword(usernamelogin, passwordlogin)
-                //
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
@@ -166,19 +188,25 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                                 updateUI(firebaseUser);
                                 goToMain(firebaseUser.getUid());
                                 Log.e(TAG, " Sign In With Email : success");
+                                waitingDialog.dismiss();
+                                Log.e(TAG, "updateUI : correo  verificado(opcional)");
+                            }else{
+                                waitingDialog.dismiss();
+                                Log.e(TAG, "no se ha verificado correo");
+                                Toast.makeText(LoginActivity.this, "Falta verificar correo", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                     }
 
 
                 })
-                //
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        updateUI(null);
                         waitingDialog.dismiss();
                         Log.e(TAG, "sign In With Email: Failure  " + e.getMessage());
+                        Toast.makeText(LoginActivity.this, "usuario o contraseña incorreo", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -221,6 +249,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                     .setValue(token);
         }
     }
+
     // *********************************************************
     // .Validación de formulario
     private boolean submitForm() {
@@ -256,35 +285,13 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         }
         return true;
     }
+
     // *********************************************************
     //. Registarse
     public void signup(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
-    // *********************************************************
-    //. Init
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (auth.getCurrentUser() != null) {
-            FirebaseUser currentUser = auth.getCurrentUser();
-            updateUI(currentUser);
-        }
-
-    }
-    // *********************************************************
-    //. Verification Email User
-    private void updateUI(FirebaseUser usuarioFirebase) {
-        if (usuarioFirebase != null) {
-            if (usuarioFirebase.isEmailVerified()) {
-                Log.e("TAG", "CORREO VERIFIADO ");
-            }
-        } else {
-            Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
-        }
-    }
-
     // *********************************************************
     //. Check out Username & Password
 
