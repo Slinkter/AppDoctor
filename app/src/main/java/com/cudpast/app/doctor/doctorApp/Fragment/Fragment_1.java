@@ -27,16 +27,10 @@ public class Fragment_1 extends Fragment {
 
     private static final String TAG = Fragment_1.class.getSimpleName();
 
-    public Fragment_1() {
-
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View f1 = inflater.inflate(R.layout.fragment_1, container, false);
-
 
         photoImageView = f1.findViewById(R.id.idFotoUsuario);
         nameTextView = f1.findViewById(R.id.nameTextView);
@@ -44,14 +38,8 @@ public class Fragment_1 extends Fragment {
         espTextView = f1.findViewById(R.id.espTextView);
         lastTextView = f1.findViewById(R.id.lastTextView);
 
-
         try {
             Usuario usuario = Common.currentUserDoctor;
-            String name = usuario.getFirstname();
-            String email = usuario.getCorreoG();
-
-            Log.e(TAG, " name :" + name);
-            Log.e(TAG, " email :" + email);
 
             nameTextView.setText(usuario.getFirstname());
             emailTextView.setText(usuario.getCorreoG());
@@ -59,10 +47,9 @@ public class Fragment_1 extends Fragment {
             lastTextView.setText(usuario.getLastname());
 
             Glide
-                    .with(getActivity())
+                    .with(f1.getContext())
                     .load(usuario.getImage())
                     .into(photoImageView);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,6 +57,4 @@ public class Fragment_1 extends Fragment {
 
         return f1;
     }
-
-
 }

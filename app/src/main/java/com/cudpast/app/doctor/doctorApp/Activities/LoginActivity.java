@@ -28,16 +28,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Soporte.Token;
-import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,11 +52,9 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
     private static final String TAG = "LoginActivity";
     //
-    private RequestQueue mRequest;
-    private VolleyRP volleyRP;
     private Button btnIngresar;
-    private Animation animation;
-    private Vibrator vib;
+    private Animation error_anim;
+    private Vibrator error_vib;
     private FirebaseAuth auth;
     //
     private EditText ed_login_email, ed_login_pwd;
@@ -72,11 +66,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASS = "password";
     //
-    private static final int MY_PERMISSION_REQUEST_CODE = 7000;
+    private static final int MY_PERMISSION_REQUEST_CODE_LOCATION = 7000;
     SpotsDialog waitingDialog;
     private TextView txt_forgot_pwd;
 
-    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,40 +78,13 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         permisos();
         // Intent intent = new Intent(LoginActivity.this, IntroActivity.class);
         // startActivity(intent);
-
-        //
-        volleyRP = VolleyRP.getInstance(this);
-        mRequest = volleyRP.getRequestQueue();
-
-        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.shake);
-        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
-        btnIngresar = findViewById(R.id.btnLogin);
-        //FIREBASE INIT
+        //--------- FIREBASE INIT-----------
         auth = FirebaseAuth.getInstance();
         //
         waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
-        //Check
-        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        ed_login_email = findViewById(R.id.ed_login_email);
-        ed_login_pwd = findViewById(R.id.ed_login_pwd);
-        checkBox = (CheckBox) findViewById(R.id.rem_userpass);
-
-        if (sharedPreferences.getBoolean(KEY_REMEMBER, false)) {
-            checkBox.setChecked(true);
-        } else {
-            checkBox.setChecked(false);
-        }
-
-        ed_login_email.setText(sharedPreferences.getString(KEY_USERNAME, ""));
-        ed_login_pwd.setText(sharedPreferences.getString(KEY_PASS, ""));
-
-        ed_login_email.addTextChangedListener(this);
-        ed_login_pwd.addTextChangedListener(this);
-        checkBox.setOnCheckedChangeListener(this);
-
-
+        error_anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
+        error_vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        btnIngresar = findViewById(R.id.btnLogin);
         btnIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,54 +95,57 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 }
             }
         });
+        //--------- Start Check-----------
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        ed_login_email = findViewById(R.id.ed_login_email);
+        ed_login_pwd = findViewById(R.id.ed_login_pwd);
+        checkBox = (CheckBox) findViewById(R.id.rem_userpass);
+        if (sharedPreferences.getBoolean(KEY_REMEMBER, false)) {
+            checkBox.setChecked(true);
+        } else {
+            checkBox.setChecked(false);
+        }
+        ed_login_email.setText(sharedPreferences.getString(KEY_USERNAME, ""));
+        ed_login_pwd.setText(sharedPreferences.getString(KEY_PASS, ""));
 
+        ed_login_email.addTextChangedListener(this);
+        ed_login_pwd.addTextChangedListener(this);
+        checkBox.setOnCheckedChangeListener(this);
 
+        //--------- Recovery Password-----------
         txt_forgot_pwd = findViewById(R.id.txt_forgot_password);
         txt_forgot_pwd.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                showDialogForgotPwd();
+                displayRecoveryPassowrd();
                 return false;
             }
         });
-
-
     }
 
-    //permisos
+    //Permisos de Location
     public void permisos() {
-        if (ContextCompat
-                .checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat
-                        .checkSelfPermission(this,
-                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSION_REQUEST_CODE);
+        if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            aux_solicitarPermiso(); // no tiene permisos y solicitar permisos
         } else {
-            // Si tiene los permisos
-            // verficiar el  checkPlayService
-            Log.e(TAG, "si tiene los permisos");
+            Log.e(TAG, "si tiene los permisos");  // Si tiene los permisos
         }
+    }
 
+    private void aux_solicitarPermiso() {
+        ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE_LOCATION);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         switch (requestCode) {
-            case MY_PERMISSION_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            case MY_PERMISSION_REQUEST_CODE_LOCATION: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.e(TAG, "si tiene los permisos  v2 ");
                 }
             }
         }
-
     }
 
 
@@ -187,27 +156,29 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         waitingDialog.show();
         auth
                 .signInWithEmailAndPassword(usernamelogin, passwordlogin)
+                //
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Log.e(TAG, " Sign In With Email : success");
                         FirebaseUser firebaseUser = auth.getCurrentUser();
-                        String userIUD = firebaseUser.getUid();
-                        if (firebaseUser.isEmailVerified()) {
-                            updateUI(firebaseUser);
-                            goToMain(userIUD);
-
+                        if (firebaseUser != null) {
+                            if (firebaseUser.isEmailVerified()) {
+                                updateUI(firebaseUser);
+                                goToMain(firebaseUser.getUid());
+                                Log.e(TAG, " Sign In With Email : success");
+                            }
                         }
                     }
 
 
                 })
+                //
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "sign In With Email: Failure  " + e.getMessage());
                         updateUI(null);
                         waitingDialog.dismiss();
+                        Log.e(TAG, "sign In With Email: Failure  " + e.getMessage());
                     }
                 });
 
@@ -221,42 +192,54 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String tokenPaciente = FirebaseInstanceId.getInstance().getToken();
-                        updateTokenToServer(tokenPaciente);
-
-
-                        Common.currentUserDoctor = dataSnapshot.getValue(Usuario.class);
+                        //
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        waitingDialog.dismiss();
                         finish();
-                        Log.e("onDataChange : ", "Common.currentUserDoctor : " + Common.currentUserDoctor);
+                        //
+                        updateTokenToServer(FirebaseInstanceId.getInstance().getToken());
+                        Common.currentUserDoctor = dataSnapshot.getValue(Usuario.class);
+                        Log.e(TAG, "Common.currentUserDoctor : " + Common.currentUserDoctor);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.e("onCancelled : ", "DatabaseError databaseError = " + databaseError.toString());
+                        waitingDialog.dismiss();
+                        Log.e(TAG, "DatabaseError databaseError = " + databaseError.toString());
                         updateUI(null);
                     }
                 });
     }
 
     private void updateTokenToServer(String refreshedToken) {
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
         Token token = new Token(refreshedToken);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            tokens.child(FirebaseAuth
-                    .getInstance()
-                    .getCurrentUser()
-                    .getUid())
+        DatabaseReference db_tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
+        if (auth.getCurrentUser() != null) {
+            db_tokens
+                    .child(auth.getCurrentUser().getUid())
                     .setValue(token);
         }
+    }
+    // *********************************************************
+    // .Validación de formulario
+    private boolean submitForm() {
 
+        if (!checkEmail()) {
+            ed_login_email.setAnimation(error_anim);
+            ed_login_email.startAnimation(error_anim);
+            error_vib.vibrate(120);
+            return false;
+        }
+        if (!checkPassword()) {
+            ed_login_email.setAnimation(error_anim);
+            ed_login_email.startAnimation(error_anim);
+            error_vib.vibrate(120);
+            return false;
+        }
+        return true;
     }
 
-
-    //Validación de formulario parte 2
     private boolean checkEmail() {
         if (ed_login_email.getText().toString().trim().isEmpty()) {
             ed_login_email.setError("por favor, ingresar su correo");
@@ -273,30 +256,14 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         }
         return true;
     }
-
-    private boolean submitForm() {
-
-        if (!checkEmail()) {
-            ed_login_email.setAnimation(animation);
-            ed_login_email.startAnimation(animation);
-            vib.vibrate(120);
-            return false;
-        }
-        if (!checkPassword()) {
-            ed_login_email.setAnimation(animation);
-            ed_login_email.startAnimation(animation);
-            vib.vibrate(120);
-            return false;
-        }
-        return true;
-    }
-
+    // *********************************************************
     //. Registarse
     public void signup(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
-
+    // *********************************************************
+    //. Init
     @Override
     protected void onStart() {
         super.onStart();
@@ -306,16 +273,20 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         }
 
     }
-
+    // *********************************************************
+    //. Verification Email User
     private void updateUI(FirebaseUser usuarioFirebase) {
         if (usuarioFirebase != null) {
             if (usuarioFirebase.isEmailVerified()) {
+                Log.e("TAG", "CORREO VERIFIADO ");
             }
         } else {
             Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
         }
     }
 
+    // *********************************************************
+    //. Check out Username & Password
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -323,13 +294,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        managePrefs();
+    public void afterTextChanged(Editable editable) {
     }
 
     @Override
-    public void afterTextChanged(Editable editable) {
-
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        managePrefs();
     }
 
     @Override
@@ -350,8 +320,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
             editor.apply();
         }
     }
+    // *********************************************************
+    //. Recovery Username & Password
 
-    private void showDialogForgotPwd() {
+    private void displayRecoveryPassowrd() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
         alertDialog.setTitle("Recuperar Contraseña");
         alertDialog.setMessage("Escriba su correo");
