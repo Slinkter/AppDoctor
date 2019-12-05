@@ -66,7 +66,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     double doclat, doclng;
     private GoogleMap mMap;
     private DatabaseReference tb_Info_Paciente;
-//
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +74,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
+
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
         tb_Info_Paciente.keepSynced(true);
 
@@ -176,20 +177,26 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         if (response.body().success == 1) {
                             waitingDialog.dismiss();
                             Log.e(TAG, "onResponse: success");
-                            doclat = Common.mLastLocation.getLatitude();
-                            doclng = Common.mLastLocation.getLongitude();
-                            //
-                            Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            //APP Doctor
-                            intent.putExtra("doclat", doclat);
-                            intent.putExtra("doclng", doclng);
-                            //APP Paciente
-                            intent.putExtra("pacienteLat", lat);
-                            intent.putExtra("pacienteLng", lng);
-                            intent.putExtra("tokenPaciente", tokenPaciente);
-                            startActivity(intent);
-                            finish();
+                            if (Common.mLastLocation != null ){
+                                doclat = Common.mLastLocation.getLatitude();
+                                doclng = Common.mLastLocation.getLongitude();
+                                //
+                                Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                //APP Doctor
+                                intent.putExtra("doclat", doclat);
+                                intent.putExtra("doclng", doclng);
+                                //APP Paciente
+                                intent.putExtra("pacienteLat", lat);
+                                intent.putExtra("pacienteLng", lng);
+                                intent.putExtra("tokenPaciente", tokenPaciente);
+                                startActivity(intent);
+                                finish();
+                            }else{
+                                Toast.makeText(DoctorBooking.this, "algo esta mal", Toast.LENGTH_SHORT).show();
+                            }
+                            
+                         
                         }
                     }
 

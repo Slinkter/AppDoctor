@@ -266,7 +266,7 @@ public class Fragment_2 extends Fragment implements
                         .getLastLocation()
                         .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                             @Override
-                            public void onSuccess(Location location) {
+                            public void onSuccess(final Location location) {
                                 if (location != null) {
                                     Common.mLastLocation = location;
 
@@ -301,6 +301,7 @@ public class Fragment_2 extends Fragment implements
                                                     marketDoctorCurrent = mMap.addMarker(m1);
                                                     LatLng doctorLL = new LatLng(latitude, longitud);
                                                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                                                    Common.mLastLocation = location;
                                                     mDialog.dismiss();
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
@@ -336,7 +337,7 @@ public class Fragment_2 extends Fragment implements
     }
 
     private void startLocationUpdate() {
-        Log.e(TAG, "startLocationUpdate()");
+        Log.e(TAG, "startLocationUpdate()" + " location_switch : ON");
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 

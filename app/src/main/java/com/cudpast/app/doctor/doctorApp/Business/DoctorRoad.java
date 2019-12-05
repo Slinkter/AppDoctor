@@ -256,10 +256,7 @@ public class DoctorRoad extends FragmentActivity implements
                         public void onResponse(Call<String> call, Response<String> response) {
                             try {
 
-                                driverMarker = mMap.addMarker(new MarkerOptions()
-                                        .position(doctorlatlng)
-                                        .title("USTED")
-                                        .icon(BitmapDoctorApp(DoctorRoad.this, R.drawable.ic_doctorapp)));
+                                driverMarker = mMap.addMarker(new MarkerOptions().position(doctorlatlng).title("USTED").icon(BitmapDoctorApp(DoctorRoad.this, R.drawable.ic_doctorapp)));
 
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorlatlng, 16.0f));
 
@@ -283,18 +280,14 @@ public class DoctorRoad extends FragmentActivity implements
     }
 
     private void startLocationUpdate() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return;
-        }
+
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiCliente, mLocationRequest, this);
     }
 
     private class getDirectionRealTime extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         ProgressDialog mDialog = new ProgressDialog(DoctorRoad.this);
-        Polyline direction;
+        Polyline direction = null;
 
         @Override
         protected void onPreExecute() {
@@ -350,7 +343,14 @@ public class DoctorRoad extends FragmentActivity implements
                 polylineOptions.color(Color.RED);
                 polylineOptions.geodesic(true);
             }
-            direction = mMap.addPolyline(polylineOptions);
+
+            if (polylineOptions !=null){
+                direction = mMap.addPolyline(polylineOptions);
+            }else {
+                Log.e(TAG, "ERROR ,   direction = mMap.addPolyline(polylineOptions);");
+            }
+
+
         }
     }
     // Eventos - Mensaje
@@ -538,17 +538,6 @@ public class DoctorRoad extends FragmentActivity implements
 
     }
 
-    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
-        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth() + 0, vectorDrawable.getIntrinsicHeight() + 0);
-        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        background.draw(canvas);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
 
     // Metodos de support
     @Override
@@ -616,11 +605,6 @@ public class DoctorRoad extends FragmentActivity implements
     private void displayLocation() {
         Log.e(TAG, "=================================================================");
         Log.e(TAG, "                          displayLocation()                      ");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(DoctorRoad.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            return;
-        }
-
         try {
             ubicacion
                     .getLastLocation()
@@ -668,6 +652,19 @@ public class DoctorRoad extends FragmentActivity implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private BitmapDescriptor BitmapDoctorApp(Context context, @DrawableRes int vectorDrawableResourceId) {
+        Drawable background = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth() + 0, vectorDrawable.getIntrinsicHeight() + 0);
+        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        background.draw(canvas);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
 }
