@@ -1,6 +1,7 @@
 package com.cudpast.app.doctor.doctorApp.Fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -80,9 +81,6 @@ public class Fragment_2 extends Fragment implements
 
     private FusedLocationProviderClient fusedLocationClient;
 
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean mLocationPermissionGranted;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,11 +91,9 @@ public class Fragment_2 extends Fragment implements
         builGoogleApiClient();
         createLocationRequest();
         updateFirebaseToken();
-        setUpLocation();
         //Google Maps
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
-        //
         //Obtener location de los Doctores del TB_Available_Doctor
         refDB_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
         //Obtener el UID del doctor
@@ -123,22 +119,25 @@ public class Fragment_2 extends Fragment implements
             }
         });
 
-
         //Sync Realtime Database : cuando existe un cambio el usuario se pone off
         refDB_checkConnect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
         refDB_checkConnect.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-                    Log.e(TAG, "refDB_checkConnect : CONNECT");
-                } else {
-                    currentUserRef.onDisconnect().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.e(TAG, "refDB_checkConnect : not CONNECT");
-                        }
-                    });
+                try {
+                    boolean connected = snapshot.getValue(Boolean.class);
+                    if (connected) {
+                        Log.e(TAG, "refDB_checkConnect : CONNECT");
+                    } else {
+                        currentUserRef.onDisconnect().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.e(TAG, "refDB_checkConnect : not CONNECT");
+                            }
+                        });
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -170,17 +169,13 @@ public class Fragment_2 extends Fragment implements
         locationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-    @Override
-    public void onStop() {
-        Log.e(TAG, "onStop() ");
-        super.onStop();
+    private void updateFirebaseToken() {
+        Log.e(TAG, "3 : updateFirebaseToken() ");
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
+        Token token = new Token(FirebaseInstanceId.getInstance().getToken());
+        tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
     }
 
-    @Override
-    public void onDestroy() {
-        Log.e(TAG, "onDestroy()");
-        super.onDestroy();
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -202,7 +197,7 @@ public class Fragment_2 extends Fragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        displayLocation();
+        //1 : displayLocation();
     }
 
     @Override
@@ -220,62 +215,6 @@ public class Fragment_2 extends Fragment implements
         displayLocation();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case MY_PERMISSION_REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                    if (checkPlayService()) {
-                        builGoogleApiClient();
-                        createLocationRequest();
-                        if (Common.location_switch.isChecked()) {
-                            displayLocation();
-                            Log.e(TAG, "displayLocation()" + "onRequestPermissionsResult");
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    private void updateFirebaseToken() {
-        Log.e(TAG, " updateFirebaseToken() ");
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference(Common.token_tbl);
-        Token token = new Token(FirebaseInstanceId.getInstance().getToken());
-        tokens.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
-    }
-
-    private void setUpLocation() {
-        Log.e(TAG, "=================================================================");
-        Log.e(TAG, "                          setUpLocation()                      ");
-        if (ContextCompat
-                .checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat
-                        .checkSelfPermission(getActivity(),
-                                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //Solicitar permiso
-            solicitarPermisoCoarseFine();
-            Log.e(TAG, "=================================================================");
-        } else {
-            // Si tiene los permisos - verficiar el  checkPlayService
-            verificarServicio();
-            Log.e(TAG, "=================================================================");
-        }
-
-    }
-
-    private void solicitarPermisoCoarseFine() {
-        ActivityCompat.requestPermissions(getActivity(),
-                new String[]{
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION},
-                MY_PERMISSION_REQUEST_CODE);
-    }
 
     private void verificarServicio() {
         if (checkPlayService()) {
@@ -283,8 +222,7 @@ public class Fragment_2 extends Fragment implements
             createLocationRequest();
             //solo ocurre si esta activado
             if (Common.location_switch.isChecked()) {
-                Log.e(TAG, " Off location ");
-                displayLocation();
+                // 2: displayLocation();
             }
         } else {
             Log.e(TAG, "error : verificarServicio()");
@@ -321,7 +259,7 @@ public class Fragment_2 extends Fragment implements
                     ContextCompat
                             .checkSelfPermission(getActivity(),
                                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLocationPermissionGranted = true;
+
 
                 //.Obtener GPS del movil
                 fusedLocationClient
@@ -371,8 +309,8 @@ public class Fragment_2 extends Fragment implements
                                             }
                                         });
                                     } else {
-                                        Log.e(TAG, "ERROR: Cannot get your location");
-                                        Log.e(TAG, "ERROR: no es checkeado");
+
+                                        Log.e(TAG, "ERROR: no es checkeado ,Cannot get your location\"");
                                     }
                                 }
                             }
@@ -399,35 +337,12 @@ public class Fragment_2 extends Fragment implements
 
     private void startLocationUpdate() {
         Log.e(TAG, "startLocationUpdate()");
-        try {
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
     private void stopLocationUpdate() {
         Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
-        try {
-            if (ContextCompat
-                    .checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat
-                            .checkSelfPermission(getActivity(),
-                                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
