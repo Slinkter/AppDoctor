@@ -74,7 +74,7 @@ public class Fragment_2 extends Fragment implements
     public GoogleApiClient googleApiClient;
     public LocationRequest locationRequest;
 
-    public DatabaseReference refDB_available_doctor, refDB_connect, currentUserRef;
+    public DatabaseReference refDB_available_doctor, refDB_checkConnect, currentUserRef;
     private GeoFire geoFire;
     private Marker marketDoctorCurrent;
 
@@ -83,61 +83,48 @@ public class Fragment_2 extends Fragment implements
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-    public Fragment_2() {
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_2, container, false);
-
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
-        mapFragment.getMapAsync(this);
+        View view = inflater.inflate(R.layout.fragment_2, container, false);
+        //
         builGoogleApiClient();
         createLocationRequest();
+        //Google Maps
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
+        mapFragment.getMapAsync(this);
         //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor
         //Obtener el UID del doctor
         //Obtener ubicación del doctor
         //On or Off : escuchar el switch
         refDB_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
         currentUserRef = refDB_available_doctor.child(Common.currentUserDoctor.getUid());
-        //cuando se pone offline el doctor desaparece en realtime database
-        refDB_connect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
-        refDB_connect
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //
-                        boolean connected = snapshot.getValue(Boolean.class);
-                        if (connected) {
-                            Log.e(TAG,"CONNECT");
-                        } else {
-                            Log.e(TAG,"not CONNECT");
-                            System.out.println("not connected");
-                            currentUserRef
-                                    .onDisconnect()
-                                    .removeValue()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.e(TAG, "refDB_connect : onSuccess : ");
-                                        }
-                                    });
+        //Sync Realtime Database : cuando existe un cambio el usuario se pone off
+        refDB_checkConnect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
+        refDB_checkConnect.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    Log.e(TAG, "refDB_checkConnect : CONNECT");
+                } else {
+                    currentUserRef.onDisconnect().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.e(TAG, "refDB_checkConnect : not CONNECT");
                         }
+                    });
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, "refDB_checkConnect : onCancelled " + databaseError);
+            }
+        });
 
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.e(TAG, "onCancelled " + databaseError);
-                    }
-                });
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        Common.location_switch = rootView.findViewById(R.id.location_switch);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
+        Common.location_switch = view.findViewById(R.id.location_switch);
         updateFirebaseToken();
         geoFire = new GeoFire(refDB_available_doctor);
         setUpLocation();
@@ -160,7 +147,26 @@ public class Fragment_2 extends Fragment implements
                         }
                     }
                 });
-        return rootView;
+        return view;
+    }
+
+    private void builGoogleApiClient() {
+        Log.e(TAG, "1 : builGoogleApiClient()");
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+    }
+
+    private void createLocationRequest() {
+        Log.e(TAG, "2 : createLocationRequest()");
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
     @Override
@@ -301,24 +307,6 @@ public class Fragment_2 extends Fragment implements
         return true;
     }
 
-    private void builGoogleApiClient() {
-        Log.e(TAG, "builGoogleApiClient()");
-        googleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        googleApiClient.connect();
-    }
-
-    private void createLocationRequest() {
-        Log.e(TAG, "createLocationRequest()");
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(UPDATE_INTERVAL);
-        locationRequest.setFastestInterval(FASTEST_INTERVAL);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
 
     private void displayLocation() {
 
@@ -342,7 +330,7 @@ public class Fragment_2 extends Fragment implements
                             public void onSuccess(Location location) {
                                 if (location != null) {
                                     Common.mLastLocation = location;
-                                    Log.e(TAG, " Common.mLastLocation = " + Common.mLastLocation );
+
                                     if (Common.mLastLocation != null && Common.location_switch.isChecked()) {
                                         //
                                         final ProgressDialog mDialog = new ProgressDialog(getActivity());
@@ -375,7 +363,7 @@ public class Fragment_2 extends Fragment implements
                                                     LatLng doctorLL = new LatLng(latitude, longitud);
                                                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
                                                     mDialog.dismiss();
-                                                }catch (Exception e) {
+                                                } catch (Exception e) {
                                                     e.printStackTrace();
                                                 }
 
@@ -409,8 +397,8 @@ public class Fragment_2 extends Fragment implements
     }
 
     private void startLocationUpdate() {
+        Log.e(TAG, "startLocationUpdate()");
         try {
-            Log.e(TAG, "startLocationUpdate()");
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(getActivity(),
@@ -424,8 +412,8 @@ public class Fragment_2 extends Fragment implements
     }
 
     private void stopLocationUpdate() {
+        Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
         try {
-            Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
             if (ContextCompat
                     .checkSelfPermission(getActivity(),
                             Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -452,6 +440,5 @@ public class Fragment_2 extends Fragment implements
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
-
 
 }
