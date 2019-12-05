@@ -87,18 +87,43 @@ public class Fragment_2 extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_2, container, false);
+        Common.location_switch = view.findViewById(R.id.location_switch);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
         //
         builGoogleApiClient();
         createLocationRequest();
+        updateFirebaseToken();
+        setUpLocation();
         //Google Maps
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment2);
         mapFragment.getMapAsync(this);
-        //Obtener Todas la ubicaciones de los Doctores del TB_Available_Doctor
-        //Obtener el UID del doctor
-        //Obtener ubicación del doctor
-        //On or Off : escuchar el switch
+        //
+        //Obtener location de los Doctores del TB_Available_Doctor
         refDB_available_doctor = FirebaseDatabase.getInstance().getReference(Common.TB_AVAILABLE_DOCTOR);
+        //Obtener el UID del doctor
         currentUserRef = refDB_available_doctor.child(Common.currentUserDoctor.getUid());
+        //Obtener ubicación del doctor
+        geoFire = new GeoFire(refDB_available_doctor);
+        //On or Off : escuchar el switch
+        Common.location_switch.setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(boolean isOnline) {
+                if (isOnline) {
+                    FirebaseDatabase.getInstance().goOnline();
+                    startLocationUpdate();
+                    displayLocation();
+                } else {
+                    if (marketDoctorCurrent != null) {
+                        FirebaseDatabase.getInstance().goOffline();
+                        stopLocationUpdate();
+                        marketDoctorCurrent.remove();
+                        mMap.clear();
+                    }
+                }
+            }
+        });
+
+
         //Sync Realtime Database : cuando existe un cambio el usuario se pone off
         refDB_checkConnect = FirebaseDatabase.getInstance().getReference().child(".info/connected");
         refDB_checkConnect.addValueEventListener(new ValueEventListener() {
@@ -123,30 +148,6 @@ public class Fragment_2 extends Fragment implements
             }
         });
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(view.getContext());
-        Common.location_switch = view.findViewById(R.id.location_switch);
-        updateFirebaseToken();
-        geoFire = new GeoFire(refDB_available_doctor);
-        setUpLocation();
-
-        Common.location_switch
-                .setOnCheckedChangeListener(new MaterialAnimatedSwitch.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(boolean isOnline) {
-                        if (isOnline) {
-                            FirebaseDatabase.getInstance().goOnline();
-                            startLocationUpdate();
-                            displayLocation();
-                        } else {
-                            if (marketDoctorCurrent != null) {
-                                FirebaseDatabase.getInstance().goOffline();
-                                stopLocationUpdate();
-                                marketDoctorCurrent.remove();
-                                mMap.clear();
-                            }
-                        }
-                    }
-                });
         return view;
     }
 
