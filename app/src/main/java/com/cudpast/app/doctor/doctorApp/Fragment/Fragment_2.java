@@ -109,11 +109,14 @@ public class Fragment_2 extends Fragment implements
                     startLocationUpdate();
                     displayLocation();
                 } else {
-                    if (marketDoctorCurrent != null) {
-                        FirebaseDatabase.getInstance().goOffline();
-                        stopLocationUpdate();
-                        marketDoctorCurrent.remove();
-                        mMap.clear();
+                    getOffDoctor();
+                    if (!Common.location_switch.isChecked()){
+                        if (marketDoctorCurrent != null) {
+                            FirebaseDatabase.getInstance().goOffline();
+                            stopLocationUpdate();
+                            marketDoctorCurrent.remove();
+                            mMap.clear();
+                        }
                     }
                 }
             }
@@ -124,21 +127,7 @@ public class Fragment_2 extends Fragment implements
         refDB_checkConnect.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    boolean connected = snapshot.getValue(Boolean.class);
-                    if (connected) {
-                        Log.e(TAG, "refDB_checkConnect : CONNECT");
-                    } else {
-                        currentUserRef.onDisconnect().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.e(TAG, "refDB_checkConnect : not CONNECT");
-                            }
-                        });
-                    }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
+                getOffDoctor();
             }
 
             @Override
@@ -148,6 +137,15 @@ public class Fragment_2 extends Fragment implements
         });
 
         return view;
+    }
+
+    private void getOffDoctor() {
+        currentUserRef.onDisconnect().removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.e(TAG, "refDB_checkConnect : not CONNECT");
+            }
+        });
     }
 
     private void builGoogleApiClient() {
@@ -252,84 +250,67 @@ public class Fragment_2 extends Fragment implements
         try {
             Log.e(TAG, "=================================================================");
             Log.e(TAG, "                          displayLocation()                      ");
+            //.Obtener GPS del movil
+            fusedLocationClient
+                    .getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(final Location location) {
+                            if (location != null) {
+                                Common.mLastLocation = location;
 
-            if (ContextCompat
-                    .checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat
-                            .checkSelfPermission(getActivity(),
-                                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                if (Common.mLastLocation != null && Common.location_switch.isChecked()) {
+                                    //
+                                    final ProgressDialog mDialog = new ProgressDialog(getActivity());
+                                    mDialog.setMessage("Actualizando su Ubicación...");
+                                    mDialog.show();
+                                    //
+                                    String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
+                                    final double latitude = Common.mLastLocation.getLatitude();
+                                    final double longitud = Common.mLastLocation.getLongitude();
 
+                                    Log.e(TAG, " firebaseUserUID =  " + firebaseUserUID);
+                                    Log.e(TAG, " Common.mLastLocation.getLatitude()  = " + latitude);
+                                    Log.e(TAG, " Common.mLastLocation.getLongitude() =  " + longitud);
 
-                //.Obtener GPS del movil
-                fusedLocationClient
-                        .getLastLocation()
-                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(final Location location) {
-                                if (location != null) {
-                                    Common.mLastLocation = location;
+                                    geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
+                                        @Override
+                                        public void onComplete(String key, DatabaseError error) {
 
-                                    if (Common.mLastLocation != null && Common.location_switch.isChecked()) {
-                                        //
-                                        final ProgressDialog mDialog = new ProgressDialog(getActivity());
-                                        mDialog.setMessage("Actualizando su Ubicación...");
-                                        mDialog.show();
-                                        //
-                                        String firebaseUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();//la llave
-                                        final double latitude = Common.mLastLocation.getLatitude();
-                                        final double longitud = Common.mLastLocation.getLongitude();
-
-                                        Log.e(TAG, " firebaseUserUID =  " + firebaseUserUID);
-                                        Log.e(TAG, " Common.mLastLocation.getLatitude()  = " + latitude);
-                                        Log.e(TAG, " Common.mLastLocation.getLongitude() =  " + longitud);
-
-                                        geoFire.setLocation(firebaseUserUID, new GeoLocation(latitude, longitud), new GeoFire.CompletionListener() {
-                                            @Override
-                                            public void onComplete(String key, DatabaseError error) {
-
-                                                if (marketDoctorCurrent != null) {
-                                                    marketDoctorCurrent.remove();
-                                                }
-
-                                                try {
-                                                    MarkerOptions m1 = new MarkerOptions()
-                                                            .position(new LatLng(latitude, longitud))
-                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
-                                                            .title("Usted");
-                                                    //Dibujar al doctor en el mapa
-                                                    marketDoctorCurrent = mMap.addMarker(m1);
-                                                    LatLng doctorLL = new LatLng(latitude, longitud);
-                                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
-                                                    Common.mLastLocation = location;
-                                                    mDialog.dismiss();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-
+                                            if (marketDoctorCurrent != null) {
+                                                marketDoctorCurrent.remove();
                                             }
-                                        });
-                                    } else {
 
-                                        Log.e(TAG, "ERROR: no es checkeado ,Cannot get your location\"");
-                                    }
+                                            try {
+                                                MarkerOptions m1 = new MarkerOptions()
+                                                        .position(new LatLng(latitude, longitud))
+                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.ic_doctorapp))
+                                                        .title("Usted");
+                                                //Dibujar al doctor en el mapa
+                                                marketDoctorCurrent = mMap.addMarker(m1);
+                                                LatLng doctorLL = new LatLng(latitude, longitud);
+                                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(doctorLL, 16.0f));
+                                                Common.mLastLocation = location;
+                                                mDialog.dismiss();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                    });
+                                } else {
+
+                                    Log.e(TAG, "ERROR: no es checkeado ,Cannot get your location");
                                 }
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "addOnFailureListener :" + e.getMessage());
-                            }
-                        });
-
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION,
-                                Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSION_REQUEST_CODE);
-            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "addOnFailureListener :" + e.getMessage());
+                        }
+                    });
             Log.e(TAG, "=================================================================");
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -344,6 +325,7 @@ public class Fragment_2 extends Fragment implements
     private void stopLocationUpdate() {
         Log.e(TAG, " stopLocationUpdate() " + " location_switch : OFF");
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        getOffDoctor();
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
