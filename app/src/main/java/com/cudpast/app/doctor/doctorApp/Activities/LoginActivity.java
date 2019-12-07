@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -59,27 +60,31 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     //
     private EditText ed_login_email, ed_login_pwd;
     private CheckBox checkBox;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     public static final String PREF_NAME = "prefs";
     public static final String KEY_REMEMBER = "remeber";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASS = "password";
     //
     private static final int MY_PERMISSION_REQUEST_CODE_LOCATION = 7000;
-    SpotsDialog waitingDialog;
+    private SpotsDialog waitingDialog;
     private TextView txt_forgot_pwd;
+
+    AlertDialog alert = null;
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-        permisos();
+        setupLocation();
         // Intent intent = new Intent(LoginActivity.this, IntroActivity.class);
         // startActivity(intent);
         //--------- FIREBASE INIT-----------
         auth = FirebaseAuth.getInstance();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         //
         waitingDialog = new SpotsDialog(LoginActivity.this, R.style.DialogLogin);
         error_anim = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.shake);
@@ -91,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 if (submitForm()) {
                     String email = ed_login_email.getText().toString();
                     String pwd = ed_login_pwd.getText().toString();
+                    waitingDialog.show();
                     loginFirebase(email, pwd);
                 }
             }
@@ -122,20 +128,48 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 return false;
             }
         });
+
+
+        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            AlertNoGps();
+        }
+    }
+
+    private void AlertNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("El sistema GPS esta desactivado, ¿Desea activarlo?")
+                .setCancelable(false)
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        alert = builder.create();
+        alert.show();
     }
 
     // *********************************************************
     //.Permisos de Location
-    public void permisos() {
-        if (ContextCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            aux_solicitarPermiso(); // No tiene permisos y solicitar permisos
+    public void setupLocation() {
+
+
+        if (ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            aux_solicitarPermiso(); // No tiene setupLocation y solicitar setupLocation
         } else {
-            Log.e(TAG, "permisos : si tiene los permisos");  // Si tiene los permisos
+            Log.e(TAG, "setupLocation : si tiene los setupLocation");  // Si tiene los setupLocation
         }
     }
 
     private void aux_solicitarPermiso() {
-        ActivityCompat.requestPermissions(LoginActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE_LOCATION);
+        ActivityCompat.requestPermissions(LoginActivity.this, new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION},
+                MY_PERMISSION_REQUEST_CODE_LOCATION);
     }
 
     @Override
@@ -143,7 +177,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_CODE_LOCATION: {
                 if (PackageManager.PERMISSION_GRANTED == grantResults[0]) {
-                    Log.e(TAG, "onRequestPermissionsResult : si tiene los permisos  v2 ");
+                    Log.e(TAG, "onRequestPermissionsResult : si tiene los setupLocation  v2 ");
                 }
             }
         }
@@ -176,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     public void loginFirebase(String usernamelogin, String passwordlogin) {
         Log.e(TAG, " ===========================================================");
         Log.e(TAG, "                loginFirebase");
-        waitingDialog.show();
+
         auth
                 .signInWithEmailAndPassword(usernamelogin, passwordlogin)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -188,13 +222,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                                 updateUI(firebaseUser);
                                 goToMain(firebaseUser.getUid());
                                 Log.e(TAG, " Sign In With Email : success");
-                                waitingDialog.dismiss();
                                 Log.e(TAG, "updateUI : correo  verificado(opcional)");
-                            }else{
-                                waitingDialog.dismiss();
+
+                            } else {
                                 Log.e(TAG, "no se ha verificado correo");
                                 Toast.makeText(LoginActivity.this, "Falta verificar correo", Toast.LENGTH_SHORT).show();
-
+                                waitingDialog.dismiss();
                             }
                         }
                     }
@@ -204,9 +237,10 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        waitingDialog.dismiss();
+
                         Log.e(TAG, "sign In With Email: Failure  " + e.getMessage());
                         Toast.makeText(LoginActivity.this, "usuario o contraseña incorreo", Toast.LENGTH_SHORT).show();
+                        waitingDialog.dismiss();
                     }
                 });
 
@@ -225,10 +259,12 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
+
                         //
                         updateTokenToServer(FirebaseInstanceId.getInstance().getToken());
                         Common.currentUserDoctor = dataSnapshot.getValue(Usuario.class);
                         Log.e(TAG, "Common.currentUserDoctor : " + Common.currentUserDoctor);
+                        waitingDialog.dismiss();
                     }
 
                     @Override
@@ -381,4 +417,18 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
         alertDialog.show();
     }
+
+
+    public void onGPS(){
+        Intent intent=new Intent("android.location.GPS_ENABLED_CHANGE");
+        intent.putExtra("enabled", true);
+        sendBroadcast(intent);
+    }
+
+    public void offGPS(){
+        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+        intent.putExtra("enabled", false);
+        sendBroadcast(intent);
+    }
+
 }

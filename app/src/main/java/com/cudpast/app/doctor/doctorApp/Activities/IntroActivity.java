@@ -123,8 +123,8 @@ public class IntroActivity extends AppCompatActivity {
     private void loadData() {
         mListSlide = new ArrayList<>();
         mListSlide.add(new ScreenItem("Bienvenido", " Appdoctor es una app para atención medica  ", R.drawable.ic_hospital));
-        mListSlide.add(new ScreenItem("Ubicación", "Para consultar medicos en tu zona es importante dar permisos de ubicación", R.drawable.ic_map_slide_2));
-        mListSlide.add(new ScreenItem("Disponibilidad", "Horarios flexibles para visitarte", R.drawable.ic_doctorapp));
+        mListSlide.add(new ScreenItem("Ubicación", "Es importante tener la última versión de Google Maps", R.drawable.ic_map_slide_2));
+        mListSlide.add(new ScreenItem("Disponibilidad", "Horarios flexibles para visitarte en tu zona", R.drawable.ic_doctorapp));
     }
     private void loadLastScreen() {
         btnNext.setVisibility(View.INVISIBLE);

@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cudpast.app.doctor.doctorApp">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -15,15 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".Others.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_hospital" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/backgroundGray" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
         <meta-data
             android:name="google_analytics_adid_collection_enabled"
             android:value="false" />
@@ -36,18 +50,16 @@
             android:taskAffinity="">
             <intent-filter>
                 <action android:name=".Business.DoctorBooking" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".Activities.SplashActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.LoginActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Business.DoctorError"
             android:screenOrientation="portrait" />
@@ -78,14 +90,12 @@
             android:name=".Activities.Extra.UpdateProfileDoctor"
             android:parentActivityName=".Activities.MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Business.DoctorEnd"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Business.DoctorRoad"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activities.RegisterActivity"
             android:screenOrientation="portrait" />
@@ -93,15 +103,13 @@
             android:name=".Activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".Activities.IntroActivity" >
+        <activity android:name=".Activities.IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Notification -->
+        </activity> <!-- Notification -->
         <service
             android:name=".Service.MyFirebaseMessaging"
             android:exported="false">

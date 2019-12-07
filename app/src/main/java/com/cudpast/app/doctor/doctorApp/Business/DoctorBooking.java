@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Soporte.Data;
 import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
-import com.cudpast.app.doctor.doctorApp.Soporte.Notification;
 import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
-import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
@@ -67,13 +65,34 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap mMap;
     private DatabaseReference tb_Info_Paciente;
 
+    //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_booking);
         getSupportActionBar().hide();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
+
+        if (getIntent() != null) {
+            title = getIntent().getStringExtra("title");
+            body = getIntent().getStringExtra("body");
+            pToken = getIntent().getStringExtra("pToken");
+            dToken = getIntent().getStringExtra("dToken");
+            lat = getIntent().getDoubleExtra("paciente_lat", -1.0);
+            lng = getIntent().getDoubleExtra("paciente_lng", -1.0);
+            pacienteUID = getIntent().getStringExtra("pacienteUID");
+
+            Log.e(TAG, "Title  = " + title);
+            Log.e(TAG, "Body  = " + body);
+            Log.e(TAG, "ptoken  = " + pToken);
+            Log.e(TAG, "dtoken  = " + dToken);
+            Log.e(TAG, "paciente_lat  = " + lat);
+            Log.e(TAG, "paciente_lng  = " + lng);
+            Log.e(TAG, "pacienteUID  =" + pacienteUID);
+        }
+
 
         tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
         tb_Info_Paciente.keepSynced(true);
@@ -85,40 +104,17 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         mFCMService = Common.getIFCMService();
         auth = FirebaseAuth.getInstance();
 
-        textPaciente = findViewById(R.id.textPaciente);
-        textAddress = findViewById(R.id.txtAddress);
-        textTime = findViewById(R.id.txtTime);
-        textDistance = findViewById(R.id.txtDistance);
-
-        if (getIntent() != null) {
-            title = getIntent().getStringExtra("title");
-            body = getIntent().getStringExtra("body");
-            pToken = getIntent().getStringExtra("pToken");
-            dToken = getIntent().getStringExtra("dToken");
-            lat = getIntent().getDoubleExtra("lat", -1.0);
-            lng = getIntent().getDoubleExtra("lng", -1.0);
-            pacienteUID = getIntent().getStringExtra("pacienteUID");
-
-            Log.e(TAG, "Title  =" + title);
-            Log.e(TAG, "Body  =" + body);
-            Log.e(TAG, "ptoken  =" + pToken);
-            Log.e(TAG, "dtoken  =" + dToken);
-            Log.e(TAG, "lat  =" + lat);
-            Log.e(TAG, "lng  =" + lng);
-            Log.e(TAG, "pacienteUID  =" + pacienteUID);
-
-
-        }
+        textPaciente = findViewById(R.id.tv_namePaciente);
+        textAddress = findViewById(R.id.tv_addressPaciente);
+        textTime = findViewById(R.id.tv_timePaciente);
+        textDistance = findViewById(R.id.tv_distancePaciente);
 
         if (Common.location_switch == null) {
             Log.e(TAG, "Common.location_switch : NULL");
         } else {
             Common.location_switch.toggle();// se pone en offline cuando se el doctor acepta la consulta medica
-            Log.e(TAG, "Common.location_switch : " + Common.location_switch.isChecked());
             Log.e(TAG, "se  puso en offline al doctor ");
         }
-
-
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,23 +131,34 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                 }
             }
         });
+
+        if (pacienteUID != null) {
+            Log.e(TAG, "Title  = " + title);
+            Log.e(TAG, "Body  = " + body);
+            Log.e(TAG, "ptoken  = " + pToken);
+            Log.e(TAG, "dtoken  = " + dToken);
+            Log.e(TAG, "paciente_lat  = " + lat);
+            Log.e(TAG, "paciente_lng  = " + lng);
+            Log.e(TAG, "pacienteUID  = " + pacienteUID);
+            getDirection(lat, lng, pacienteUID);
+        } else {
+            Log.e(TAG, "Title  = " + title);
+            Log.e(TAG, "Body  = " + body);
+            Log.e(TAG, "ptoken  = " + pToken);
+            Log.e(TAG, "dtoken  = " + dToken);
+            Log.e(TAG, "paciente_lat  = " + lat);
+            Log.e(TAG, "paciente_lng  = " + lng);
+            Log.e(TAG, "pacienteUID  = " + pacienteUID);
+        }
+
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        if (getIntent() != null) {
-            title = getIntent().getStringExtra("title");
-            body = getIntent().getStringExtra("body");
-            pToken = getIntent().getStringExtra("pToken");
-            dToken = getIntent().getStringExtra("dToken");
-            lat = getIntent().getDoubleExtra("lat", -1.0);
-            lng = getIntent().getDoubleExtra("lng", -1.0);
-            pacienteUID = getIntent().getStringExtra("pacienteUID");
-        }
 
-        getDirection(lat, lng, pacienteUID);
     }
 
     //.
@@ -177,26 +184,20 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                         if (response.body().success == 1) {
                             waitingDialog.dismiss();
                             Log.e(TAG, "onResponse: success");
-                            if (Common.mLastLocation != null ){
-                                doclat = Common.mLastLocation.getLatitude();
-                                doclng = Common.mLastLocation.getLongitude();
-                                //
-                                Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                //APP Doctor
-                                intent.putExtra("doclat", doclat);
-                                intent.putExtra("doclng", doclng);
-                                //APP Paciente
-                                intent.putExtra("pacienteLat", lat);
-                                intent.putExtra("pacienteLng", lng);
-                                intent.putExtra("tokenPaciente", tokenPaciente);
-                                startActivity(intent);
-                                finish();
-                            }else{
-                                Toast.makeText(DoctorBooking.this, "algo esta mal", Toast.LENGTH_SHORT).show();
-                            }
-                            
-                         
+                            doclat = Common.mLastLocation.getLatitude();
+                            doclng = Common.mLastLocation.getLongitude();
+                            //
+                            Intent intent = new Intent(DoctorBooking.this, DoctorRoad.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            //APP Doctor
+                            intent.putExtra("doclat", doclat);
+                            intent.putExtra("doclng", doclng);
+                            //APP Paciente
+                            intent.putExtra("pacienteLat", lat);
+                            intent.putExtra("pacienteLng", lng);
+                            intent.putExtra("tokenPaciente", tokenPaciente);
+                            startActivity(intent);
+                            finish();
                         }
                     }
 
@@ -266,27 +267,27 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     }
 
     //Cargar duración distancia y direccion final
-    private void getDirection(final double lat, final double lng, String mpacienteUID) {
-
+    private void getDirection(final double lat, final double lng, String uid_paciente) {
+        Log.e(TAG, " getDirection " );
         tb_Info_Paciente
-                .child(mpacienteUID)
+                .child(uid_paciente)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
                         Common.currentPaciente = userPaciente;
                         textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
-                        Log.e(TAG, " currentPaciente :" + Common.currentPaciente.getNombre());
-                        String requestApi = null;
+                        Log.e(TAG, "getDirection : currentPaciente =" + Common.currentPaciente.getNombre());
+
 
                         try {
-                            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
+                            String requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
                                     "mode=driving&" +
                                     "transit_routing_preference=less_driving&" +
                                     "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
                                     "destination=" + lat + "," + lng + "&" +
                                     "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-
+                            Log.e(TAG, "getDirection : requestApi =" + requestApi);
                             mService.getPath(requestApi)
                                     .enqueue(new Callback<String>() {
                                         @Override
@@ -294,7 +295,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                                             try {
 
                                                 JSONObject jsonObject = new JSONObject(response.body().toString());
-
+                                                Log.e(TAG, "getDirection : jsonObject =" + jsonObject);
                                                 JSONArray routes = jsonObject.getJSONArray("routes");
                                                 JSONObject object = routes.getJSONObject(0);
                                                 JSONArray legs = object.getJSONArray("legs");

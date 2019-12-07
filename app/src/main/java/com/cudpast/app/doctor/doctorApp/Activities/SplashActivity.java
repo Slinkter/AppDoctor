@@ -57,7 +57,7 @@ public class SplashActivity extends AppCompatActivity {
                             this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_CODE);
 
         } else {
-            Log.e(TAG, "si tiene los permisos");
+            Log.e(TAG, "si tiene los setupLocation");
         }
 
     }
@@ -67,7 +67,7 @@ public class SplashActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e(TAG, "si tiene los permisos ");
+                    Log.e(TAG, "si tiene los setupLocation ");
                 }
             }
         }
