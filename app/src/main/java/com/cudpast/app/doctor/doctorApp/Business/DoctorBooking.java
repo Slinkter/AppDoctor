@@ -268,63 +268,72 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         final ProgressDialog mDialog = new ProgressDialog(DoctorBooking.this);
         mDialog.setMessage(" visualizando .... ");
         mDialog.show();
-
+        Log.e(TAG, " tb_Info_Paciente =  " + tb_Info_Paciente);
         tb_Info_Paciente
-                .child(uid_paciente)
+                .orderByKey()
+                .equalTo(uid_paciente)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for( DataSnapshot post : dataSnapshot.getChildren()){
+                            final PacienteProfile pacienteProfile = post.getValue(PacienteProfile.class);
+                            try {
 
-                        final PacienteProfile pacienteProfile = dataSnapshot.getValue(PacienteProfile.class);
-                        try {
-                            String url_requestApiGoogleMaps = "https://maps.googleapis.com/maps/api/directions/json?" +
-                                    "mode=driving&" +
-                                    "transit_routing_preference=less_driving&" +
-                                    "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
-                                    "destination=" + lat + "," + lng + "&" +
-                                    "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-                            Log.e(TAG, " url_requestApiGoogleMaps =" + url_requestApiGoogleMaps);
-                            mService.getPath(url_requestApiGoogleMaps)
-                                    .enqueue(new Callback<String>() {
-                                        @Override
-                                        public void onResponse(Call<String> call, Response<String> response) {
-                                            mDialog.dismiss();
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(response.body().toString());
-                                                JSONArray routes = jsonObject.getJSONArray("routes");
-                                                JSONObject object = routes.getJSONObject(0);
-                                                JSONArray legs = object.getJSONArray("legs");
-                                                JSONObject legsObject = legs.getJSONObject(0);
-                                                Log.e(TAG, "onResponse : jsonObject =" + jsonObject);
-                                                //
-                                                JSONObject distance = legsObject.getJSONObject("distance");
-                                                textDistance.setText(distance.getString("text"));
-                                                //
-                                                JSONObject time = legsObject.getJSONObject("duration");
-                                                textTime.setText(time.getString("text"));
-                                                //
-                                                String address = legsObject.getString("end_address");
-                                                textAddress.setText(address);
-                                                //
-                                                Common.currentPaciente = pacienteProfile;
-                                                textPaciente.setText(pacienteProfile.getFirstname() + " " + pacienteProfile.getLastname());
-                                                Log.e(TAG, "currentPaciente =" + Common.currentPaciente.getFirstname());
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
+                                Log.e(TAG, " pacienteProfile =  " + pacienteProfile.getFirstname());
+                                String url_requestApiGoogleMaps = "https://maps.googleapis.com/maps/api/directions/json?" +
+                                        "mode=driving&" +
+                                        "transit_routing_preference=less_driving&" +
+                                        "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
+                                        "destination=" + lat + "," + lng + "&" +
+                                        "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
+                                Log.e(TAG, " url_requestApiGoogleMaps =" + url_requestApiGoogleMaps);
+                                mService.getPath(url_requestApiGoogleMaps)
+                                        .enqueue(new Callback<String>() {
+                                            @Override
+                                            public void onResponse(Call<String> call, Response<String> response) {
+
+                                                try {
+                                                    JSONObject jsonObject = new JSONObject(response.body().toString());
+                                                    JSONArray routes = jsonObject.getJSONArray("routes");
+                                                    JSONObject object = routes.getJSONObject(0);
+                                                    JSONArray legs = object.getJSONArray("legs");
+                                                    JSONObject legsObject = legs.getJSONObject(0);
+                                                    Log.e(TAG, "onResponse : jsonObject =" + jsonObject);
+                                                    //
+                                                    JSONObject distance = legsObject.getJSONObject("distance");
+                                                    textDistance.setText(distance.getString("text"));
+                                                    //
+                                                    JSONObject time = legsObject.getJSONObject("duration");
+                                                    textTime.setText(time.getString("text"));
+                                                    //
+                                                    String address = legsObject.getString("end_address");
+                                                    textAddress.setText(address);
+                                                    //
+                                                    Common.currentPaciente = pacienteProfile;
+                                                    textPaciente.setText(pacienteProfile.getFirstname() + " " + pacienteProfile.getLastname());
+                                                    Log.e(TAG, "currentPaciente =" + Common.currentPaciente.getFirstname());
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                    mDialog.dismiss();
+                                                }
                                                 mDialog.dismiss();
                                             }
-                                        }
 
-                                        @Override
-                                        public void onFailure(Call<String> call, Throwable t) {
-                                            Log.e(TAG, " onFailure = "+ t.getMessage());
-                                            mDialog.dismiss();
-                                        }
-                                    });
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            mDialog.dismiss();
+                                            @Override
+                                            public void onFailure(Call<String> call, Throwable t) {
+                                                Log.e(TAG, " onFailure = "+ t.getMessage());
+                                                mDialog.dismiss();
+                                            }
+                                        });
+                                mDialog.dismiss();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                mDialog.dismiss();
+                            }
                         }
+
+
+
                     }
 
                     @Override

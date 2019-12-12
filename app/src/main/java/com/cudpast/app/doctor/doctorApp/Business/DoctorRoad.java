@@ -364,6 +364,7 @@ public class DoctorRoad extends FragmentActivity implements
         builder.setView(view);
         builder.setCancelable(false);
         view.setKeepScreenOn(true);
+
         final AlertDialog dialog = builder.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button btn_accept_cancelar, btn_decline_cancelar;
@@ -408,6 +409,7 @@ public class DoctorRoad extends FragmentActivity implements
         builder.setCancelable(false);
         view.setKeepScreenOn(true);
         final AlertDialog dialog = builder.create();
+
         try {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             Button btn_notificationPaciente;

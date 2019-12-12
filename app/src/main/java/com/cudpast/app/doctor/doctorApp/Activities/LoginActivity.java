@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -45,6 +46,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.squareup.picasso.Picasso;
 
 import dmax.dialog.SpotsDialog;
 
@@ -73,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
     AlertDialog alert = null;
     LocationManager locationManager;
+    public DatabaseReference TB_AVAILABLE_DOCTOR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +97,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
             @Override
             public void onClick(View v) {
                 if (submitForm()) {
-                    String email = ed_login_email.getText().toString();
-                    String pwd = ed_login_pwd.getText().toString();
+                    String email = ed_login_email.getText().toString().trim();
+                    String pwd = ed_login_pwd.getText().toString().trim();
                     waitingDialog.show();
                     loginFirebase(email, pwd);
                 }
@@ -130,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
         });
 
 
-        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             AlertNoGps();
         }
     }
@@ -199,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     //. Verification  User
     private void updateUI(FirebaseUser usuarioFirebase) {
         if (usuarioFirebase != null) {
-
+            Log.e(TAG,"HOLA , " + usuarioFirebase.getDisplayName());
         } else {
             Toast.makeText(this, "usuario o contraseña incorrecto", Toast.LENGTH_LONG).show();
         }
@@ -221,8 +224,8 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
                             if (firebaseUser.isEmailVerified()) {
                                 updateUI(firebaseUser);
                                 goToMain(firebaseUser.getUid());
-                                Log.e(TAG, " Sign In With Email : success");
-                                Log.e(TAG, "updateUI : correo  verificado(opcional)");
+                                Log.e(TAG, " Sign In With Email : success " + firebaseUser.getUid());
+                                Log.e(TAG, "updateUI : correo  verificado(opcional)" + firebaseUser);
 
                             } else {
                                 Log.e(TAG, "no se ha verificado correo");
@@ -247,33 +250,35 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     }
 
     private void goToMain(String userIUD) {
-        FirebaseDatabase
-                .getInstance()
-                .getReference(Common.TB_INFO_DOCTOR)
-                .child(userIUD)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
 
-                        //
-                        updateTokenToServer(FirebaseInstanceId.getInstance().getToken());
-                        Common.currentUserDoctor = dataSnapshot.getValue(DoctorProfile.class);
-                        Log.e(TAG, "Common.currentUserDoctor : " + Common.currentUserDoctor);
-                        waitingDialog.dismiss();
+        TB_AVAILABLE_DOCTOR = FirebaseDatabase.getInstance().getReference().child(Common.TB_INFO_DOCTOR);
+        TB_AVAILABLE_DOCTOR.keepSynced(true);
+        TB_AVAILABLE_DOCTOR.orderByKey().equalTo(userIUD).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot post : dataSnapshot.getChildren()) {
+                    DoctorProfile doctorProfile = post.getValue(DoctorProfile.class);
+                    if (doctorProfile != null) {
+                        Common.currentUserDoctor = doctorProfile;
+                        Log.e(TAG, " doctorProfile.uid = " + doctorProfile.getUid());
+                        Log.e(TAG, " doctorProfile.name = " + doctorProfile.getFirstname());
+                        Log.e(TAG, " Common.currentUserDoctor = " + Common.currentUserDoctor);
                     }
+                }
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+                waitingDialog.dismiss();
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        waitingDialog.dismiss();
-                        Log.e(TAG, "DatabaseError databaseError = " + databaseError.toString());
-                        updateUI(null);
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, " DatabaseError databaseError = " + databaseError.toString());
+                updateUI(null);
+                waitingDialog.dismiss();
+            }
+        });
     }
 
     private void updateTokenToServer(String refreshedToken) {
@@ -419,13 +424,13 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     }
 
 
-    public void onGPS(){
-        Intent intent=new Intent("android.location.GPS_ENABLED_CHANGE");
+    public void onGPS() {
+        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
         intent.putExtra("enabled", true);
         sendBroadcast(intent);
     }
 
-    public void offGPS(){
+    public void offGPS() {
         Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
         intent.putExtra("enabled", false);
         sendBroadcast(intent);
