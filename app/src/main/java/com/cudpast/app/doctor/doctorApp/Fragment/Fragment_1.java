@@ -2,7 +2,6 @@ package com.cudpast.app.doctor.doctorApp.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 
 
@@ -39,16 +38,16 @@ public class Fragment_1 extends Fragment {
         lastTextView = f1.findViewById(R.id.lastTextView);
 
         try {
-            Usuario usuario = Common.currentUserDoctor;
+            DoctorProfile doctorProfile = Common.currentUserDoctor;
 
-            nameTextView.setText(usuario.getFirstname());
-            emailTextView.setText(usuario.getCorreoG());
-            espTextView.setText(usuario.getEspecialidad());
-            lastTextView.setText(usuario.getLastname());
+            nameTextView.setText(doctorProfile.getFirstname());
+            emailTextView.setText(doctorProfile.getMail());
+            espTextView.setText(doctorProfile.getEspecialidad());
+            lastTextView.setText(doctorProfile.getLastname());
 
             Glide
                     .with(f1.getContext())
-                    .load(usuario.getImage())
+                    .load(doctorProfile.getImagePhoto())
                     .into(photoImageView);
 
         } catch (Exception e) {

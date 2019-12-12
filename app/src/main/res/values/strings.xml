@@ -6,7 +6,7 @@
     <string name="error_campo_apellido">por favor ingrese apeliido</string>
     <string name="error_campo_telefono">por favor ingrese telefono</string>
     <string name="error_campo_codmed">por favor su código</string>
-    <string name="error_campo_usuario">por favor ingrese usuario</string>
+    <string name="error_campo_usuario">por favor ingrese doctorProfile</string>
     <string name="error_campo_password">por favor ingrese contraseña</string>
 
     <string name="title_activity_doctor_home">DoctorHome</string>

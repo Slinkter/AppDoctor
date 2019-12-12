@@ -23,7 +23,7 @@ import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_1;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_2;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_3;
 import com.cudpast.app.doctor.doctorApp.Fragment.Fragment_4;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        Usuario usuario = Common.currentUserDoctor;
-        if (usuario != null) {
+        DoctorProfile doctorProfile = Common.currentUserDoctor;
+        if (doctorProfile != null) {
             loadInfoDoctorHeader();
         } else {
             goToLoginActivity();
@@ -122,17 +122,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void loadInfoDoctorHeader() {
         Log.e(TAG, "usuario esta logeado");
         try {
-            Usuario usuario = Common.currentUserDoctor;
+            DoctorProfile doctorProfile = Common.currentUserDoctor;
 
-            String name = usuario.getFirstname();
-            String especialidad = usuario.getEspecialidad();
-            String urlImg = usuario.getImage();
+            String name = doctorProfile.getFirstname();
+            String especialidad = doctorProfile.getEspecialidad();
+            String urlImg = doctorProfile.getImagePhoto();
 
             nameDoctor.setText(name);
             especialidadDoctor.setText(especialidad);
             Glide
                     .with(this)
-                    .load(Common.currentUserDoctor.getImage())
+                    .load(Common.currentUserDoctor.getImagePhoto())
                     .placeholder(R.drawable.ic_doctorapp)
                     .error(R.drawable.ic_doctorapp)
                     .into(imageViewDoctor);

@@ -409,7 +409,6 @@ public class DoctorRoad extends FragmentActivity implements
         view.setKeepScreenOn(true);
         final AlertDialog dialog = builder.create();
         try {
-
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             Button btn_notificationPaciente;
             btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
@@ -417,14 +416,10 @@ public class DoctorRoad extends FragmentActivity implements
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //
                             sendArriveNotification(idTokenPaciente);
-                            //
                             dialog.dismiss();
-                            finish();
                         }
                     });
-
             dialog.show();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -449,6 +444,7 @@ public class DoctorRoad extends FragmentActivity implements
         Sender sender = new Sender(tokenPaciente, data);
         Log.e(TAG, " " + data);
         Log.e(TAG, " " + sender);
+        Log.e(TAG,"OK");
 
         mFCMService
                 .sendMessage(sender)
@@ -456,14 +452,12 @@ public class DoctorRoad extends FragmentActivity implements
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
-
                             Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         } else {
-
                             Toast.makeText(DoctorRoad.this, "Failed", Toast.LENGTH_SHORT).show();
                             Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
                             startActivity(intentError);

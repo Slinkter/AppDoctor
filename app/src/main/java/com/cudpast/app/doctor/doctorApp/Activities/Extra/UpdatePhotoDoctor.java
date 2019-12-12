@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -47,7 +47,7 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
     private StorageReference StorageReference;
 
     private Uri mUriPhoto;
-    Usuario usuario;
+    DoctorProfile doctorProfile;
     String userAuthId;
 
     private ImageView updateDoctorPhotoView;
@@ -62,14 +62,14 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
 
         tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
-        usuario = Common.currentUserDoctor;
-        userAuthId = usuario.getUid();
+        doctorProfile = Common.currentUserDoctor;
+        userAuthId = doctorProfile.getUid();
 
         updateDoctorPhotoView = findViewById(R.id.updateDoctorPhoto);
 
         Glide
                 .with(this)
-                .load(Common.currentUserDoctor.getImage())
+                .load(Common.currentUserDoctor.getImagePhoto())
                 .into(updateDoctorPhotoView);
 
         btn_UploadPhotoDoctor = findViewById(R.id.btn_updateDoctorPhoto);
@@ -135,23 +135,23 @@ public class UpdatePhotoDoctor extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
                                 final String imageUrl = downloadUri.toString();
-                                final Usuario updateUser = new Usuario();
-                                //.Usuario a actualizar on Firebase
-                                updateUser.setDni(usuario.getDni());
-                                updateUser.setFirstname(usuario.getFirstname());
-                                updateUser.setLastname(usuario.getLastname());
-                                updateUser.setNumphone(usuario.getNumphone());
-                                updateUser.setCodmedpe(usuario.getCodmedpe());
-                                updateUser.setEspecialidad(usuario.getEspecialidad());
-                                updateUser.setDireccion(usuario.getDireccion());
+                                final DoctorProfile updateUser = new DoctorProfile();
+                                //.DoctorProfile a actualizar on Firebase
+                                updateUser.setDni(doctorProfile.getDni());
+                                updateUser.setFirstname(doctorProfile.getFirstname());
+                                updateUser.setLastname(doctorProfile.getLastname());
+                                updateUser.setNumphone(doctorProfile.getNumphone());
+                                updateUser.setCodmedpe(doctorProfile.getCodmedpe());
+                                updateUser.setEspecialidad(doctorProfile.getEspecialidad());
+                                updateUser.setDireccion(doctorProfile.getDireccion());
 
-                                updateUser.setPassword(usuario.getPassword());
-                                updateUser.setCorreoG(usuario.getCorreoG());
-                                updateUser.setFecha(usuario.getFecha());
-                                updateUser.setImage(imageUrl);//<-- set nueva imagen
-                                updateUser.setUid(usuario.getUid());
+                                updateUser.setPassword(doctorProfile.getPassword());
+                                updateUser.setMail(doctorProfile.getMail());
+                                updateUser.setCreateDate(doctorProfile.getCreateDate());
+                                updateUser.setImagePhoto(imageUrl);//<-- set nueva imagen
+                                updateUser.setUid(doctorProfile.getUid());
 
-                                Common.currentUserDoctor.setImage(imageUrl);
+                                Common.currentUserDoctor.setImagePhoto(imageUrl);
                                 Common.currentUserDoctor = updateUser;
 
 

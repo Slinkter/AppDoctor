@@ -28,8 +28,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
 import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.cudpast.app.doctor.doctorApp.Soporte.VolleyRP;
 import com.google.android.gms.tasks.Continuation;
@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
-    private Button btn_save, btn_uploadPhoto;
+    private Button btnNewDoctor, btn_uploadPhoto;
     private Animation animation;
     private Vibrator vib;
     private ImageView signupImagePhoto;
@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     SpotsDialog waitingDialog;
     StorageReference fileReference;
     Spinner spinner;
-    String dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, password, email, fecha, imageUrl, uid;
+    String dni, firstname, lastname, numphone, codmedpe, especialidad, address, password, email, dateSuscriptor, imageUrl, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +98,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             }
         });
         //
-
-
-        btn_save = findViewById(R.id.btnGuardar);
+        btnNewDoctor = findViewById(R.id.btnNewDoctor);
         btn_uploadPhoto = findViewById(R.id.btn_choose_image);
         spinner = findViewById(R.id.signupSpinnerCategoria);
 
@@ -131,7 +129,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         signupNumPhone = findViewById(R.id.signupNumPhone);
         signupAnddress = findViewById(R.id.signupDir);
         signupCodMePe = findViewById(R.id.signupCodMePe);
-
         signupMail = findViewById(R.id.signupMail);
         signupPassword = findViewById(R.id.signupPassword);
         signupDNI = findViewById(R.id.signupDNI);
@@ -139,24 +136,23 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
         signupEsp = findViewById(R.id.signupEsp); //<-- borrar spinner = findViewById(R.id.signupSpinnerCategoria);
         //
+        waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
 
+        btn_uploadPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
 
-        btn_uploadPhoto
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        openFileChooser();
-                    }
-                });
-
-        btn_save
+        btnNewDoctor
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (submitForm()) {// Form field
-                            if (uriPhoto != null) { //Selected Photo
 
-                                waitingDialog = new SpotsDialog(RegisterActivity.this, R.style.DialogRegistro);
+                        if (submitForm()) {
+                            //Selected Photo
+                            if (uriPhoto != null) {
                                 waitingDialog.show();
                                 //insertar photo en Storage
                                 fileReference = StorageReference.child(dni + "." + getFileExtension(uriPhoto));
@@ -177,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                                                 if (task.isSuccessful()) {
                                                     Uri downloadUri = task.getResult();
                                                     imageUrl = downloadUri.toString();
-                                                    CreateUser();
+                                                    CreateDoctoronFirebase();
                                                 }
                                             }
 
@@ -194,75 +190,67 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 });
     }
 
-    private void CreateUser() {
-        // Email
+    private void CreateDoctoronFirebase() {
+        Log.e(TAG, " ======================");
+        Log.e(TAG, " ----> CreateDoctoronFirebase ");
         email = signupMail.getText().toString().trim();
         password = signupPassword.getText().toString().trim();
-        // Datos
         dni = signupDNI.getText().toString();
         firstname = signupFirstName.getText().toString();
         lastname = signupLastName.getText().toString();
         numphone = signupNumPhone.getText().toString();
         codmedpe = signupCodMePe.getText().toString();
-        //especialidad
-        direccion = signupAnddress.getText().toString();
-        //password
-        fecha = getCurrentTimeStamp();
-        //image
-        //uid
-
+        address = signupAnddress.getText().toString();
+        dateSuscriptor = getCurrentTimeStamp();
+        //
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
+                        Log.e(TAG, " onSuccess : New Doctor created");
                         uid = authResult.getUser().getUid();
                         especialidad = spinner.getSelectedItem().toString();// plasma o medico general
-                        Usuario newUser = new Usuario(dni, firstname, lastname, numphone, codmedpe, especialidad, direccion, " ", email, fecha, imageUrl, uid);
-                        Log.e(TAG, dni + firstname + lastname + numphone + codmedpe + especialidad + direccion + " " + email + fecha + imageUrl + uid);
-                        insertNewDoctor(newUser);
+                        DoctorProfile newDoctor = new DoctorProfile(uid, imageUrl, firstname, lastname, numphone, address, codmedpe, dni, email, password, especialidad, dateSuscriptor);
+                        SaveNewDoctorOnFirebase(newDoctor);
+                        waitingDialog.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, " onFaile:  It wasn´t created  = " + e.getMessage());
                         Toast.makeText(RegisterActivity.this, "No se creo el usuario " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         waitingDialog.dismiss();
                     }
                 });
     }
 
-    private void insertNewDoctor(Usuario newUser) {
-        Usuario newDoctor = newUser;
-
+    private void SaveNewDoctorOnFirebase(DoctorProfile newDoctor) {
+        Log.e(TAG, " ======================");
+        Log.e(TAG, " ----> SaveNewDoctorOnFirebase ");
         tb_Info_Doctor
                 .child(uid)
                 .setValue(newDoctor)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        //
-                        sendEmailVerification();
+                        Log.e(TAG, " onSuccess : save doctor  on tb_Info_Doctor");
                         generarToken();
-                        //
-                        Log.e(TAG, " onSuccess : insertNewDoctor");
-                        Toast.makeText(RegisterActivity.this, "Verifique su correo, por favor", Toast.LENGTH_SHORT).show();
-                        //
+                        sendEmailVerification();
                         iniciarActivity();
-                        waitingDialog.dismiss();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
-                        Log.e("RegisterActivity ", "onFailure ");
-                        waitingDialog.dismiss();
+                        Toast.makeText(RegisterActivity.this, "DoctorProfile  No Registrado ", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "onFailure  : not save doctor  on tb_Info_Doctor ");
                     }
                 });
     }
 
-    private void insertarNewPlasma(Usuario newUser) {
-        Usuario newPlasma = newUser;
+    private void insertarNewPlasma(DoctorProfile newUser) {
+        DoctorProfile newPlasma = newUser;
         tb_Info_Plasma
                 .child(uid)
                 .setValue(newPlasma)
@@ -283,7 +271,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(RegisterActivity.this, "Usuario  No Registrado ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "DoctorProfile  No Registrado ", Toast.LENGTH_SHORT).show();
                         Log.e("RegisterActivity ", "onFailure ");
                         waitingDialog.dismiss();
                     }
@@ -309,14 +297,13 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     private void sendEmailVerification() {
 
-        final FirebaseUser user = auth.getCurrentUser();
-        user
+        auth.getCurrentUser()
                 .sendEmailVerification()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Revise su correo " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Verifique su correo, por favor", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(RegisterActivity.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
                         }
@@ -359,7 +346,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     private boolean submitForm() {
 
 
-
         if (!checkName()) {
             signupFirstName.setAnimation(animation);
             signupFirstName.startAnimation(animation);
@@ -380,7 +366,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             vib.vibrate(120);
             return false;
         }
-        // direccion
+        // address
         if (!checkAnddress()) {
             signupAnddress.setAnimation(animation);
             signupAnddress.startAnimation(animation);
@@ -401,8 +387,6 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
             vib.vibrate(120);
             return false;
         }
-
-
 
 
         if (!checkPassword()) {
@@ -448,12 +432,11 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
 
     private boolean checkAnddress() {
         if (signupAnddress.getText().toString().trim().isEmpty()) {
-            signupAnddress.setError("Error ingresar direccion");
+            signupAnddress.setError("Error ingresar address");
             return false;
         }
         return true;
     }
-
 
 
     private boolean checkDNI() {
@@ -483,19 +466,20 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void generarToken() {
-        Log.e(TAG, "generarToken1()");
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.e(TAG, " ======================");
+        Log.e(TAG, " ----> generarToken ");
+        String newToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference tokens = db.getReference(Common.token_tbl);
+        DatabaseReference refDB_tokens = db.getReference(Common.token_tbl);
 
-        Token token = new Token(refreshedToken);
+        Token token = new Token(newToken);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             String doctorUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            tokens
+            refDB_tokens
                     .child(doctorUID)
                     .setValue(token);
             Common.token_doctor = token.getToken();
-            Log.e("TOKEN : ", refreshedToken);
+            Log.e(TAG ,"newToken = " + newToken) ;
         }
     }
 

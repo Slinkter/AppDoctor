@@ -3,7 +3,7 @@ package com.cudpast.app.doctor.doctorApp.Common;
 import android.location.Location;
 
 import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.Remote.FCMClient;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
@@ -26,7 +26,7 @@ public class Common {
     public static final String db_session = "db_session";
 
     public static String token_doctor;
-    public static Usuario currentUserDoctor;
+    public static DoctorProfile currentUserDoctor;
     public static UserPaciente currentPaciente;
     public static Location mLastLocation;
 

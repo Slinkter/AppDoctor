@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,7 +62,7 @@ public class UpdateProfileDoctor extends AppCompatActivity {
     private UploadTask uploadTask;
 
     boolean choosed;
-    Usuario usuario;
+    DoctorProfile doctorProfile;
     String userAuthId;
 
     //todo : agregar Dialog
@@ -89,25 +89,25 @@ public class UpdateProfileDoctor extends AppCompatActivity {
         btn_UploadInfoDoctor = findViewById(R.id.btnUpdateDoctoAll);
 
 
-        //.Obtener usuario actualizr
-        usuario = Common.currentUserDoctor;
+        //.Obtener doctorProfile actualizr
+        doctorProfile = Common.currentUserDoctor;
         //.Display on XMLc
-        updateDoctorName.setText(usuario.getFirstname());
-        updateDoctorLast.setText(usuario.getLastname());
-        updateDoctorNumPhone.setText(usuario.getNumphone());
-        updateDoctorDir.setText(usuario.getDireccion());
-        updateDoctorCodMePe.setText(usuario.getCodmedpe());
-        updateDoctorEsp.setText(usuario.getEspecialidad());
+        updateDoctorName.setText(doctorProfile.getFirstname());
+        updateDoctorLast.setText(doctorProfile.getLastname());
+        updateDoctorNumPhone.setText(doctorProfile.getNumphone());
+        updateDoctorDir.setText(doctorProfile.getDireccion());
+        updateDoctorCodMePe.setText(doctorProfile.getCodmedpe());
+        updateDoctorEsp.setText(doctorProfile.getEspecialidad());
         // update XML
 //        Picasso
 //                .with(this)
-//                .load(usuario.getImage())
+//                .load(doctorProfile.getImagePhoto())
 //                .placeholder(R.drawable.ic_photo_doctor)
 //                .resize(200, 200)
 //                .error(R.drawable.ic_photo_doctor)
 //                .into(updateDoctorPhotoView);
 
-        userAuthId = usuario.getUid();
+        userAuthId = doctorProfile.getUid();
         //todo: que lo haga de manera independiten su propio boton
 
 
@@ -115,24 +115,24 @@ public class UpdateProfileDoctor extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //
-                final Usuario updateUser = new Usuario();
+                final DoctorProfile updateUser = new DoctorProfile();
                 final SpotsDialog waitingDialog = new SpotsDialog(UpdateProfileDoctor.this, R.style.DialogUpdateDoctorProfile);
                 waitingDialog.show();
-                String imgPath = Common.currentUserDoctor.getImage();
+                String imgPath = Common.currentUserDoctor.getImagePhoto();
 
-                //.Usuario a actualizar on Firebase
-                updateUser.setDni(usuario.getDni());
+                //.DoctorProfile a actualizar on Firebase
+                updateUser.setDni(doctorProfile.getDni());
                 updateUser.setFirstname(updateDoctorName.getText().toString());
                 updateUser.setLastname(updateDoctorLast.getText().toString());
                 updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
                 updateUser.setCodmedpe(updateDoctorCodMePe.getText().toString());
                 updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
-                updateUser.setImage(imgPath);
+                updateUser.setImagePhoto(imgPath);
                 updateUser.setDireccion(updateDoctorDir.getText().toString());
-                updateUser.setPassword(usuario.getPassword());
-                updateUser.setCorreoG(usuario.getCorreoG());
-                updateUser.setFecha(usuario.getFecha());
-                updateUser.setUid(usuario.getUid());
+                updateUser.setPassword(doctorProfile.getPassword());
+                updateUser.setMail(doctorProfile.getMail());
+                updateUser.setCreateDate(doctorProfile.getCreateDate());
+                updateUser.setUid(doctorProfile.getUid());
 //                Log.e(TAG, "updatePhotoToStorage" + updateUser.getCadena());
                 Common.currentUserDoctor = updateUser;
 
@@ -223,9 +223,9 @@ public class UpdateProfileDoctor extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
                                 final String imageUrl = downloadUri.toString();
-                                final Usuario updateUser = new Usuario();
-                                //.Usuario a actualizar on Firebase
-                                updateUser.setDni(usuario.getDni());
+                                final DoctorProfile updateUser = new DoctorProfile();
+                                //.DoctorProfile a actualizar on Firebase
+                                updateUser.setDni(doctorProfile.getDni());
                                 updateUser.setFirstname(updateDoctorName.getText().toString());
                                 updateUser.setLastname(updateDoctorLast.getText().toString());
                                 updateUser.setNumphone(updateDoctorNumPhone.getText().toString());
@@ -233,13 +233,13 @@ public class UpdateProfileDoctor extends AppCompatActivity {
                                 updateUser.setEspecialidad(updateDoctorEsp.getText().toString());
                                 updateUser.setDireccion(updateDoctorDir.getText().toString());
 
-                                updateUser.setPassword(usuario.getPassword());
-                                updateUser.setCorreoG(usuario.getCorreoG());
-                                updateUser.setFecha(usuario.getFecha());
-                                updateUser.setImage(imageUrl);//<-- set nueva imagen
-                                updateUser.setUid(usuario.getUid());
+                                updateUser.setPassword(doctorProfile.getPassword());
+                                updateUser.setMail(doctorProfile.getMail());
+                                updateUser.setCreateDate(doctorProfile.getCreateDate());
+                                updateUser.setImagePhoto(imageUrl);//<-- set nueva imagen
+                                updateUser.setUid(doctorProfile.getUid());
 
-                                Common.currentUserDoctor.setImage(imageUrl);
+                                Common.currentUserDoctor.setImagePhoto(imageUrl);
                                 Common.currentUserDoctor = updateUser;
 
 //                                Log.e(TAG, "updatePhotoToStorage : " + updateUser.getCadena());

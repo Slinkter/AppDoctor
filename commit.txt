@@ -122,7 +122,7 @@ commit 25c54618bf7f86618e979bf8234c14eda623c81f
 Author: Slinkter <luis.j.cueva@gmail.com>
 Date:   Wed Mar 6 12:18:59 2019 -0500
 
-    Jueves : RegisterActivit.xml se mejoro el diseño y botones , se agrego el UID en usuario para guardar en firebase
+    Jueves : RegisterActivit.xml se mejoro el diseño y botones , se agrego el UID en doctorProfile para guardar en firebase
 
 commit 203efb74d41b83befd3130b862896a36775163b3
 Author: Slinkter <luis.j.cueva@gmail.com>
@@ -297,7 +297,7 @@ commit 52ff909885b8c649ff88f2ddd8d3293ea1d62a69
 Author: Slinkter <luis.j.cueva@gmail.com>
 Date:   Thu Feb 21 12:40:48 2019 -0500
 
-    Jueves : El appdoctor recibe la cancelacion del usuario cuando le han solicitado un cita
+    Jueves : El appdoctor recibe la cancelacion del doctorProfile cuando le han solicitado un cita
 
 commit 88a5039e0f73918ffda941e031a3eefe939756b2
 Author: Slinkter <luis.j.cueva@gmail.com>

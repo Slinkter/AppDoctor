@@ -4,8 +4,8 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="5dp"
+    app:cardCornerRadius="25dp"
+    app:cardElevation="3dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -18,15 +18,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:padding="5dp">
+            android:layout_marginLeft="3dp"
+            android:padding="3dp">
+
+
 
             <TextView
                 android:id="@+id/firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:gravity="right"
+                android:gravity="left"
                 android:text="name"
                 android:textStyle="bold" />
 
@@ -35,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/firstname"
-                android:gravity="right"
+                android:gravity="left"
                 android:text="last"
                 android:textStyle="bold" />
 
@@ -44,8 +45,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lastname"
-                android:gravity="right"
+                android:gravity="left"
                 android:text="00000000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/createDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/phone"
+                android:gravity="left"
+                android:text="createDate"
                 android:textStyle="bold" />
 
         </RelativeLayout>

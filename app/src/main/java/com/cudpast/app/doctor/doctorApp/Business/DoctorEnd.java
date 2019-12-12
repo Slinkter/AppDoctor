@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 
 public class DoctorEnd extends AppCompatActivity {
@@ -31,7 +31,7 @@ public class DoctorEnd extends AppCompatActivity {
     private void metodoSignInResult() {
         try {
 
-            Usuario currentDoctor = Common.currentUserDoctor;
+            DoctorProfile currentDoctor = Common.currentUserDoctor;
             UserPaciente currentPaciente = Common.currentPaciente;
 
             tv_paciente_firstname.setText(currentPaciente.getNombre());

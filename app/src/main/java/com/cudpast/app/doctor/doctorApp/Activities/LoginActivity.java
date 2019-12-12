@@ -30,7 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.Usuario;
+import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Soporte.Token;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -262,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
                         //
                         updateTokenToServer(FirebaseInstanceId.getInstance().getToken());
-                        Common.currentUserDoctor = dataSnapshot.getValue(Usuario.class);
+                        Common.currentUserDoctor = dataSnapshot.getValue(DoctorProfile.class);
                         Log.e(TAG, "Common.currentUserDoctor : " + Common.currentUserDoctor);
                         waitingDialog.dismiss();
                     }

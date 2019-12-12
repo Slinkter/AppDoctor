@@ -24,20 +24,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 public class Fragment_3 extends Fragment {
 
     public static final String TAG = Fragment_3.class.getSimpleName();
-
-
-
     private View viewFragment;
     private String userUID;
     private RecyclerView mBlogList;
     private DatabaseReference AppDoctor_history;
     private FirebaseAuth auth;
-
     private FirebaseRecyclerAdapter<UserPaciente, pacienteViewHolder> adapter;
-
-    public Fragment_3() {
-
-    }
 
 
     @Override
@@ -48,7 +40,6 @@ public class Fragment_3 extends Fragment {
         auth = FirebaseAuth.getInstance();
         userUID = auth.getCurrentUser().getUid();
 
-
         AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(userUID);
         AppDoctor_history.keepSynced(true);
         AppDoctor_history.orderByKey();
@@ -57,10 +48,10 @@ public class Fragment_3 extends Fragment {
         mBlogList.setHasFixedSize(true);
         mBlogList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Log.e(TAG,"userUID : " +userUID);
-        Log.e(TAG,"AppDoctor_history : " +AppDoctor_history);
-        Log.e(TAG,"mBlogList : " +mBlogList);
-        Log.e(TAG,"AppDoctor_history : " +AppDoctor_history);
+        Log.e(TAG, "userUID : " + userUID);
+        Log.e(TAG, "AppDoctor_history : " + AppDoctor_history);
+        Log.e(TAG, "mBlogList : " + mBlogList);
+        Log.e(TAG, "AppDoctor_history : " + AppDoctor_history);
 
         return viewFragment;
     }
@@ -70,12 +61,10 @@ public class Fragment_3 extends Fragment {
     public void onStart() {
         super.onStart();
         //Options
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions.Builder<UserPaciente>()
+        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions
+                .Builder<UserPaciente>()
                 .setQuery(AppDoctor_history, UserPaciente.class)
                 .build();
-
-
-
 
         //Adapter
 
@@ -83,13 +72,13 @@ public class Fragment_3 extends Fragment {
 
             @Override
             protected void onBindViewHolder(@NonNull pacienteViewHolder holder, int position, @NonNull UserPaciente model) {
-
-                Log.e(TAG,"holder : " +holder);
-                Log.e(TAG,"getNombre : " +model.getNombre());
-                Log.e(TAG,"getApellido : " +model.getApellido());
                 holder.setFirstName(model.getNombre());
                 holder.setLastName(model.getApellido());
                 holder.setPhone(model.getDirecion());
+                //
+                Log.e(TAG, "holder : " + holder);
+                Log.e(TAG, "getNombre : " + model.getNombre());
+                Log.e(TAG, "getApellido : " + model.getApellido());
             }
 
             @NonNull
@@ -97,14 +86,13 @@ public class Fragment_3 extends Fragment {
             public pacienteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View v1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.paciente_layout_info, parent, false);
                 pacienteViewHolder viewHolder = new pacienteViewHolder(v1);
-
                 return viewHolder;
             }
         };
 
-        Log.e(TAG,"options : " +options);
-        Log.e(TAG,"adapter : " +adapter);
-        Log.e(TAG,"mBlogList : " +mBlogList);
+        Log.e(TAG, "options : " + options);
+        Log.e(TAG, "adapter : " + adapter);
+        Log.e(TAG, "mBlogList : " + mBlogList);
 
 
         mBlogList.setAdapter(adapter);

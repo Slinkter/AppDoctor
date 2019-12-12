@@ -41,7 +41,7 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="El usuario ha cancelado la consulta" />
+            android:text="El doctorProfile ha cancelado la consulta" />
 
         <Button
             android:layout_width="match_parent"
