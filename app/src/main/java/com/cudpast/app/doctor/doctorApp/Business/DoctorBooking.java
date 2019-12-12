@@ -1,5 +1,6 @@
 package com.cudpast.app.doctor.doctorApp.Business;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -22,7 +23,7 @@ import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Soporte.Data;
 import com.cudpast.app.doctor.doctorApp.Soporte.FCMResponse;
 import com.cudpast.app.doctor.doctorApp.Soporte.Sender;
-import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
+import com.cudpast.app.doctor.doctorApp.Model.PacienteProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.cudpast.app.doctor.doctorApp.Remote.IFCMService;
 import com.cudpast.app.doctor.doctorApp.Remote.IGoogleAPI;
@@ -76,6 +77,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
 
         if (getIntent() != null) {
+            Log.e(TAG, "======================================================");
+            Log.e(TAG, "--------------> sendRequestDoctor                    ");
             title = getIntent().getStringExtra("title");
             body = getIntent().getStringExtra("body");
             pToken = getIntent().getStringExtra("pToken");
@@ -90,7 +93,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "dtoken  = " + dToken);
             Log.e(TAG, "paciente_lat  = " + lat);
             Log.e(TAG, "paciente_lng  = " + lng);
-            Log.e(TAG, "pacienteUID  =" + pacienteUID);
+            Log.e(TAG, "pacienteUID  = " + pacienteUID);
         }
 
 
@@ -148,16 +151,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "dtoken  = " + dToken);
             Log.e(TAG, "paciente_lat  = " + lat);
             Log.e(TAG, "paciente_lng  = " + lng);
-            Log.e(TAG, "pacienteUID  = " + pacienteUID);
+            Log.e(TAG, "pacienteUID   = " + pacienteUID);
         }
-
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
 
     }
 
@@ -268,38 +263,39 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
     //Cargar duración distancia y direccion final
     private void getDirection(final double lat, final double lng, String uid_paciente) {
-        Log.e(TAG, " getDirection " );
+        Log.e(TAG, "==========================================");
+        Log.e(TAG, " getDirection ");
+        final ProgressDialog mDialog = new ProgressDialog(DoctorBooking.this);
+        mDialog.setMessage(" visualizando .... ");
+        mDialog.show();
+
         tb_Info_Paciente
                 .child(uid_paciente)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        UserPaciente userPaciente = dataSnapshot.getValue(UserPaciente.class);
-                        Common.currentPaciente = userPaciente;
-                        textPaciente.setText(userPaciente.getNombre() + " " + userPaciente.getApellido());
-                        Log.e(TAG, "getDirection : currentPaciente =" + Common.currentPaciente.getNombre());
 
-
+                        final PacienteProfile pacienteProfile = dataSnapshot.getValue(PacienteProfile.class);
                         try {
-                            String requestApi = "https://maps.googleapis.com/maps/api/directions/json?" +
+                            String url_requestApiGoogleMaps = "https://maps.googleapis.com/maps/api/directions/json?" +
                                     "mode=driving&" +
                                     "transit_routing_preference=less_driving&" +
                                     "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
                                     "destination=" + lat + "," + lng + "&" +
                                     "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-                            Log.e(TAG, "getDirection : requestApi =" + requestApi);
-                            mService.getPath(requestApi)
+                            Log.e(TAG, " url_requestApiGoogleMaps =" + url_requestApiGoogleMaps);
+                            mService.getPath(url_requestApiGoogleMaps)
                                     .enqueue(new Callback<String>() {
                                         @Override
                                         public void onResponse(Call<String> call, Response<String> response) {
+                                            mDialog.dismiss();
                                             try {
-
                                                 JSONObject jsonObject = new JSONObject(response.body().toString());
-                                                Log.e(TAG, "getDirection : jsonObject =" + jsonObject);
                                                 JSONArray routes = jsonObject.getJSONArray("routes");
                                                 JSONObject object = routes.getJSONObject(0);
                                                 JSONArray legs = object.getJSONArray("legs");
                                                 JSONObject legsObject = legs.getJSONObject(0);
+                                                Log.e(TAG, "onResponse : jsonObject =" + jsonObject);
                                                 //
                                                 JSONObject distance = legsObject.getJSONObject("distance");
                                                 textDistance.setText(distance.getString("text"));
@@ -309,23 +305,31 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                                                 //
                                                 String address = legsObject.getString("end_address");
                                                 textAddress.setText(address);
+                                                //
+                                                Common.currentPaciente = pacienteProfile;
+                                                textPaciente.setText(pacienteProfile.getFirstname() + " " + pacienteProfile.getLastname());
+                                                Log.e(TAG, "currentPaciente =" + Common.currentPaciente.getFirstname());
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
+                                                mDialog.dismiss();
                                             }
                                         }
 
                                         @Override
                                         public void onFailure(Call<String> call, Throwable t) {
-
+                                            Log.e(TAG, " onFailure = "+ t.getMessage());
+                                            mDialog.dismiss();
                                         }
                                     });
                         } catch (Exception e) {
                             e.printStackTrace();
+                            mDialog.dismiss();
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                        mDialog.dismiss();
                         Log.e(TAG, " databaseError : " + databaseError.getMessage());
                     }
                 });

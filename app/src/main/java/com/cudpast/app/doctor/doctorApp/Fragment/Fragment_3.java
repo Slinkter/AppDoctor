@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
+import com.cudpast.app.doctor.doctorApp.Model.PacienteProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +29,7 @@ public class Fragment_3 extends Fragment {
     private RecyclerView mBlogList;
     private DatabaseReference AppDoctor_history;
     private FirebaseAuth auth;
-    private FirebaseRecyclerAdapter<UserPaciente, pacienteViewHolder> adapter;
+    private FirebaseRecyclerAdapter<PacienteProfile, pacienteViewHolder> adapter;
 
 
     @Override
@@ -62,23 +62,23 @@ public class Fragment_3 extends Fragment {
         super.onStart();
         //Options
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions
-                .Builder<UserPaciente>()
-                .setQuery(AppDoctor_history, UserPaciente.class)
+                .Builder<PacienteProfile>()
+                .setQuery(AppDoctor_history, PacienteProfile.class)
                 .build();
 
         //Adapter
 
-        adapter = new FirebaseRecyclerAdapter<UserPaciente, pacienteViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<PacienteProfile, pacienteViewHolder>(options) {
 
             @Override
-            protected void onBindViewHolder(@NonNull pacienteViewHolder holder, int position, @NonNull UserPaciente model) {
-                holder.setFirstName(model.getNombre());
-                holder.setLastName(model.getApellido());
-                holder.setPhone(model.getDirecion());
+            protected void onBindViewHolder(@NonNull pacienteViewHolder holder, int position, @NonNull PacienteProfile model) {
+                holder.setFirstName(model.getFirstname());
+                holder.setLastName(model.getLastname());
+                holder.setPhone(model.getAddress());
                 //
                 Log.e(TAG, "holder : " + holder);
-                Log.e(TAG, "getNombre : " + model.getNombre());
-                Log.e(TAG, "getApellido : " + model.getApellido());
+                Log.e(TAG, "getNombre : " + model.getFirstname());
+                Log.e(TAG, "getApellido : " + model.getLastname());
             }
 
             @NonNull

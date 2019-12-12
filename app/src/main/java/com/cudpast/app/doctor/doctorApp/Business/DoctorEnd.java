@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.cudpast.app.doctor.doctorApp.Common.Common;
-import com.cudpast.app.doctor.doctorApp.Model.UserPaciente;
+import com.cudpast.app.doctor.doctorApp.Model.PacienteProfile;
 import com.cudpast.app.doctor.doctorApp.Model.DoctorProfile;
 import com.cudpast.app.doctor.doctorApp.R;
 
@@ -32,10 +32,10 @@ public class DoctorEnd extends AppCompatActivity {
         try {
 
             DoctorProfile currentDoctor = Common.currentUserDoctor;
-            UserPaciente currentPaciente = Common.currentPaciente;
+            PacienteProfile currentPaciente = Common.currentPaciente;
 
-            tv_paciente_firstname.setText(currentPaciente.getNombre());
-            tv_paciente_lastName.setText(currentPaciente.getApellido());
+            tv_paciente_firstname.setText(currentPaciente.getFirstname());
+            tv_paciente_lastName.setText(currentPaciente.getLastname());
 
 
         } catch (Exception e) {

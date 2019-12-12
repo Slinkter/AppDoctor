@@ -91,6 +91,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         intent.putExtra("paciente_lat", customer_location.latitude);
         intent.putExtra("paciente_lng", customer_location.longitude);
         intent.putExtra("pacienteUID", message.getData().get("pacienteUID"));
+
+
         //
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         //
