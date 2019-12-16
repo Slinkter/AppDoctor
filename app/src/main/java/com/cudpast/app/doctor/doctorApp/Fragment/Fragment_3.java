@@ -47,11 +47,14 @@ public class Fragment_3 extends Fragment {
         rv_historyListDoctor = viewFragment.findViewById(R.id.myrecycleviewHistory);
         rv_historyListDoctor.setHasFixedSize(true);
         rv_historyListDoctor.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        Log.e(TAG, "uid_doctor : " + uid_doctor);
-        Log.e(TAG, "refDB_AppDoctor_history : " + refDB_AppDoctor_history);
-        Log.e(TAG, "rv_historyListDoctor : " + rv_historyListDoctor);
-        Log.e(TAG, "refDB_AppDoctor_history : " + refDB_AppDoctor_history);
+        Log.e(TAG, "====================================");
+        Log.e(TAG, "uid_doctor = " + uid_doctor);
+        Log.e(TAG, "====================================");
+        Log.e(TAG, "refDB_AppDoctor_history = " + refDB_AppDoctor_history.getDatabase());
+        Log.e(TAG, "====================================");
+        Log.e(TAG, "rv_historyListDoctor = " + rv_historyListDoctor);
+        Log.e(TAG, "====================================");
+        Log.e(TAG, "refDB_AppDoctor_history = " + refDB_AppDoctor_history);
 
         return viewFragment;
     }
@@ -61,24 +64,27 @@ public class Fragment_3 extends Fragment {
     public void onStart() {
         super.onStart();
         //Options
-        FirebaseRecyclerOptions options = new FirebaseRecyclerOptions
+        FirebaseRecyclerOptions myfirebaseRecyclerOptions;
+        myfirebaseRecyclerOptions = new FirebaseRecyclerOptions
                 .Builder<PacienteProfile>()
                 .setQuery(refDB_AppDoctor_history, PacienteProfile.class)
                 .build();
-
         //Adapter
 
-        firebase_adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder>(options) {
+        firebase_adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder>(myfirebaseRecyclerOptions) {
 
             @Override
             protected void onBindViewHolder(@NonNull myPacienteViewHolder holder, int position, @NonNull PacienteProfile model) {
+                holder.setDateVisit(model.getDateborn());
                 holder.setFirstName(model.getFirstname());
                 holder.setLastName(model.getLastname());
-                holder.setPhone(model.getAddress());
+                holder.setAddress(model.getAddress());
                 //
-                Log.e(TAG, "holder : " + holder);
-                Log.e(TAG, "getNombre : " + model.getFirstname());
-                Log.e(TAG, "getApellido : " + model.getLastname());
+
+                Log.e(TAG, "datevisit : " + model.getFirstname());
+                Log.e(TAG, "getFirstName : " + model.getFirstname());
+                Log.e(TAG, "getLastName : " + model.getLastname());
+                Log.e(TAG, "getAddress : " + model.getAddress());
             }
 
             @NonNull
@@ -90,7 +96,7 @@ public class Fragment_3 extends Fragment {
             }
         };
 
-        Log.e(TAG, "options : " + options);
+        Log.e(TAG, "myfirebaseRecyclerOptions : " + myfirebaseRecyclerOptions);
         Log.e(TAG, "firebase_adapter : " + firebase_adapter);
         Log.e(TAG, "rv_historyListDoctor : " + rv_historyListDoctor);
 
@@ -103,12 +109,16 @@ public class Fragment_3 extends Fragment {
     public static class myPacienteViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
-        TextView post_firstName, post_lastName, post_phone;
+        TextView post_date, post_firstName, post_lastName, post_phone;
 
 
         public myPacienteViewHolder(@NonNull final View itemView) {
             super(itemView);
             mView = itemView;
+        }
+        public void setDateVisit(String dateVisit){
+            post_date = mView.findViewById(R.id.datevisit);
+            post_date.setText(dateVisit);
         }
 
         public void setFirstName(String firstName) {
@@ -121,7 +131,7 @@ public class Fragment_3 extends Fragment {
             post_lastName.setText(lastName);
         }
 
-        public void setPhone(String phone) {
+        public void setAddress(String phone) {
             post_phone = mView.findViewById(R.id.phone);
             post_phone.setText(phone);
 
