@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="25dp"
-    app:cardElevation="3dp"
+    app:cardElevation="8dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -15,13 +15,20 @@
         android:padding="15dp">
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
+            android:orientation="vertical"
             android:padding="3dp">
 
-
+            <TextView
+                android:id="@+id/createDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="createDate"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/firstname"
@@ -35,7 +42,7 @@
                 android:id="@+id/lastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/firstname"
+
                 android:gravity="left"
                 android:text="last"
                 android:textStyle="bold" />
@@ -44,20 +51,29 @@
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lastname"
                 android:gravity="left"
                 android:text="00000000"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/createDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/phone"
-                android:gravity="left"
-                android:text="createDate"
-                android:textStyle="bold" />
 
-        </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:gravity="right|center"
+            android:orientation="vertical"
+            android:padding="3dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ambulance">
+
+            </ImageView>
+
+
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

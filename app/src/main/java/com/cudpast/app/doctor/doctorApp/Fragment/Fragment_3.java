@@ -26,10 +26,10 @@ public class Fragment_3 extends Fragment {
     public static final String TAG = Fragment_3.class.getSimpleName();
     private View viewFragment;
     private String uid_doctor;
-    private RecyclerView mBlogList;
-    private DatabaseReference AppDoctor_history;
+    private RecyclerView rv_historyListDoctor;
+    private DatabaseReference refDB_AppDoctor_history;
     private FirebaseAuth auth;
-    private FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder> adapter;
+    private FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder> firebase_adapter;
 
 
     @Override
@@ -40,18 +40,18 @@ public class Fragment_3 extends Fragment {
         auth = FirebaseAuth.getInstance();
         uid_doctor = auth.getCurrentUser().getUid();
 
-        AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(uid_doctor);
-        AppDoctor_history.keepSynced(true);
-        AppDoctor_history.orderByKey();
+        refDB_AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(uid_doctor);
+        refDB_AppDoctor_history.keepSynced(true);
+        refDB_AppDoctor_history.orderByKey();
 
-        mBlogList = viewFragment.findViewById(R.id.myrecycleviewHistory);
-        mBlogList.setHasFixedSize(true);
-        mBlogList.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv_historyListDoctor = viewFragment.findViewById(R.id.myrecycleviewHistory);
+        rv_historyListDoctor.setHasFixedSize(true);
+        rv_historyListDoctor.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Log.e(TAG, "uid_doctor : " + uid_doctor);
-        Log.e(TAG, "AppDoctor_history : " + AppDoctor_history);
-        Log.e(TAG, "mBlogList : " + mBlogList);
-        Log.e(TAG, "AppDoctor_history : " + AppDoctor_history);
+        Log.e(TAG, "refDB_AppDoctor_history : " + refDB_AppDoctor_history);
+        Log.e(TAG, "rv_historyListDoctor : " + rv_historyListDoctor);
+        Log.e(TAG, "refDB_AppDoctor_history : " + refDB_AppDoctor_history);
 
         return viewFragment;
     }
@@ -63,12 +63,12 @@ public class Fragment_3 extends Fragment {
         //Options
         FirebaseRecyclerOptions options = new FirebaseRecyclerOptions
                 .Builder<PacienteProfile>()
-                .setQuery(AppDoctor_history, PacienteProfile.class)
+                .setQuery(refDB_AppDoctor_history, PacienteProfile.class)
                 .build();
 
         //Adapter
 
-        adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder>(options) {
+        firebase_adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder>(options) {
 
             @Override
             protected void onBindViewHolder(@NonNull myPacienteViewHolder holder, int position, @NonNull PacienteProfile model) {
@@ -91,20 +91,20 @@ public class Fragment_3 extends Fragment {
         };
 
         Log.e(TAG, "options : " + options);
-        Log.e(TAG, "adapter : " + adapter);
-        Log.e(TAG, "mBlogList : " + mBlogList);
+        Log.e(TAG, "firebase_adapter : " + firebase_adapter);
+        Log.e(TAG, "rv_historyListDoctor : " + rv_historyListDoctor);
 
 
-        mBlogList.setAdapter(adapter);
-        adapter.startListening();
+        rv_historyListDoctor.setAdapter(firebase_adapter);
+        firebase_adapter.startListening();
     }
 
 
     public static class myPacienteViewHolder extends RecyclerView.ViewHolder {
 
-
-        TextView post_firstName, post_lastName, post_phone;
         View mView;
+        TextView post_firstName, post_lastName, post_phone;
+
 
         public myPacienteViewHolder(@NonNull final View itemView) {
             super(itemView);
