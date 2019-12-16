@@ -174,8 +174,7 @@ public class DoctorRoad extends FragmentActivity implements
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
-                    Log.i("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
-
+                    Log.e("MainActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
                 }
             }
 
@@ -198,40 +197,34 @@ public class DoctorRoad extends FragmentActivity implements
         }
 
         mMap = googleMap;
-
         geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(Common.TB_SERVICIO_DOCTOR_PACIENTE));
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(pacienteLat, pacienteLng), 0.05f);
-        geoQuery
-                .addGeoQueryEventListener(new GeoQueryEventListener() {
-                    @Override
-                    public void onKeyEntered(String key, GeoLocation location) {
-                        //--->
-                        ShowPopupNotification();
-                        //<--
-                    }
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                ShowPopupNotification();
+            }
 
-                    @Override
-                    public void onKeyExited(String key) {
+            @Override
+            public void onKeyExited(String key) {
 
-                    }
+            }
 
-                    @Override
-                    public void onKeyMoved(String key, GeoLocation location) {
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
 
-                    }
+            }
 
-                    @Override
-                    public void onGeoQueryReady() {
+            @Override
+            public void onGeoQueryReady() {
 
-                    }
+            }
 
-                    @Override
-                    public void onGeoQueryError(DatabaseError error) {
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
 
-                    }
-                });
-
-
+            }
+        });
     }
 
     private void getRoadRealTime() {
@@ -344,9 +337,9 @@ public class DoctorRoad extends FragmentActivity implements
                 polylineOptions.geodesic(true);
             }
 
-            if (polylineOptions !=null){
+            if (polylineOptions != null) {
                 direction = mMap.addPolyline(polylineOptions);
-            }else {
+            } else {
                 Log.e(TAG, "ERROR ,   direction = mMap.addPolyline(polylineOptions);");
             }
 
@@ -402,26 +395,26 @@ public class DoctorRoad extends FragmentActivity implements
     public void ShowPopupNotification() {
         // cuando el doctor llega a la zona o direccion del paciente
         // se muestra cuando esta dentro del área en el metodo
-        AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.pop_up_notification, null);
-        builder.setView(view);
-        builder.setCancelable(false);
-        view.setKeepScreenOn(true);
-        final AlertDialog dialog = builder.create();
 
         try {
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.pop_up_notification, null);
+            view.setKeepScreenOn(true);
+            //
+            AlertDialog.Builder builder = new AlertDialog.Builder(DoctorRoad.this);
+            builder.setView(view);
+            builder.setCancelable(false);
+            //
+            final AlertDialog dialog = builder.create();
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            Button btn_notificationPaciente;
-            btn_notificationPaciente = view.findViewById(R.id.btn_send_notification);
-            btn_notificationPaciente
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            sendArriveNotification(idTokenPaciente);
-                            dialog.dismiss();
-                        }
-                    });
+            Button btn_sendNotification = view.findViewById(R.id.btn_send_notification);
+            btn_sendNotification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sendArriveNotification(idTokenPaciente);
+                    dialog.dismiss();
+                }
+            });
             dialog.show();
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -446,7 +439,7 @@ public class DoctorRoad extends FragmentActivity implements
         Sender sender = new Sender(tokenPaciente, data);
         Log.e(TAG, " " + data);
         Log.e(TAG, " " + sender);
-        Log.e(TAG,"OK");
+        Log.e(TAG, "OK");
 
         mFCMService
                 .sendMessage(sender)
@@ -465,7 +458,7 @@ public class DoctorRoad extends FragmentActivity implements
                             startActivity(intentError);
                             finish();
                         }
-                        Log.e(TAG, "=====================================================");
+
                     }
 
                     @Override
@@ -475,9 +468,10 @@ public class DoctorRoad extends FragmentActivity implements
                         Intent intentError = new Intent(DoctorRoad.this, DoctorError.class);
                         startActivity(intentError);
                         finish();
-                        Log.e(TAG, "=====================================================");
+
                     }
                 });
+        Log.e(TAG, "=====================================================");
         ubicacion.removeLocationUpdates(mLocationCallback);
     }
 

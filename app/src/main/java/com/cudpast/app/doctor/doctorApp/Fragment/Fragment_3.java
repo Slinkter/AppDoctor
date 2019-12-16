@@ -25,11 +25,11 @@ public class Fragment_3 extends Fragment {
 
     public static final String TAG = Fragment_3.class.getSimpleName();
     private View viewFragment;
-    private String userUID;
+    private String uid_doctor;
     private RecyclerView mBlogList;
     private DatabaseReference AppDoctor_history;
     private FirebaseAuth auth;
-    private FirebaseRecyclerAdapter<PacienteProfile, pacienteViewHolder> adapter;
+    private FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder> adapter;
 
 
     @Override
@@ -38,9 +38,9 @@ public class Fragment_3 extends Fragment {
         viewFragment = inflater.inflate(R.layout.fragment_3, container, false);
 
         auth = FirebaseAuth.getInstance();
-        userUID = auth.getCurrentUser().getUid();
+        uid_doctor = auth.getCurrentUser().getUid();
 
-        AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(userUID);
+        AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(uid_doctor);
         AppDoctor_history.keepSynced(true);
         AppDoctor_history.orderByKey();
 
@@ -48,7 +48,7 @@ public class Fragment_3 extends Fragment {
         mBlogList.setHasFixedSize(true);
         mBlogList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        Log.e(TAG, "userUID : " + userUID);
+        Log.e(TAG, "uid_doctor : " + uid_doctor);
         Log.e(TAG, "AppDoctor_history : " + AppDoctor_history);
         Log.e(TAG, "mBlogList : " + mBlogList);
         Log.e(TAG, "AppDoctor_history : " + AppDoctor_history);
@@ -68,10 +68,10 @@ public class Fragment_3 extends Fragment {
 
         //Adapter
 
-        adapter = new FirebaseRecyclerAdapter<PacienteProfile, pacienteViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder>(options) {
 
             @Override
-            protected void onBindViewHolder(@NonNull pacienteViewHolder holder, int position, @NonNull PacienteProfile model) {
+            protected void onBindViewHolder(@NonNull myPacienteViewHolder holder, int position, @NonNull PacienteProfile model) {
                 holder.setFirstName(model.getFirstname());
                 holder.setLastName(model.getLastname());
                 holder.setPhone(model.getAddress());
@@ -83,9 +83,9 @@ public class Fragment_3 extends Fragment {
 
             @NonNull
             @Override
-            public pacienteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public myPacienteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View v1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.paciente_layout_info, parent, false);
-                pacienteViewHolder viewHolder = new pacienteViewHolder(v1);
+                myPacienteViewHolder viewHolder = new myPacienteViewHolder(v1);
                 return viewHolder;
             }
         };
@@ -100,13 +100,13 @@ public class Fragment_3 extends Fragment {
     }
 
 
-    public static class pacienteViewHolder extends RecyclerView.ViewHolder {
+    public static class myPacienteViewHolder extends RecyclerView.ViewHolder {
 
 
         TextView post_firstName, post_lastName, post_phone;
         View mView;
 
-        public pacienteViewHolder(@NonNull final View itemView) {
+        public myPacienteViewHolder(@NonNull final View itemView) {
             super(itemView);
             mView = itemView;
         }

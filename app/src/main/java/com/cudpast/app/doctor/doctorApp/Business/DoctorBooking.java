@@ -70,11 +70,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_doctor_booking);
         getSupportActionBar().hide();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
+
 
         if (getIntent() != null) {
             Log.e(TAG, "======================================================");
@@ -144,14 +147,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "paciente_lng  = " + lng);
             Log.e(TAG, "pacienteUID  = " + pacienteUID);
             getDirection(lat, lng, pacienteUID);
-        } else {
-            Log.e(TAG, "Title  = " + title);
-            Log.e(TAG, "Body  = " + body);
-            Log.e(TAG, "ptoken  = " + pToken);
-            Log.e(TAG, "dtoken  = " + dToken);
-            Log.e(TAG, "paciente_lat  = " + lat);
-            Log.e(TAG, "paciente_lng  = " + lng);
-            Log.e(TAG, "pacienteUID   = " + pacienteUID);
         }
 
     }
@@ -261,89 +256,77 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         //
     }
 
-    //Cargar duración distancia y direccion final
+    //
     private void getDirection(final double lat, final double lng, String uid_paciente) {
         Log.e(TAG, "==========================================");
         Log.e(TAG, " getDirection ");
-        final ProgressDialog mDialog = new ProgressDialog(DoctorBooking.this);
-        mDialog.setMessage(" visualizando .... ");
-        mDialog.show();
         Log.e(TAG, " tb_Info_Paciente =  " + tb_Info_Paciente);
-        tb_Info_Paciente
-                .orderByKey()
-                .equalTo(uid_paciente)
-                .addValueEventListener(new ValueEventListener() {
+
+        final String url_requestApiGoogleMaps = "https://maps.googleapis.com/maps/api/directions/json?" +
+                "mode=driving&" +
+                "transit_routing_preference=less_driving&" +
+                "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
+                "destination=" + lat + "," + lng + "&" +
+                "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
+
+        Log.e(TAG, " url_requestApiGoogleMaps = " + url_requestApiGoogleMaps);
+
+        tb_Info_Paciente.orderByKey().equalTo(uid_paciente)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for( DataSnapshot post : dataSnapshot.getChildren()){
+                        for (DataSnapshot post : dataSnapshot.getChildren()) {
+
                             final PacienteProfile pacienteProfile = post.getValue(PacienteProfile.class);
-                            try {
+                            Log.e(TAG, " pacienteProfile =  " + pacienteProfile.getFirstname());
 
-                                Log.e(TAG, " pacienteProfile =  " + pacienteProfile.getFirstname());
-                                String url_requestApiGoogleMaps = "https://maps.googleapis.com/maps/api/directions/json?" +
-                                        "mode=driving&" +
-                                        "transit_routing_preference=less_driving&" +
-                                        "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
-                                        "destination=" + lat + "," + lng + "&" +
-                                        "key=" + "AIzaSyCZMjdhZ3FydT4lkXtHGKs-d6tZKylQXAA";
-                                Log.e(TAG, " url_requestApiGoogleMaps =" + url_requestApiGoogleMaps);
-                                mService.getPath(url_requestApiGoogleMaps)
-                                        .enqueue(new Callback<String>() {
-                                            @Override
-                                            public void onResponse(Call<String> call, Response<String> response) {
-
-                                                try {
-                                                    JSONObject jsonObject = new JSONObject(response.body().toString());
-                                                    JSONArray routes = jsonObject.getJSONArray("routes");
-                                                    JSONObject object = routes.getJSONObject(0);
-                                                    JSONArray legs = object.getJSONArray("legs");
-                                                    JSONObject legsObject = legs.getJSONObject(0);
-                                                    Log.e(TAG, "onResponse : jsonObject =" + jsonObject);
-                                                    //
-                                                    JSONObject distance = legsObject.getJSONObject("distance");
-                                                    textDistance.setText(distance.getString("text"));
-                                                    //
-                                                    JSONObject time = legsObject.getJSONObject("duration");
-                                                    textTime.setText(time.getString("text"));
-                                                    //
-                                                    String address = legsObject.getString("end_address");
-                                                    textAddress.setText(address);
-                                                    //
-                                                    Common.currentPaciente = pacienteProfile;
-                                                    textPaciente.setText(pacienteProfile.getFirstname() + " " + pacienteProfile.getLastname());
-                                                    Log.e(TAG, "currentPaciente =" + Common.currentPaciente.getFirstname());
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                    mDialog.dismiss();
-                                                }
-                                                mDialog.dismiss();
+                            mService.getPath(url_requestApiGoogleMaps)
+                                    .enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> response) {
+                                            Log.e(TAG, " pre - try-catch");
+                                            try {
+                                                JSONObject jsonObject = new JSONObject(response.body());
+                                                JSONArray routes = jsonObject.getJSONArray("routes");
+                                                JSONObject object = routes.getJSONObject(0);
+                                                JSONArray legs = object.getJSONArray("legs");
+                                                JSONObject legsObject = legs.getJSONObject(0);
+                                                Log.e(TAG, "onResponse : jsonObject =" + jsonObject);
+                                                //
+                                                JSONObject distance = legsObject.getJSONObject("distance");
+                                                textDistance.setText(distance.getString("text"));
+                                                Log.e(TAG, " distance = " + distance);
+                                                //
+                                                JSONObject time = legsObject.getJSONObject("duration");
+                                                textTime.setText(time.getString("text"));
+                                                Log.e(TAG, " time = " + time);
+                                                //
+                                                String address = legsObject.getString("end_address");
+                                                textAddress.setText(address);
+                                                Log.e(TAG, " address = " + address);
+                                                //
+                                                Common.currentPaciente = pacienteProfile;
+                                                textPaciente.setText(pacienteProfile.getFirstname() + " " + pacienteProfile.getLastname());
+                                                Log.e(TAG, "currentPaciente =" + Common.currentPaciente.getFirstname());
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                                Log.e(TAG,"error try-catch = " + e.getMessage());
                                             }
+                                        }
 
-                                            @Override
-                                            public void onFailure(Call<String> call, Throwable t) {
-                                                Log.e(TAG, " onFailure = "+ t.getMessage());
-                                                mDialog.dismiss();
-                                            }
-                                        });
-                                mDialog.dismiss();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                mDialog.dismiss();
-                            }
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
+                                            Log.e(TAG, " onFailure = " + t.getMessage());
+                                        }
+                                    });
                         }
-
-
-
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        mDialog.dismiss();
                         Log.e(TAG, " databaseError : " + databaseError.getMessage());
                     }
                 });
-
-
     }
 
     //.
@@ -360,7 +343,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         }
         mMap = googleMap;
         //
-
         LatLng geoPaciente = new LatLng(lat, lng);
         mMap
                 .addMarker(new MarkerOptions()
