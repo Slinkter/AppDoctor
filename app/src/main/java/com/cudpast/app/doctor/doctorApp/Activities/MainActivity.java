@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             DoctorProfile doctorProfile = Common.currentUserDoctor;
 
-            String name = doctorProfile.getFirstname();
+            String name = doctorProfile.getFirstname() + " " + doctorProfile.getLastname();
             String especialidad = doctorProfile.getEspecialidad();
             String urlImg = doctorProfile.getImagePhoto();
 
