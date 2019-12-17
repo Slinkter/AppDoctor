@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
     private RequestQueue mRequest;
     private VolleyRP volleyRP;
 
-    private Button btnNewDoctor, btn_uploadPhoto;
+    private Button btnNewDoctor ,btnExitDoctor, btn_uploadPhoto;
     private Animation animation;
     private Vibrator vib;
     private ImageView signupImagePhoto;
@@ -99,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
         });
         //
         btnNewDoctor = findViewById(R.id.btnNewDoctor);
+        btnExitDoctor = findViewById(R.id.btnExitDoctor);
         btn_uploadPhoto = findViewById(R.id.btn_choose_image);
         spinner = findViewById(R.id.signupSpinnerCategoria);
 
@@ -188,6 +189,15 @@ public class RegisterActivity extends AppCompatActivity implements AdapterView.O
                         }
                     }
                 });
+
+        btnExitDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void CreateDoctoronFirebase() {

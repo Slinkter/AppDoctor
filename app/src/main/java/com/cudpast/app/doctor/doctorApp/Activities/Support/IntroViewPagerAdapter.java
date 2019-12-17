@@ -42,9 +42,9 @@ public class IntroViewPagerAdapter extends PagerAdapter {
         TextView title = v.findViewById(R.id.intro_title);
         TextView description = v.findViewById(R.id.intro_description);
         //
-        imgSlide.setAnimation(animation);
-        title.setAnimation(animation);
-        description.setAnimation(animation);
+        // imgSlide.setAnimation(animation);
+        // title.setAnimation(animation);
+        // description.setAnimation(animation);
         //
         imgSlide.setImageResource(mListScreen.get(position).getScreenImg());
         title.setText(mListScreen.get(position).getTitle());
