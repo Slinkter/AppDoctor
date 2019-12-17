@@ -186,6 +186,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 transaction.commit();
                 break;
         }
+
+
     }
 
 }
