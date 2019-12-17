@@ -160,7 +160,6 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
     //.Permisos de Location
     public void setupLocation() {
 
-
         if (ActivityCompat.checkSelfPermission(LoginActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             aux_solicitarPermiso(); // No tiene setupLocation y solicitar setupLocation
         } else {
