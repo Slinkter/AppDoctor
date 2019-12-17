@@ -29,8 +29,8 @@ public class Fragment_3 extends Fragment {
     private RecyclerView rv_historyListDoctor;
     private DatabaseReference refDB_AppDoctor_history;
     private FirebaseAuth auth;
-    private FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder> firebase_adapter;
-
+    private FirebaseRecyclerAdapter<PacienteProfile, myPacienteVH> firebase_recycler_adapter;
+    private FirebaseRecyclerOptions firebase_recycler_options;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,59 +64,56 @@ public class Fragment_3 extends Fragment {
     public void onStart() {
         super.onStart();
         //Options
-        FirebaseRecyclerOptions myfirebaseRecyclerOptions;
-        myfirebaseRecyclerOptions = new FirebaseRecyclerOptions
+        firebase_recycler_options = new FirebaseRecyclerOptions
                 .Builder<PacienteProfile>()
                 .setQuery(refDB_AppDoctor_history, PacienteProfile.class)
                 .build();
         //Adapter
-
-        firebase_adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteViewHolder>(myfirebaseRecyclerOptions) {
+        firebase_recycler_adapter = new FirebaseRecyclerAdapter<PacienteProfile, myPacienteVH>(firebase_recycler_options) {
 
             @Override
-            protected void onBindViewHolder(@NonNull myPacienteViewHolder holder, int position, @NonNull PacienteProfile model) {
-                holder.setDateVisit(model.getDateborn());
-                holder.setFirstName(model.getFirstname());
-                holder.setLastName(model.getLastname());
-                holder.setAddress(model.getAddress());
-                //
-
-                Log.e(TAG, "datevisit : " + model.getFirstname());
-                Log.e(TAG, "getFirstName : " + model.getFirstname());
-                Log.e(TAG, "getLastName : " + model.getLastname());
-                Log.e(TAG, "getAddress : " + model.getAddress());
+            protected void onBindViewHolder(@NonNull myPacienteVH pacienteVH, int position, @NonNull PacienteProfile pacienteModel) {
+                //imprime info de la atención del pacienteModel
+                Log.e(TAG, " onBindViewHolder :  position = " + position);
+                pacienteVH.setDateVisit(pacienteModel.getDateborn());
+                pacienteVH.setFirstName(pacienteModel.getFirstname());
+                pacienteVH.setLastName(pacienteModel.getLastname());
+                pacienteVH.setAddress(pacienteModel.getAddress());
             }
 
             @NonNull
             @Override
-            public myPacienteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v1 = LayoutInflater.from(parent.getContext()).inflate(R.layout.paciente_layout_info, parent, false);
-                myPacienteViewHolder viewHolder = new myPacienteViewHolder(v1);
-                return viewHolder;
+            public myPacienteVH onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+                View view = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.layout_paciente_info, parent, false);
+                myPacienteVH myPacienteVH = new myPacienteVH(view);
+                return myPacienteVH;
             }
         };
 
-        Log.e(TAG, "myfirebaseRecyclerOptions : " + myfirebaseRecyclerOptions);
-        Log.e(TAG, "firebase_adapter : " + firebase_adapter);
+        Log.e(TAG, "firebase_recycler_options : " + firebase_recycler_options);
+        Log.e(TAG, "firebase_recycler_adapter : " + firebase_recycler_adapter);
         Log.e(TAG, "rv_historyListDoctor : " + rv_historyListDoctor);
 
 
-        rv_historyListDoctor.setAdapter(firebase_adapter);
-        firebase_adapter.startListening();
+        rv_historyListDoctor.setAdapter(firebase_recycler_adapter);
+        firebase_recycler_adapter.startListening();
     }
 
 
-    public static class myPacienteViewHolder extends RecyclerView.ViewHolder {
+    public static class myPacienteVH extends RecyclerView.ViewHolder {
 
         View mView;
         TextView post_date, post_firstName, post_lastName, post_phone;
 
 
-        public myPacienteViewHolder(@NonNull final View itemView) {
+        public myPacienteVH(@NonNull final View itemView) {
             super(itemView);
             mView = itemView;
         }
-        public void setDateVisit(String dateVisit){
+
+        public void setDateVisit(String dateVisit) {
             post_date = mView.findViewById(R.id.datevisit);
             post_date.setText(dateVisit);
         }
