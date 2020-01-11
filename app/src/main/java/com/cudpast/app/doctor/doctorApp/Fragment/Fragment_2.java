@@ -151,6 +151,28 @@ public class Fragment_2 extends Fragment implements
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause()");
+        getOffDoctor();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop()");
+        getOffDoctor();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy");
+        getOffDoctor();
+
+    }
+
     private void builGoogleApiClient() {
         Log.e(TAG, "1 : builGoogleApiClient()");
         googleApiClient = new GoogleApiClient.Builder(getActivity())

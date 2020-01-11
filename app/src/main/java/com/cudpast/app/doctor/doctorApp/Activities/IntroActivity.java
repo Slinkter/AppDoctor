@@ -76,27 +76,25 @@ public class IntroActivity extends AppCompatActivity {
                     }
                 });
 
-        tabIndicator
-                .addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(TabLayout.Tab tab) {
-                        if (mListSlide.size() - 1 == tab.getPosition()) {
+        tabIndicator.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (mListSlide.size() - 1 == tab.getPosition()) {
 
-                            loadLastScreen();
-                        }
-                    }
+                    loadLastScreen();
+                }
+            }
 
-                    @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-                    }
+            }
 
-                    @Override
-                    public void onTabReselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-                    }
-                });
-
+            }
+        });
 
         btnStarted.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +109,9 @@ public class IntroActivity extends AppCompatActivity {
     }
 
 
-
     private boolean showSlideFirst() {
-        SharedPreferences sp ;
-        Boolean isIntroActivityOpenedBefore ;
+        SharedPreferences sp;
+        Boolean isIntroActivityOpenedBefore;
         sp = getApplicationContext().getSharedPreferences("myPrefs", MODE_PRIVATE);
         isIntroActivityOpenedBefore = sp.getBoolean("isIntroOpened", false);
         return isIntroActivityOpenedBefore;
@@ -126,6 +123,7 @@ public class IntroActivity extends AppCompatActivity {
         mListSlide.add(new ScreenItem("Ubicación", "Es importante tener la última versión de \n Google Maps", R.drawable.ic_map_slide_2));
         mListSlide.add(new ScreenItem("Disponibilidad", "Horarios flexibles para visitarte en \n tu zona", R.drawable.ic_doctorapp));
     }
+
     private void loadLastScreen() {
         btnNext.setVisibility(View.INVISIBLE);
         tabIndicator.setVisibility(View.INVISIBLE);
@@ -134,8 +132,8 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     private void savePrefData() {
-        SharedPreferences sp ;
-        SharedPreferences.Editor editor ;
+        SharedPreferences sp;
+        SharedPreferences.Editor editor;
         sp = getApplicationContext().getSharedPreferences("myPrefs", MODE_PRIVATE);
         editor = sp.edit();
         editor.putBoolean("isIntroOpened", true);

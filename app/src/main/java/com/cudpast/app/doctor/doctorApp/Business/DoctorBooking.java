@@ -64,22 +64,39 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
     public double lat, lng;
     double doclat, doclng;
     private GoogleMap mMap;
-    private DatabaseReference tb_Info_Paciente;
+    public DatabaseReference tb_Info_Paciente;
 
     //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_doctor_booking);
         getSupportActionBar().hide();
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapCustomerCall);
         mapFragment.getMapAsync(this);
 
-
         if (getIntent() != null) {
+            tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
+            tb_Info_Paciente.keepSynced(true);
+
+            mService = Common.getGoogleAPI();
+            mFCMService = Common.getIFCMService();
+            auth = FirebaseAuth.getInstance();
+
+            textPaciente = findViewById(R.id.tv_namePaciente);
+            textAddress = findViewById(R.id.tv_addressPaciente);
+            textTime = findViewById(R.id.tv_timePaciente);
+            textDistance = findViewById(R.id.tv_distancePaciente);
+
+            btnCancel = findViewById(R.id.btn_decline_booking);
+            btnAccept = findViewById(R.id.btn_accept_booking);
+
+            if (Common.location_switch == null) {
+                Log.e(TAG, "Common.location_switch : NULL");
+            } else {
+                Common.location_switch.toggle();// se pone en offline cuando se el doctor acepta la consulta medica
+                Log.e(TAG, "se  puso en offline al doctor ");
+            }
             Log.e(TAG, "======================================================");
             Log.e(TAG, "--------------> sendRequestDoctor                    ");
             title = getIntent().getStringExtra("title");
@@ -89,7 +106,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             lat = getIntent().getDoubleExtra("paciente_lat", -1.0);
             lng = getIntent().getDoubleExtra("paciente_lng", -1.0);
             pacienteUID = getIntent().getStringExtra("pacienteUID");
-
             Log.e(TAG, "Title  = " + title);
             Log.e(TAG, "Body  = " + body);
             Log.e(TAG, "ptoken  = " + pToken);
@@ -97,30 +113,14 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             Log.e(TAG, "paciente_lat  = " + lat);
             Log.e(TAG, "paciente_lng  = " + lng);
             Log.e(TAG, "pacienteUID  = " + pacienteUID);
+            if (pacienteUID != null) {
+                getDirection(lat, lng, pacienteUID);
+                Log.e(TAG, "pacienteUID   es   " + pacienteUID);
+            }else{
+                Log.e(TAG, "pacienteUID   es null  ");
+            }
         }
 
-
-        tb_Info_Paciente = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_PACIENTE);
-        tb_Info_Paciente.keepSynced(true);
-
-        btnCancel = findViewById(R.id.btn_decline_booking);
-        btnAccept = findViewById(R.id.btn_accept_booking);
-
-        mService = Common.getGoogleAPI();
-        mFCMService = Common.getIFCMService();
-        auth = FirebaseAuth.getInstance();
-
-        textPaciente = findViewById(R.id.tv_namePaciente);
-        textAddress = findViewById(R.id.tv_addressPaciente);
-        textTime = findViewById(R.id.tv_timePaciente);
-        textDistance = findViewById(R.id.tv_distancePaciente);
-
-        if (Common.location_switch == null) {
-            Log.e(TAG, "Common.location_switch : NULL");
-        } else {
-            Common.location_switch.toggle();// se pone en offline cuando se el doctor acepta la consulta medica
-            Log.e(TAG, "se  puso en offline al doctor ");
-        }
         //.
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,16 +138,6 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
             }
         });
 
-        if (pacienteUID != null) {
-            Log.e(TAG, "Title  = " + title);
-            Log.e(TAG, "Body  = " + body);
-            Log.e(TAG, "ptoken  = " + pToken);
-            Log.e(TAG, "dtoken  = " + dToken);
-            Log.e(TAG, "paciente_lat  = " + lat);
-            Log.e(TAG, "paciente_lng  = " + lng);
-            Log.e(TAG, "pacienteUID  = " + pacienteUID);
-            getDirection(lat, lng, pacienteUID);
-        }
 
     }
 
@@ -262,7 +252,8 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
         Log.e(TAG, " getDirection ");
         Log.e(TAG, " tb_Info_Paciente =  " + tb_Info_Paciente);
 
-        final String url_requestApiGoogleMaps = "https://maps.googleapis.com/maps/api/directions/json?" +
+        final String url_requestApiGoogleMaps =
+                "https://maps.googleapis.com/maps/api/directions/json?" +
                 "mode=driving&" +
                 "transit_routing_preference=less_driving&" +
                 "origin=" + Common.mLastLocation.getLatitude() + "," + Common.mLastLocation.getLongitude() + "&" +
@@ -271,8 +262,10 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
 
         Log.e(TAG, " url_requestApiGoogleMaps = " + url_requestApiGoogleMaps);
 
-        tb_Info_Paciente.orderByKey().equalTo(uid_paciente)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        tb_Info_Paciente
+                .orderByKey()
+                .equalTo(uid_paciente)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot post : dataSnapshot.getChildren()) {
@@ -310,7 +303,7 @@ public class DoctorBooking extends AppCompatActivity implements OnMapReadyCallba
                                                 Log.e(TAG, "currentPaciente =" + Common.currentPaciente.getFirstname());
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
-                                                Log.e(TAG,"error try-catch = " + e.getMessage());
+                                                Log.e(TAG, "error try-catch = " + e.getMessage());
                                             }
                                         }
 
