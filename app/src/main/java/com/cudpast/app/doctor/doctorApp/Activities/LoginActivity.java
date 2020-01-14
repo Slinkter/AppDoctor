@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Vibrator;
@@ -134,26 +136,48 @@ public class LoginActivity extends AppCompatActivity implements TextWatcher, Com
 
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            AlertNoGps();
+           // AlertNoGps();
+           // displayLocationNull();
         }
     }
 
-    private void AlertNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("El sistema GPS esta desactivado, ¿Desea activarlo?")
-                .setCancelable(false)
-                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        alert = builder.create();
-        alert.show();
+
+    private void displayLocationNull() {
+
+        try {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(LoginActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.alert_location_null, null);
+            builder.setView(view);
+            builder.setCancelable(false);
+            view.setKeepScreenOn(true);
+            final android.app.AlertDialog dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+
+            Button btn_gps_active = view.findViewById(R.id.btn_gps_active);
+            Button btn_gps_cancele = view.findViewById(R.id.btn_gps_cancele);
+
+            btn_gps_active.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    dialog.dismiss();
+                }
+            });
+
+            btn_gps_cancele.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+
+        } catch (Exception  e) {
+            e.printStackTrace();
+        }
     }
 
     // *********************************************************

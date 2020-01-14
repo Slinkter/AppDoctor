@@ -1,6 +1,9 @@
 package com.cudpast.app.doctor.doctorApp.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -11,9 +14,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView imageViewDoctor;
     TextView nameDoctor;
     TextView especialidadDoctor;
+
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
         especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
         setFragment(1);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // AlertNoGps();
+             displayLocationNull();
+        }
     }
 
     @Override
@@ -65,6 +78,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void displayLocationNull() {
+
+        try {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+            View view = inflater.inflate(R.layout.alert_location_null, null);
+            builder.setView(view);
+            builder.setCancelable(false);
+            view.setKeepScreenOn(true);
+            final android.app.AlertDialog dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+
+            Button btn_gps_active = view.findViewById(R.id.btn_gps_active);
+            Button btn_gps_cancele = view.findViewById(R.id.btn_gps_cancele);
+
+            btn_gps_active.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    dialog.dismiss();
+                }
+            });
+
+            btn_gps_cancele.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+
+        } catch (Exception  e) {
+            e.printStackTrace();
         }
     }
 

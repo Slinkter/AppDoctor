@@ -447,7 +447,7 @@ public class DoctorRoad extends FragmentActivity implements
                     @Override
                     public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                         if (response.body().success == 1) {
-                            Toast.makeText(DoctorRoad.this, "success", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DoctorRoad.this, "Se envio la notificación ", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(DoctorRoad.this, DoctorEnd.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
