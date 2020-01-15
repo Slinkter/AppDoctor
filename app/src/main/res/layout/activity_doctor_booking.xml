@@ -8,13 +8,12 @@
     android:fitsSystemWindows="false"
     tools:context=".Business.DoctorBooking">
 
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="1dp"
         app:cardCornerRadius="25dp"
-        app:cardElevation="1dp"
+        app:cardElevation="8dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -30,17 +29,6 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:gravity="center"
-                    android:text="Atención Medica"
-                    android:textColor="@color/colorVerdeAzul"
-                    android:textSize="25dp"
-                    android:textStyle="bold" />
-
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="340dp"
@@ -48,8 +36,7 @@
                     app:cardCornerRadius="25dp"
                     app:cardElevation="5dp">
 
-                    <fragment
-                        xmlns:android="http://schemas.android.com/apk/res/android"
+                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                         xmlns:map="http://schemas.android.com/apk/res-auto"
                         xmlns:tools="http://schemas.android.com/tools"
                         android:id="@+id/mapCustomerCall"
@@ -225,6 +212,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/txt_rider_app"
+                android:layout_gravity="center"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="50dp"
                 android:gravity="center"
@@ -250,7 +238,7 @@
                         android:id="@+id/btn_accept_booking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/custom_button_5"
                         android:text="aceptar"
@@ -260,7 +248,7 @@
                         android:id="@+id/btn_decline_booking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/custom_button_1"
                         android:text="Declinar"

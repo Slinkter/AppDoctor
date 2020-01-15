@@ -1,68 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:background="@color/colorVerdeAzul"
     android:orientation="vertical"
     tools:context=".Business.DoctorEnd">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="30dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:weightSum="10">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="1dp"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="8dp"
+        app:cardUseCompatPadding="true">
 
-        <ImageView
-            android:id="@+id/icon"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="30dp"
-            android:layout_weight="3"
-            android:src="@drawable/ic_hospital" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Atención Medica"
-            android:textSize="30dp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:weightSum="10">
 
 
-        <TextView
-            android:id="@+id/fin_pacienteFirstName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:text="nombre"
-            android:textColor="@color/colorVerdeAzul"
-            android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/fin_pacienteLastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="apellido"
-            android:textColor="@color/colorVerdeAzul"
-            android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:layout_weight="3"
+                android:src="@drawable/ic_hospital" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:gravity="center"
-            android:text="El paciente tiene que finalizar la consulta medica "
-            android:textSize="12dp"
-            android:textStyle="italic" />
-    </LinearLayout>
-</LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Atención Medica"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/fin_pacienteFirstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="nombre"
+                android:textColor="@color/colorVerdeAzul"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/fin_pacienteLastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="apellido"
+                android:textColor="@color/colorVerdeAzul"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:text="El paciente tiene que finalizar la consulta medica "
+                android:textSize="12dp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</ScrollView>
