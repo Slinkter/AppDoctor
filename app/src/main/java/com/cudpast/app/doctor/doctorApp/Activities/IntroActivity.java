@@ -50,11 +50,14 @@ public class IntroActivity extends AppCompatActivity {
         animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.button_animation);
         // Falso = todavia no vio
         // Verdadero = ya vio
+        /*
         if (showSlideFirst()) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
         }
+
+         */
         loadData();
         //
         adapter = new IntroViewPagerAdapter(this, mListSlide);
@@ -101,7 +104,7 @@ public class IntroActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent goMain = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(goMain);
-                savePrefData();
+              // savePrefData();
                 finish();
             }
         });

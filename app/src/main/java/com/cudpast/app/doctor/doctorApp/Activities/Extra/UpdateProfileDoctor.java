@@ -74,7 +74,6 @@ public class UpdateProfileDoctor extends AppCompatActivity {
         getSupportActionBar().setTitle("Actualizar datos");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         tb_Info_Doctor = FirebaseDatabase.getInstance().getReference(Common.TB_INFO_DOCTOR);
         StorageReference = FirebaseStorage.getInstance().getReference("DoctorRegisterApp");
         //. XML
@@ -135,7 +134,6 @@ public class UpdateProfileDoctor extends AppCompatActivity {
                 updateUser.setUid(doctorProfile.getUid());
 //                Log.e(TAG, "updatePhotoToStorage" + updateUser.getCadena());
                 Common.currentUserDoctor = updateUser;
-
 
                 //.Actualizar campos
                 tb_Info_Doctor

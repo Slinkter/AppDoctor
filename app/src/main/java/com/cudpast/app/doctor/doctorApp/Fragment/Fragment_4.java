@@ -27,14 +27,12 @@ public class Fragment_4 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         View rootView;
         rootView = inflater.inflate(R.layout.fragment_4, container, false);
 
         c1 = rootView.findViewById(R.id.cv_update_info_doctor);
         c2 = rootView.findViewById(R.id.cv_update_photo_doctor);
         c3 = rootView.findViewById(R.id.cv_update_pwd_doctor);
-
 
         btn_update_info_doctor = (Button) rootView.findViewById(R.id.btn_update_info_doctor);
         btn_update_photo_doctor = (Button) rootView.findViewById(R.id.btn_update_photo_doctor);
@@ -45,7 +43,6 @@ public class Fragment_4 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UpdateProfileDoctor.class);
                 startActivity(intent);
-
             }
         });
 
@@ -54,7 +51,6 @@ public class Fragment_4 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UpdateProfileDoctor.class);
                 startActivity(intent);
-
             }
         });
 
@@ -64,7 +60,6 @@ public class Fragment_4 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UpdatePhotoDoctor.class);
                 startActivity(intent);
-
             }
         });
 
@@ -73,7 +68,6 @@ public class Fragment_4 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UpdatePhotoDoctor.class);
                 startActivity(intent);
-
             }
         });
 
@@ -82,7 +76,6 @@ public class Fragment_4 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UpdatePwdDoctor.class);
                 startActivity(intent);
-
             }
         });
 
@@ -91,7 +84,6 @@ public class Fragment_4 extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), UpdatePwdDoctor.class);
                 startActivity(intent);
-
             }
         });
 

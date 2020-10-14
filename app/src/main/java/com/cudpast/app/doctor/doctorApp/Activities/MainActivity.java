@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView imageViewDoctor;
     TextView nameDoctor;
     TextView especialidadDoctor;
-
+    //
     LocationManager locationManager;
 
     @Override
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageViewDoctor = (ImageView) headerView.findViewById(R.id.imageViewDoctor);
         nameDoctor = (TextView) headerView.findViewById(R.id.nameDoctor);
         especialidadDoctor = (TextView) headerView.findViewById(R.id.especialidadDoctor);
+
         setFragment(1);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -108,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             btn_gps_cancele.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     dialog.dismiss();
                 }
             });
