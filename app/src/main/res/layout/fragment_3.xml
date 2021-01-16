@@ -15,7 +15,6 @@
         android:gravity="center"
         android:paddingTop="20dp"
         android:text="Historial de Atenciones"
-        android:textColor="@color/colorAccent"
         android:textSize="24sp"
         android:textStyle="bold" />
 

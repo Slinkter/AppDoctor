@@ -65,8 +65,7 @@
                             android:layout_marginTop="15dp"
                             android:layout_marginRight="5dp"
                             android:gravity="center"
-                            android:text="Actualizar\nDatos"
-                            android:textColor="@color/colorAccent" />
+                            android:text="Actualizar\nDatos" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -100,8 +99,7 @@
                             android:layout_marginTop="15dp"
                             android:layout_marginRight="5dp"
                             android:gravity="center"
-                            android:text="Actualizar\nFoto"
-                            android:textColor="@color/colorAccent" />
+                            android:text="Actualizar\nFoto" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </LinearLayout>
@@ -144,8 +142,7 @@
                             android:layout_marginTop="15dp"
                             android:layout_marginRight="5dp"
                             android:gravity="center"
-                            android:text="Actualizar\nContraseña"
-                            android:textColor="@color/colorAccent" />
+                            android:text="Actualizar\nContraseña" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 

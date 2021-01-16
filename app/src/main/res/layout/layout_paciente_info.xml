@@ -4,8 +4,8 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="8dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -21,19 +21,19 @@
             android:orientation="vertical"
             android:padding="3dp">
 
+
             <TextView
-                android:id="@+id/datevisit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:text="DateVisit"
-                android:textColor="@color/colorAccent"
+                android:text="Paciente"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="name" />
 
@@ -41,6 +41,7 @@
                 android:id="@+id/lastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="last" />
 
@@ -48,8 +49,17 @@
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:gravity="left"
                 android:text="Address" />
+
+            <TextView
+                android:id="@+id/datevisit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="left"
+                android:text="DateVisit" />
 
         </LinearLayout>
     </LinearLayout>
