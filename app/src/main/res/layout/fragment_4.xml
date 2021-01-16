@@ -35,7 +35,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cv_update_info_doctor"
                     android:layout_width="170dp"
                     android:layout_height="190dp"
@@ -66,9 +66,9 @@
                             android:gravity="center"
                             android:text="Actualizar\nDatos" />
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cv_update_photo_doctor"
                     android:layout_width="170dp"
                     android:layout_height="190dp"
@@ -100,7 +100,7 @@
                             android:gravity="center"
                             android:text="Actualizar\nFoto" />
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
 
 
@@ -112,7 +112,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cv_update_pwd_doctor"
                     android:layout_width="170dp"
                     android:layout_height="190dp"
@@ -143,7 +143,7 @@
                             android:gravity="center"
                             android:text="Actualizar\nContraseña" />
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </LinearLayout>
