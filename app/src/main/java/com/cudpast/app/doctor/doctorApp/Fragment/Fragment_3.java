@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cudpast.app.doctor.doctorApp.Activities.LoginActivity;
 import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.Model.PacienteProfile;
 import com.cudpast.app.doctor.doctorApp.R;
@@ -19,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
+import dmax.dialog.SpotsDialog;
 
 
 public class Fragment_3 extends Fragment {
@@ -32,6 +35,8 @@ public class Fragment_3 extends Fragment {
     private FirebaseRecyclerAdapter<PacienteProfile, myPacienteVH> firebase_recycler_adapter;
     private FirebaseRecyclerOptions firebase_recycler_options;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,11 +47,13 @@ public class Fragment_3 extends Fragment {
 
         refDB_AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(uid_doctor);
         refDB_AppDoctor_history.keepSynced(true);
-        refDB_AppDoctor_history.orderByKey();
+        refDB_AppDoctor_history.limitToLast(10);
+       refDB_AppDoctor_history.orderByKey();
 
         rv_historyListDoctor = viewFragment.findViewById(R.id.myrecycleviewHistory);
         rv_historyListDoctor.setHasFixedSize(true);
         rv_historyListDoctor.setLayoutManager(new LinearLayoutManager(getContext()));
+
         Log.e(TAG, "====================================");
         Log.e(TAG, "uid_doctor = " + uid_doctor);
         Log.e(TAG, "====================================");
@@ -64,6 +71,8 @@ public class Fragment_3 extends Fragment {
     public void onStart() {
         super.onStart();
         //Options
+
+
         firebase_recycler_options = new FirebaseRecyclerOptions
                 .Builder<PacienteProfile>()
                 .setQuery(refDB_AppDoctor_history, PacienteProfile.class)

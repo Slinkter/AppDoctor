@@ -8,6 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".Activities.Extra.UpdatePhotoDoctor">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +16,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="0dp"
         android:text="ACTUALIZAR FOTO "
-        android:textColor="@color/colorAccent"
+
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -41,12 +42,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="8dp"
+                android:padding="10dp"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/updateDoctorPhoto"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
                     android:layout_above="@+id/btn_choose_image"
                     android:layout_below="@+id/botones"
                     android:layout_gravity="center"
@@ -64,11 +66,10 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="30dp"
                     android:layout_marginBottom="20sp"
-                    android:background="@drawable/custom_button_2"
+                    android:background="@color/backgroundGray"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="Elegir foto"
-                    android:textColor="@color/white" />
+                    android:text="examinar foto" />
 
             </LinearLayout>
 
