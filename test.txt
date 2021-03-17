@@ -1,0 +1,302 @@
+b13c8bd revision
+ab39b4a androd x actived
+ac464c5 test migr android x
+fe3b8aa pre- target sdk 28 a 29
+1a6335f correcion de colores y font
+68e1466 revision
+ee13b00 ok
+1797a6a revision
+2ae6011 update
+f02ab03 update github
+4c62661 update
+063469b 20200115
+e9d88ad 20200114
+29667f6 20200114
+85945af 20200110
+eca3743 buscando
+6063f43 VERSION : 1.22
+23f7196 ok
+4057990 se modifo el header de foto del usuario de doctor  y nombre , falta actualizar perfil
+4fd7db4 se paso a español algunos botones y mejoras en regitro de boton de salida
+e4d8009 ok
+f6c1aa0 ok
+f85e35d Fragment 3 : se puede visualizar la fecha y hora del final de la atencion
+0736022 Lunes (fragment 03 ) : Historial de Ateciones
+d1c5999 Lunes
+0485a01 se levantaron los bug
+001dead funciona todo el recorrido
+8f406c9 probando 01
+7f3d7b3 Sabado : se actualizo las key para Google maps Api direcction , ya se puede pedir permisos para activar el GPS location , permiso para ubicacion , el login carga correctamente el Dialog de ingresar
+58554ef Viernes : Funciona el boton de online y offline
+bc12386 arreglan bug-01
+9ffea65 Startlocation and stopLocation
+e5dbd51 Documentando el codigo y mejorando el codigo
+69fc026 estudio y recodificacion de codigo
+630fcb9 Login ok , se arreglo la logica de verificacion de correo y verificacion de contraseña o usuario
+d379dc3 Miercoles : revision de codigo
+4e9d779 reduciones el codigo y mejorando
+cbc2e7b Sabado : modificar y mejorar fragment 2
+92cfd16 animation screenSlide
+6bc9dec Jueve se finalizo el esqueleo de introView
+0a850fa registro diseño
+55a16cf Revision y update
+5efac07 version 1.20
+f85622b 2019 07 25
+0ee79b4 cumple la ruta
+da12e34 Buscar token del paciente a través de la uid
+5bee0d8 se debe poner la actualizacion del token despues de iniciar session
+3777d4e ok design m1
+9697027 Cambios en el diseño
+9d1deb2 revision
+0ffe979 version : 1.19
+ff2e9a0 version : 1.19
+a21dc8d Plasma 4 : realiza todo el recorrido
+ff2b807 Plasma 3
+d089794 cambios
+8dfd782 cambios en fragment 2 , se debe diferenciar entre Mediciona General y Plasma
+1df73f1 El login se pulio
+85d899d 2019 07 01 : se modifico el login
+78766c3 cambiando en verificacion de correo tb_info_docotro ---> tb_info_plasma
+816c718 Plasma 2 : inicio
+74a6bcf 2019 06 27 : Regreso
+c4640df se conecta con appPaciente
+c96d490 ok
+0b7ed9c 2019 06 15 : (Saturday) Implementación de la nueva categoria Plasma
+b4bf305 version 1.18
+f35d1ac ok
+76eb369 ok
+fcb8eff 2019 06 13
+e3e0378 FMC 2
+594315f 2019 06 12 : DoctorBooking
+8419703 se entiendo como funcion el metodo token
+b9d1d2a Se genera el token al registrarse
+6cf6a61 Al actualizar el FCM se elimino la clase MyFirebaseIdService que generaba el token
+8f8b972 up version
+adbcd19 2019 06 07 : Fin
+0d33df9 se arreglo una interfaces que no funcionan
+157bfd8 version 16
+94208db Listo todas la interfaces de cancel
+e468acf 2019 06 06 : buscando metodo para enviar notificacion el doctor desaparece
+fcb0edf 2019 06 05 : (miercoles) se estara trabajando el mensaje cuando se cierra la aplicacion que enviar notificacion para paciente
+e7b5fd9 buscando metodo para mostrar al usuario un mensaje cuando cierra session
+9a4b2bd version 15
+8e966d9 listo para subir
+acc3a83 se modificio doctorCancelOnRoad,  se saco toggle
+a8c22f8 2019 06 03
+35ea602 prueba
+ad3c42a 2019 06 03 : (Lunes)
+e7d7a8e Lunes
+721a9b3 En DoctorTimeOut de off se ponia on
+4e6170b 2019 05 30 : (Jueves ) : Se esta intentado ajusta las notificaciones-Data para que corra en foreground y backgroup
+758c7c8 version 1.14
+ec310d0 2019 05 29 : (Miercoles) se actualizo el método de Notificacion a método Data para los dos aplicativos
+df6889c Cambios en doctorBooking , no me carga el nombre del paciente
+9de1913 probar el caso 1
+4b57372 Crear la session controlar la session entre docto y paciete
+1803298 mejorando el doctorBooking
+43203ce 2019 05 28 : (Martes) Inicio
+3984533 2019 05 27 : (Lunes) Working with from Mac OS
+ec6fa0d Lunes
+de47548 lunes
+2877429 version ; 1.13
+70349bb 2019 05 25 : (Sábado) Se creo tres slide para mostrar un tour al usuarioDoctor
+8044996 2019 05 24 : configurando los slide para app doctor
+6b0ee5b 2019 05 24 :(Viernes) Funciona el AppIntro
+266e597 2019 05 24 : (Viernes) AppIntro
+7872d5a 2019 05 24 : (Viernes)
+8b0d1d8 2019 05 23 : Jueves --> windows to macbook
+bb5a084 windows 10
+baa1612 macbook pro
+2410740 20190523 : Eliminacion de branch
+9ab6149 20190523
+f1a51d8 20190522 : Cambios en doctor road , hacer que cuando llegue se muestre un alertDialog
+1569eb3 Marte : Mejoramiento de xml del booking
+8ff9ed6 version 1.12
+c9994d1 version 1.12
+9a9e37e 20190520
+9f4f395 20190520 : los comentarios de los pacientes se almacena y se visualiza en la appPaciente
+0465404 20190518
+85f7307 version 1.11  a
+596afb3 version 1.1
+7a4aa65 revisando la animacion del FirebaseRecyclerView
+869567d 2019 05 08 : Cumple la ruta
+84c106a Cambios de alertDialog
+f5404ce Se logro ponder en DoctorRoad el tiempo y distancia en tiempo real en el display
+e6bf923 El alertReloj notifica correctamente cuando el paciente envia cancelacion y timeout
+6681458 Version 1.10
+67fc380 2019 05 04 : Sabado
+db9fc38 2019 05 04 : Se va a modificar cuando el cliente cancela y/o que se acaba el tiempo de espera
+c9975c7 Problemas con el reloj
+6b5e446 2019 05 03 : Se va a chanchar la notificacion no aceptada
+04bfe12 2019 05 03 : pdfGenetor
+08f4033 2019 04 24 : Version 1.9
+127bbc9 Ok
+b6e9cc8 ver
+16fffe3 2019 04 23 : (martes ) Ordenar codigo y cambios de nombre a las actividades
+e52adef 2019 04 23 : (martes ) Ordenar codigo y cambios de nombre a las actividades- parte 2
+47831ce 2019 04 23 : (martes ) Ordenar codigo y cambios de nombre a las actividades
+03989f4 2019 04 23 : (martes)
+ebab592 Fin : parte17a
+c722ae8 ver
+9439a06 2019 04 22 : Funciona prueba con envio de datos
+44b3979 2019 04 22 : Funciona prueba con postman
+70f34bf 2019 04 22 : (Lunes ) Cambios en Notification to Data
+23ba0e8 2019 04 16 (Martes) : Version 1.8 MinSDK 17
+9b80632 version 1.8 : compatible con la version Android OS 4.2
+ca215af Version 1.7
+3a34fa6 Version 1.7
+bf31f30 martes : los permisos funciona correctamente
+18b2598 Martes : Verificarion de permisos
+403a278 Lunes : Cambios en el Login
+3d682c2 Lunes
+245a565 Sabado
+687df2c Fin
+7e2c793 Viernes : Fragment 4 : falta agrega cambiar contraseña
+f2b0517 Miercoles : fragment 3 ... funcione le historial
+87372f8 Miercoles : cambios
+924fb96 Martes : se inserta historial de appPaciente y appDoctor
+d620ead Martes
+da59b47 Martes : Fragment 3 : Historia -Firebase recicleview
+84c1c72 Martes : Version 1.5
+4d8bfe7 Martes : falta el Fragment 3 : Historial
+ea49305 Martes : Funciona los botones de cancelar servicio en pleno ruta
+3895dac Lunes : popup_cancelar
+14d0311 Lunes : DoctorRuta --> Add Buttom void to appPaciente
+b5f860a Sabado : Fragment4 btn_1 --> funciona , btn_2 --> funciona , btn_3 --> falta
+4f85156 Sabado : Fragment4 btn_1 --> funciona , btn_2 --> falta , btn_3 falta
+ddc3bf0 Sabado : Se esta mejorando el xml-diseño , fragment4 : se esta creando dos botones para infoDoctor y cambio de foto
+9f29063 Vierns : Se va a modificar el Nav , datos personales
+90c73c7 Viernes : Funciona , se pone en offline cuando acepta la consulta medica
+8101e64 Viernes : toggle funciona bien , mueve la palanca
+a39f9e4 Viernes:Inicio de ponder off al doctor cuando le llega una notificacion del paciente
+7455b17 Jueves : revisión
+0aba143 Jueves :
+71b5cdc Martes : app_doctor
+fad18a8 Martes : subir a google play store
+9b8bebb Martes : Funciona ok ,falta arreglar permisos
+42445b8 Revisando
+f56bd5e Sabado : Fin Activity --> falta poner los datos del usuario y doctor ,Boton notificación del paciente para cerra consulta medica
+1199f95 Viernes : Fin de parte014 : fin de logica
+5353d5d Viernes : problemas de permisos
+da87506 Jueves : map style updated
+a079528 Jueves : Before change style map
+506e6ff Jueves : la imagen se voltear cuando left 90
+be6742b Fin de parte 13 :  reduccion de image o foto
+1f9cfe7 Fin de parte 13 :  la actualizacion de la foto se hizo con un boton independiente
+8e97389 Jueves : boton independiente para update Photo
+6d95d5e Jueves
+2f59ee6 Miercoles : parte013 fin - falta testear en otros android
+1eb36b7 Miercoles : funciona el update/upload de foto del doctor
+ce67d9d Miercoles : testeando update/upload foto
+63711ed Miercoles : se muestra la foto en updateprofile.xml del doctor  , falta el codigo para actualizar del foto del doctor
+37f7d56 Miercoles CRUD : update los datos del Doctor
+a6abf24 Martes : ok+
+86e4845 Lunes : prueba 4 : testenado
+ae3910c Lunes : Prueba 3 : testeando
+a3272b8 Lunes arregando
+9642719 Lunes : prueba 2
+5b3c594 Lunes : fallo googleAPi
+4724778 Lunes : Fused Location provider --> prueba 1 : ok
+7fe3e15 Lunes : Inicio
+e69acb1 Sabado : cambiar de FusedLocationProviderApi a ----> FusedLocationProviderClient
+74c3a2c Sabado : se arreglo el switch_location pero da error la geolocazacion
+4c1adab Sabado : ELimnado codigo
+5b415cd Viernes
+1edb9d9 Viernes : icon de google maps error Context -revisar
+8510ed4 Viernes : mejora de iconos en nav_
+1aba50c Viernes : parte012a
+12d6ae1 Viernes : onresumen , onpause
+cfe3fd5 Jueves : mejoras de drawle y ubicacion ... falta arreglar la geoubicacion del user
+52f8e41 Jueves : creacion de fragments
+e0c915b dasdsa
+cefdbd4 Marte :  se modicio el xml del on and off location del Doctor
+f24b8a6 cambios
+25c5461 Jueves : RegisterActivit.xml se mejoro el diseño y botones , se agrego el UID en usuario para guardar en firebase
+203efb7 Jueves :xml login icon ++ size
+5bafdfe Jueves : xml login
+837268d Sabado : Mejorando
+162fb83 Jueves : Inicio parte012
+77ca8ef Martes : fin parte 11
+62d1c4c Marte : ver codigo de atras
+c289de2 Martes : se va a testear Set up a special activity PendingIntent
+e67ad10 Martes : NotificationDevelopers
+d177341 Martes
+daabdb1 Lunes : revisar video de notificatinCompat
+c62cee3 Lunes : cambios en notificacion
+5982647 Lunes : Inicio de parte011
+bd4a4ba 2019 03 04 : Lunes --> parte11 fin
+91137b4 Merge branch 'parte011'
+9234db2 Sabado
+e047be5 Sabado : Modificando Notificaion
+3aa39b5 se borro
+0d4bd12 Jueves final
+d56cffd Jueves
+8bc433c Jueves solo funciona la actualizacion de la ruta o diraccion , el iccno del doctor se repite
+4e156e8 Jueves : Buena
+75f9c8a erre
+c1ad620 Borrar
+cc5fee3 Miercoles : Reducciones codigo
+1f3cee2 Sabado
+cbbf80b Viernes : se puede enviar el tokendoctor para la appPaciente
+5d06d1a Viernes : se dibuja la ruta en el mapa desde el doctor y el paciente
+fb8dae4 Jueves : Funciona el diseño de customer_call.xml
+52ff909 Jueves : El appdoctor recibe la cancelacion del usuario cuando le han solicitado un cita
+88a5039 parte003
+03dc164 Jueves Regreso al master
+2b9bc8d Merge branch 'master' into HEAD
+9f4c9d1 Jueves : se tiene q arreglar
+2493b49 Jueves : Funciona la cancelacion desde el doctor enviando la notificacion
+4c240cf fcm icon default
+b23a367 Miercoles : Funciona el getData
+46ee10e Miercoles : mejoras de Notificaciones
+929c065 Martes 2019 02 19 : activity_main.xml , se implemento la liberia de cicleView y Picasso
+97481a2 Martes se mejora xml de inicio del doctor main
+02829cd Martes : Mejora de xml_main
+7a0eee8 Lunes mejor los diseño
+8696999 Jueves : funciona el envio de cancelar del doctor hacia el paciente
+116d8df Miercoles : falta arreglar en el xml el timepo y la distancia
+195b8b7 Miercoles : mejorando el callCustomer.xml
+6674f5a Jueves : estable
+13f3930 se va a elimar el valor 1 y valor 2
+a0fd3e5 Jueves : 2019 02 07
+c4daafa Jueves : 2019 02 07 :
+c19b431 Sabado : version estable
+eb12dc9 Jueves : Version estable con session :
+de0ce2b Jueves : Se va a utlizar FirebaseUser and DatbaseFirebase para extraer info
+f978341 Jueves : se elimina google Sign
+d7cd2aa con   requestIdToken
+8a94273 Miercoles : Version estable - Beta - Se va a subir a Play Store beta
+727473d Miercoles : se modifico el registro y login  con correo y verificacion de correo
+fe0a43d Miercoles : agregando sendVerication
+1db6d0b Martes : Funciona en Login y Register
+a30f649 Martes :  se modifico el xml  y pruebas en campo con el apk
+772159d Martes : se arreglo el puntero de null
+737f22d Martes : Se va a modificar el xml del DOCTORHOME
+ca2744a Martes : Se arreglo ?
+910fd30 Lunes : Funcionado
+d3f12ea Lunes : Modificando el Registro
+9ec3fb9 Lunes : 28 01 2019 : DataShop data USER001 <--
+11f3e62 Lunes :
+9de19b9 Sabado : merge
+f92bb4d Sabado :Git
+ed68716 Sabado : ok
+3c25c3c Sabado : Storage no tenia permisos
+8bfa396 error
+3c80121 Lunes : Configurar tablas firebase
+a845e2f Lunes : Google maps configurado
+bd0fdb4 Lunes : Inicio de Business
+0b02df6 Lunes : se agregao Diaglo a login
+b6dd7ae Lunes : se modifico el login y main activitiy con doble verificacion
+1efb7df todo configurado con ProjectoMedicalApp : nuevo
+f220170 cambiando nombre de package
+4ea3239 pruebas
+f9af73e 2018 12 26 : Miercoles
+f82cc33 error
+70072c0 2018 11 05 : Sin APK firmada
+d0fee59 2018 11 05 : Prueba
+a4235e5 2018 10 27 : Funcion la inserscion en la base de datos Godaddy y Firebase 100% funcional Register y Login
+0f65d85 modificacion en la base de datos , la creacion de 3 tablas y modificaion del php para la validación de las tres tablas
+5d2a400 Mejoras en el xml de login ,verificacion
+c19a193 2018 10 26 : App Doctor --> funciona 100 %
+d7d52c1 2018 10 15 : Login Activity : Validaciones de campos parte 1
+3209782 2018 10 12 : Registro : validación de campos de formulario
