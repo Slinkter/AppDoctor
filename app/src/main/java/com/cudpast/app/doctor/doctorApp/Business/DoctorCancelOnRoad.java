@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.cudpast.app.doctor.doctorApp.Activities.MainActivity;
-import com.cudpast.app.doctor.doctorApp.Common.Common;
 import com.cudpast.app.doctor.doctorApp.R;
 
 public class DoctorCancelOnRoad extends AppCompatActivity {

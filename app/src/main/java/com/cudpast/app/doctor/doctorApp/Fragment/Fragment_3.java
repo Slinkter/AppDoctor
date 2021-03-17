@@ -1,10 +1,10 @@
 package com.cudpast.app.doctor.doctorApp.Fragment;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,8 @@ public class Fragment_3 extends Fragment {
     private FirebaseRecyclerAdapter<PacienteProfile, myPacienteVH> firebase_recycler_adapter;
     private FirebaseRecyclerOptions firebase_recycler_options;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -42,11 +44,13 @@ public class Fragment_3 extends Fragment {
 
         refDB_AppDoctor_history = FirebaseDatabase.getInstance().getReference(Common.AppDoctor_history).child(uid_doctor);
         refDB_AppDoctor_history.keepSynced(true);
-        refDB_AppDoctor_history.orderByKey();
+        refDB_AppDoctor_history.limitToLast(10);
+       refDB_AppDoctor_history.orderByKey();
 
         rv_historyListDoctor = viewFragment.findViewById(R.id.myrecycleviewHistory);
         rv_historyListDoctor.setHasFixedSize(true);
         rv_historyListDoctor.setLayoutManager(new LinearLayoutManager(getContext()));
+
         Log.e(TAG, "====================================");
         Log.e(TAG, "uid_doctor = " + uid_doctor);
         Log.e(TAG, "====================================");
@@ -64,6 +68,8 @@ public class Fragment_3 extends Fragment {
     public void onStart() {
         super.onStart();
         //Options
+
+
         firebase_recycler_options = new FirebaseRecyclerOptions
                 .Builder<PacienteProfile>()
                 .setQuery(refDB_AppDoctor_history, PacienteProfile.class)

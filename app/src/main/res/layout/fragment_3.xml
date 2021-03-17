@@ -15,11 +15,10 @@
         android:gravity="center"
         android:paddingTop="20dp"
         android:text="Historial de Atenciones"
-        android:textColor="@color/colorAccent"
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/myrecycleviewHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

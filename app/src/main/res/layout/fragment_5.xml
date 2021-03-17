@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
+    android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
     tools:context=".Fragment.Fragment_5">
@@ -16,7 +17,8 @@
         android:layout_gravity="center"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="50dp"
-        android:src="@drawable/ic_hospital" />
+        android:src="@drawable/ic_hospital"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/idsalirapp"
@@ -26,7 +28,7 @@
         android:layout_marginRight="50dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/custom_button_1"
-        android:text="Salir"
+        android:text="Cerrar sesión "
         android:textColor="@color/white" />
 
 

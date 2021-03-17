@@ -1,6 +1,6 @@
 package com.cudpast.app.doctor.doctorApp.Others;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
 
 import com.cudpast.app.doctor.doctorApp.R;

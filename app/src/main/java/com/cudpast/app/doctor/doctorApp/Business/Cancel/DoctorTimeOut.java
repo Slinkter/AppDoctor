@@ -1,7 +1,10 @@
 package com.cudpast.app.doctor.doctorApp.Business.Cancel;
 
 import android.content.Intent;
+<<<<<<< HEAD
 
+=======
+>>>>>>> migreandroidx
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
